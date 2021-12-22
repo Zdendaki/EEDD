@@ -9,21 +9,24 @@
         <StackPanel Background="LightGray" Orientation="Horizontal" HorizontalAlignment="Left">
             <StackPanel.Resources>
                 <Style TargetType="{x:Type Label}">
-                    <Setter Property="Padding" Value="5" />
+                    <Setter Property="Padding" Value="0,5" />
                     <Setter Property="BorderBrush" Value="White" />
                     <Setter Property="BorderThickness" Value="0.5" />
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                     <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="FontFamily" Value="CustomSansSerif" />
+                    <Setter Property="FontWeight" Value="Regular" />
                 </Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="TextAlignment" Value="Center" />
                 </Style>
             </StackPanel.Resources>
             
-            <Label Width="20" />
-            <Label Width="60">
+            <Label Width="15" />
+            <Label Width="50">
                 <Label.Content>
-                    <TextBlock>
+                    <TextBlock LineHeight="14">
                         <Run Text="číslo" /><LineBreak />
                         <Run Text="vlaku" />
                     </TextBlock>
@@ -31,6 +34,94 @@
             </Label>
             <Label Width="40" Content="druh" />
             <Label Width="40" Content="směr" />
+            <Label Width="50">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="trať." /><LineBreak />
+                        <Run Text="kol." />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="50">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="předv" /><LineBreak />
+                        <Run Text="odjezd" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="15" Content="ch" />
+            <Label Width="50">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="pro" /><LineBreak />
+                        <Run Text="PMD" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="50">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="skut." /><LineBreak />
+                        <Run Text="odjezd" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="50">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="st" /><LineBreak />
+                        <Run Text="kol." />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="S" /><LineBreak />
+                        <Run Text="1" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="S" /><LineBreak />
+                        <Run Text="2" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="S" /><LineBreak />
+                        <Run Text="3" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="S" /><LineBreak />
+                        <Run Text="4" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="50">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="příjezd" /><LineBreak />
+                        <Run Text="odjezd" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="50" Content="zpož." />
+            <Label Width="50" Content="odhl." />
+            <Label Width="15" Content="P" />
+            <Label Width="15" Content="J" />
+            <Label Width="15" Content="!" />
+            <Label Width="15" Content="K" />
+            <Label Width="25" Content="V" />
         </StackPanel>
     </Grid>
 </UserControl>

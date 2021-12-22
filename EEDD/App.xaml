@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:EEDD"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <FontFamily x:Key="CustomSansSerif">/Fonts/SansSerif.ttf</FontFamily>
     </Application.Resources>
 </Application>

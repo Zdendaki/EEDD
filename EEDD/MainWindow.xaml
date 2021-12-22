@@ -15,7 +15,65 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
-            <MenuItem Header="" />
+            <MenuItem Header="Soubor">
+                <MenuItem Header="Konec" />
+            </MenuItem>
+            <MenuItem Header="Úpravy">
+                <MenuItem Header="Vložení řádku" InputGestureText="Insert" />
+                <Separator />
+                <MenuItem Header="Oprava řádku" />
+                <MenuItem Header="Zrušení řádku" />
+                <MenuItem Header="Ukončení řádku" IsEnabled="False" />
+                <Separator />
+                <MenuItem Header="Návrat vlaku z tratě" IsEnabled="False" />
+            </MenuItem>
+            <MenuItem Header="Mimořádné">
+                <MenuItem Header="Výluka" IsEnabled="False">
+                    <MenuItem />
+                </MenuItem>
+                <MenuItem Header="Bezpečnostní štítek" IsEnabled="False">
+                    <MenuItem />
+                </MenuItem>
+                <MenuItem Header="TZZ">
+                    <MenuItem Header="Změna stavu..." />
+                    <Separator />
+                    <MenuItem Header="Zobrazení poruch TZZ" IsEnabled="False">
+                        <MenuItem />
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="Výluka dopravní služby" IsEnabled="False">
+                    <MenuItem />
+                </MenuItem>
+                <MenuItem Header="Předání/převzetí dopravny" IsEnabled="False">
+                    <MenuItem />
+                </MenuItem>
+                <MenuItem Header="Telefonická volnost">
+                    <MenuItem Header="Začátek..." />
+                    <MenuItem Header="Konec..." IsEnabled="False" />
+                    <Separator />
+                    <MenuItem Header="Zobrazení..." IsEnabled="False" />
+                </MenuItem>
+                <MenuItem Header="Nemožné dorozumění" IsEnabled="False" />
+                <Separator />
+                <MenuItem Header="Předvídaný odjezd telefonem" IsEnabled="False" />
+                <MenuItem Header="Odeslání předpokládaného narušení" IsEnabled="False" />
+                <MenuItem Header="Informace o vlaku" IsEnabled="False" />
+                <MenuItem Header="Složení vlaku" IsEnabled="False" />
+                <MenuItem Header="Dotaz na JŘ" IsEnabled="False" />
+                <MenuItem Header="Zápis počasí..." />
+            </MenuItem>
+            <MenuItem Header="Plánování">
+                <MenuItem Header="Podle GVD..." />
+                <Separator />
+                <MenuItem Header="Posun mezi dopravnami..." IsEnabled="False" />
+            </MenuItem>
+            <MenuItem Header="Komunikace">
+                <MenuItem Header="Zprávy..." />
+            </MenuItem>
+            <MenuItem Header="Archivace" />
+            <MenuItem Header="Nápověda">
+                <MenuItem Header="O aplikaci..." />
+            </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Background="#FFF0F0F0">
             <StackPanel.Resources>
@@ -30,8 +88,20 @@
             <Label Content="Pohyb vlaku" />
         </StackPanel>
 
-        <StackPanel Grid.Row="2">
-            
-        </StackPanel>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
+            <Grid>
+                <StackPanel>
+                    <StackPanel.RenderTransform>
+                        <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
+                    </StackPanel.RenderTransform>
+                    <local:Header />
+                    <local:Row />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+
+        <StatusBar Grid.Row="3">
+            <StatusBarItem Content="" />
+        </StatusBar>
     </Grid>
 </Window>
