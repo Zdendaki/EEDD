@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:l="clr-namespace:EEDD"
-             mc:Ignorable="d" d:DesignWidth="800">
-    <Border BorderBrush="Black" BorderThickness="0.5">
-        <Grid Background="LightGray" HorizontalAlignment="Left">
+             Loaded="UserControl_Loaded"
+             mc:Ignorable="d">
+    <Border BorderBrush="Black" BorderThickness="0.5" Background="Gainsboro">
+        <Grid HorizontalAlignment="Left">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20" />
                 <RowDefinition Height="20" />
@@ -14,16 +15,80 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="45" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="37" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="15" x:Name="Signaller1" />
+                <ColumnDefinition Width="15" x:Name="Signaller2" />
+                <ColumnDefinition Width="0" x:Name="Signaller3" />
+                <ColumnDefinition Width="0" x:Name="Signaller4" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="80" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
             <!--Řádek příjezd-->
-            <l:EDDTextBox Text="P" Grid.Row="0" Grid.Column="0" Align="Center" />
-            <l:EDDTextBox Text="111111" Grid.Row="0" Grid.Column="1" Align="Right" InnerBorder="Blue" />
+            <l:EDDTextBox Text="P" Grid.Row="0" Grid.Column="0" Align="Center" Type="Static" EditMode="Locked" />
+            <l:EDDTextBox Text="49405" x:Name="ANumber" Grid.Row="0" Grid.Column="1" Align="Right" Type="TrainNumber" EditMode="Locked" InnerBorder="Blue" />
+            <l:EDDTextBox Text="Nex" x:Name="AType" Grid.Row="0" Grid.Column="2" Align="Left" Type="Static" MaxLength="4" />
+            <l:EDDTextBox Text="Ko" x:Name="ADirection" Grid.Row="0" Grid.Column="3" Align="Left" Type="Static" EditMode="Locked" MaxLength="2" />
+            <l:EDDTextBox Text="1" x:Name="ARoute" Grid.Row="0" Grid.Column="4" Align="Left" Type="Number" EditMode="CanModify" Cursor="Arrow" />
+            <l:EDDTextBox Text="" x:Name="AAnnounced" Grid.Row="0" Grid.Column="5" Align="Left" Type="Time" EditMode="CanModify" />
+            <l:EDDTextBox Text="" Grid.Row="0" Grid.Column="6" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="APMD" Grid.Row="0" Grid.Column="7" Align="Left" Type="Time" EditMode="Locked" />
+            <l:EDDTextBox Text="" x:Name="AActualDep" Grid.Row="0" Grid.Column="8" Align="Left" Type="Time" EditMode="CanEdit" />
+            <l:EDDTextBox Text="1" x:Name="ATrack" Grid.Row="0" Grid.Column="9" Align="Left" Type="Number" EditMode="CanEdit" />
+            <l:EDDTextBox Text="" Grid.Row="0" Grid.Column="10" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" Grid.Row="0" Grid.Column="11" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" Grid.Row="0" Grid.Column="12" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" Grid.Row="0" Grid.Column="13" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="Arrival" Grid.Row="0" Grid.Column="14" Align="Left" Type="Time" EditMode="CanModify" />
+            <l:EDDTextBox Text="" x:Name="ADelay" Grid.Row="0" Grid.Column="15" Align="Left" Type="Number" EditMode="Locked" />
+            <l:EDDTextBox Text="" x:Name="ADeparted" Grid.Row="0" Grid.Column="16" Align="Left" Type="Time" EditMode="Locked" />
+            <l:EDDTextBox Text="" x:Name="ANote" Grid.Row="0" Grid.Column="17" Align="Left" Type="Note" EditMode="CanModify" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="AApproval" Grid.Row="0" Grid.Column="18" Align="Center" Type="String" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="AExceptions" Grid.Row="0" Grid.Column="19" Align="Center" Type="String" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="AContact" Grid.Row="0" Grid.Column="20" Align="Center" Type="String" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="ASent" Grid.Row="0" Grid.Column="21" Align="Center" Type="Number" EditMode="Locked" MaxLength="2" />
+            <l:EDDTextBox Text="" x:Name="AComment" Grid.Row="0" Grid.Column="22" Align="Center" Type="String" EditMode="CanModify" MaxLength="30" />
 
             <!--Řádek odjezd-->
-            <l:EDDTextBox Text="O" Grid.Row="1" Grid.Column="0" Align="Center" />
-            <l:EDDTextBox Text="222222" Grid.Row="1" Grid.Column="1" Align="Right" InnerBorder="Blue" />
+            <l:EDDTextBox Text="O" Grid.Row="1" Grid.Column="0" Align="Center" Type="Static" EditMode="Locked" />
+            <l:EDDTextBox Text="49405" x:Name="DNumber" Grid.Row="1" Grid.Column="1" Align="Right" Type="TrainNumber" EditMode="Locked" InnerBorder="Blue" />
+            <l:EDDTextBox Text="Nex" x:Name="DType" Grid.Row="1" Grid.Column="2" Align="Left" Type="Static" MaxLength="4" />
+            <l:EDDTextBox Text="St" x:Name="DDirection" Grid.Row="1" Grid.Column="3" Align="Left" Type="Static" EditMode="Locked" MaxLength="2" />
+            <l:EDDTextBox Text="1" x:Name="DRoute" Grid.Row="1" Grid.Column="4" Align="Left" Type="Number" EditMode="CanModify" />
+            <l:EDDTextBox Text="" x:Name="DAnnounced" Grid.Row="1" Grid.Column="5" Align="Left" Type="AnnounceTime" EditMode="CanEdit" />
+            <l:EDDTextBox Text="" Grid.Row="1" Grid.Column="6" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="DPMD" Grid.Row="1" Grid.Column="7" Align="Left" Type="Time" EditMode="Locked" />
+            <l:EDDTextBox Text="" x:Name="DActualDep" Grid.Row="1" Grid.Column="8" Align="Left" Type="Time" EditMode="Locked" />
+            <l:EDDTextBox Text="1" x:Name="DTrack" Grid.Row="1" Grid.Column="9" Align="Left" Type="Number" EditMode="CanEdit" />
+            <l:EDDTextBox Text="" Grid.Row="1" Grid.Column="10" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" Grid.Row="1" Grid.Column="11" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" Grid.Row="1" Grid.Column="12" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" Grid.Row="1" Grid.Column="13" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="Departure" Grid.Row="1" Grid.Column="14" Align="Left" Type="Time" EditMode="CanModify" />
+            <l:EDDTextBox Text="" x:Name="DDelay" Grid.Row="1" Grid.Column="15" Align="Left" Type="Number" EditMode="Locked" />
+            <l:EDDTextBox Text="" x:Name="DDeparted" Grid.Row="1" Grid.Column="16" Align="Left" Type="Time" EditMode="Locked" />
+            <l:EDDTextBox Text="" x:Name="DNote" Grid.Row="1" Grid.Column="17" Align="Center" Type="Note" EditMode="CanModify" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="DApproval" Grid.Row="1" Grid.Column="18" Align="Center" Type="String" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="DExceptions" Grid.Row="1" Grid.Column="19" Align="Center" Type="String" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="DContact" Grid.Row="1" Grid.Column="20" Align="Center" Type="String" EditMode="Locked" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="DSent" Grid.Row="1" Grid.Column="21" Align="Center" Type="Number" EditMode="Locked" MaxLength="2" />
+            <l:EDDTextBox Text="" x:Name="DComment" Grid.Row="1" Grid.Column="22" Align="Center" Type="String" EditMode="CanModify" MaxLength="30" />
+            
         </Grid>
     </Border>
 </UserControl>

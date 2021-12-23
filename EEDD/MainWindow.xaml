@@ -88,12 +88,12 @@
             <Label Content="Pohyb vlaku" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left">
             <Grid>
                 <StackPanel>
-                    <StackPanel.RenderTransform>
-                        <ScaleTransform ScaleX="1.2" ScaleY="1.2" />
-                    </StackPanel.RenderTransform>
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform ScaleX="1.25" ScaleY="1.25" />
+                    </StackPanel.LayoutTransform>
                     <local:Header />
                     <local:Row />
                 </StackPanel>

@@ -24,7 +24,7 @@
             </StackPanel.Resources>
             
             <Label Width="15" />
-            <Label Width="50">
+            <Label Width="45">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="číslo" /><LineBreak />
@@ -32,9 +32,9 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="40" Content="druh" />
-            <Label Width="40" Content="směr" />
-            <Label Width="50">
+            <Label Width="30" Content="druh" />
+            <Label Width="25" Content="směr" />
+            <Label Width="35">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="trať." /><LineBreak />
@@ -42,7 +42,7 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="50">
+            <Label Width="37">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="předv" /><LineBreak />
@@ -51,7 +51,7 @@
                 </Label.Content>
             </Label>
             <Label Width="15" Content="ch" />
-            <Label Width="50">
+            <Label Width="35">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="pro" /><LineBreak />
@@ -59,7 +59,7 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="50">
+            <Label Width="35">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="skut." /><LineBreak />
@@ -67,7 +67,7 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="50">
+            <Label Width="35">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="st" /><LineBreak />
@@ -91,7 +91,7 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="15">
+            <Label Width="0">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="S" /><LineBreak />
@@ -99,7 +99,7 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="15">
+            <Label Width="0">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="S" /><LineBreak />
@@ -107,7 +107,7 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="50">
+            <Label Width="35">
                 <Label.Content>
                     <TextBlock LineHeight="14">
                         <Run Text="příjezd" /><LineBreak />
@@ -115,13 +115,14 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="50" Content="zpož." />
-            <Label Width="50" Content="odhl." />
+            <Label Width="35" Content="zpož." />
+            <Label Width="35" Content="odhl." />
             <Label Width="15" Content="P" />
             <Label Width="15" Content="J" />
             <Label Width="15" Content="!" />
             <Label Width="15" Content="K" />
-            <Label Width="25" Content="V" />
+            <Label Width="20" Content="V" />
+            <Label Width="80" Content="cesta" />
         </StackPanel>
     </Grid>
 </UserControl>

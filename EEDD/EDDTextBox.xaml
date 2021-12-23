@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EEDD"
              mc:Ignorable="d"
-             d:DesignHeight="20" d:DesignWidth="35" d:Background="LightGray" PreviewMouseDoubleClick="UserControl_PreviewMouseDoubleClick">
+             d:DesignHeight="20" d:DesignWidth="35" d:Background="LightGray" PreviewMouseDoubleClick="UserControl_PreviewMouseDoubleClick" PreviewMouseDown="UserControl_PreviewMouseDown">
     <UserControl.Resources>
         <Style x:Key="Label" TargetType="{x:Type Label}">
             <Setter Property="Padding" Value="0" />
@@ -30,9 +30,10 @@
         <Border BorderBrush="Black" BorderThickness="0.5">
             <Border x:Name="InBorder" BorderBrush="Blue" BorderThickness="1" Visibility="Hidden" />
         </Border>
+        <Rectangle x:Name="FocusBorder" Visibility="Collapsed" Stroke="#FF000000" StrokeThickness="0.5" StrokeDashArray="4 4" Margin="1.5" />
         <Label x:Name="TextLabel" Content="{Binding Text, Mode=OneWay}" Style="{StaticResource LabelLeft}" Margin="0,-1,0,0" />
-        <Canvas x:Name="AcceptRectangle" Visibility="Collapsed" HorizontalAlignment="Right" Width="1" Background="Green" Margin="2" />
-        <Polygon x:Name="RequestArrow" Points="0,0 3,0, 3,3" Visibility="Collapsed" Fill="Blue" HorizontalAlignment="Right" Margin="2" />
-        <TextBox x:Name="TextBox" Visibility="Collapsed" BorderBrush="Gray" BorderThickness="0.5" MaxLength="{Binding MaxLength, Mode=OneWay}" Text="{Binding Text, Mode=TwoWay}" FontFamily="Segoe UI" FontSize="12" Padding="0,1" HorizontalContentAlignment="Left" />
+        <Canvas x:Name="AcceptRectangle" Visibility="Collapsed" HorizontalAlignment="Right" Width="1.5" Background="Green" Margin="2" />
+        <Polygon x:Name="RequestArrow" Points="0,0 4,0, 4,4" Visibility="Collapsed" Fill="Blue" HorizontalAlignment="Right" Margin="2" />
+        <TextBox x:Name="TextBox" Visibility="Collapsed" BorderBrush="Gray" BorderThickness="0.5" MaxLength="{Binding MaxLength, Mode=OneWay}" Text="{Binding Text, Mode=TwoWay}" FontFamily="Segoe UI" FontSize="12" Padding="0,1" HorizontalContentAlignment="Left" KeyDown="TextBox_KeyDown" MouseDown="TextBox_MouseDown" LostMouseCapture="TextBox_LostMouseCapture" />
     </Grid>
 </UserControl>

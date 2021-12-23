@@ -20,6 +20,18 @@ namespace EEDD
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static EDDTextBox? focused = null;
+        public static EDDTextBox? FocusedTextBox
+        {
+            get => focused;
+            set
+            {
+                if (focused is not null)
+                    focused.HasFocus = false;
+                focused = value;
+            }
+        }
+        
         public MainWindow()
         {
             InitializeComponent();
