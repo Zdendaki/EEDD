@@ -3,9 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EEDD", "EEDD\EEDD.csproj", "{450BD5CC-719C-4207-B669-ACAEFD6B420E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EEDD", "EEDD\EEDD.csproj", "{450BD5CC-719C-4207-B669-ACAEFD6B420E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{45C5C096-1691-4FDC-AFEE-E88136BE89F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csproj", "{45C5C096-1691-4FDC-AFEE-E88136BE89F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EEDD.Data", "EEDD.Data\EEDD.Data.csproj", "{0343E4F2-6224-470D-AD82-0FF726124ACA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E8F41F16-BBBE-4E5F-AAA8-90BF8227A249}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +28,10 @@ Global
 		{45C5C096-1691-4FDC-AFEE-E88136BE89F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45C5C096-1691-4FDC-AFEE-E88136BE89F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45C5C096-1691-4FDC-AFEE-E88136BE89F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0343E4F2-6224-470D-AD82-0FF726124ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0343E4F2-6224-470D-AD82-0FF726124ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0343E4F2-6224-470D-AD82-0FF726124ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0343E4F2-6224-470D-AD82-0FF726124ACA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
