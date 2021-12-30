@@ -20,17 +20,14 @@ namespace EEDD
     /// </summary>
     public partial class Row : UserControl
     {
-        Brush odd = new SolidColorBrush(Color.FromRgb(220, 220, 220));
-        Brush even = new SolidColorBrush(Color.FromRgb(200, 200, 200));
-
-        public Row(bool isOdd)
+        public Row(StationBackground station, bool odd)
         {
             InitializeComponent();
 
-            Background = isOdd ? odd : even;
+            Background = GetBackground(station, odd);
         }
 
-        public Row() : this(true) { }
+        public Row() : this(StationBackground.Gray, true) { }
 
         internal void Next(EDDTextBox prev, bool tab = false)
         {
@@ -44,6 +41,17 @@ namespace EEDD
                 DTrack.Focus(!tab);
             else if (name == nameof(DTrack))
                 Departure.Focus(!tab);
+        }
+
+        private Brush GetBackground(StationBackground station, bool odd)
+        {
+            if (station == StationBackground.Gray)
+                return odd ? EDDBrushes.BackgroundGray1 : EDDBrushes.BackgroundGray2;
+            else if (station == StationBackground.Green)
+                return odd ? EDDBrushes.BackgroundGreen1 : EDDBrushes.BackgroundGreen2;
+            else if (station == StationBackground.Yellow)
+                return odd ? EDDBrushes.BackgroundYellow1 : EDDBrushes.BackgroundYellow2;
+            else throw new ArgumentException("Station's background is undefined", nameof(station));
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

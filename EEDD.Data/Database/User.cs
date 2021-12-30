@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EEDD.Data.Database
+﻿namespace ServerData.Database
 {
     [Table("Users")]
     [Index(nameof(Username), IsUnique = true)]
@@ -25,6 +19,20 @@ namespace EEDD.Data.Database
         [MaxLength(64)]
         public string Name { get; set; }
 
+        [MaxLength(64)]
+        public string? Token { get; set; }
+
+        [Precision(0)]
+        public DateTime? TokenIssued { get; set; }
+
+        [Required]
+        public UserRole Role { get; set; } = UserRole.User;
+
+        [Required]
+        public bool IsBanned { get; set; } = false;
+
         public List<Route> Routes { get; set; } = new List<Route>();
+
+        public List<Shift> Shifts { get; set; } = new List<Shift>();
     }
 }

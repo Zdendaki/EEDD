@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerData.Clients
+namespace EEDD
 {
-    internal class Client
+    internal static class Utils
     {
+
     }
 }

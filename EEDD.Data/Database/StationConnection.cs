@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EEDD.Data.Database
+﻿namespace ServerData.Database
 {
     [Table("StationConnections")]
     public class StationConnection
@@ -25,6 +19,10 @@ namespace EEDD.Data.Database
         public List<RouteTrack> RouteTracks { get; set; } = new List<RouteTrack>();
 
         public Route Route { get; set; }
+
+        public int PrimaryId { get; set; }
+
+        public int SecondaryId { get; set; }
     }
 
     [Table("RouteTracks")]
@@ -36,5 +34,9 @@ namespace EEDD.Data.Database
         public byte Number { get; set; }
 
         public StationConnection Connection { get; set; }
+        
+        public bool Secured { get; set; } = true;
+
+        public int MinimalDelay { get; set; } = 0;
     }
 }

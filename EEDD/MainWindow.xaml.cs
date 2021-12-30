@@ -35,6 +35,12 @@ namespace EEDD
         public MainWindow()
         {
             InitializeComponent();
+
+            TableScale.ScaleX = TableScale.ScaleY = 1.5f;
+
+            Rows.Children.Add(new Row(StationBackground.Gray, true));
+            Rows.Children.Add(new Row(StationBackground.Gray, false));
+            Rows.Children.Add(new Row(StationBackground.Gray, true));
         }
     }
 }

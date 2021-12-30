@@ -90,12 +90,17 @@
 
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left">
             <Grid>
-                <StackPanel>
-                    <StackPanel.LayoutTransform>
-                        <ScaleTransform ScaleX="1.25" ScaleY="1.25" />
-                    </StackPanel.LayoutTransform>
-                    <local:Header />
-                    <local:Row />
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.LayoutTransform>
+                    <ScaleTransform x:Name="TableScale" ScaleX="1" ScaleY="1" />
+                </Grid.LayoutTransform>
+
+                <local:Header Grid.Row="0" />
+
+                <StackPanel x:Name="Rows" Grid.Row="1">
                 </StackPanel>
             </Grid>
         </ScrollViewer>

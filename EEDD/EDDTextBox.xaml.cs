@@ -83,7 +83,7 @@ namespace EEDD
             {
                 editMode = value;
                 TextBox.Visibility = editMode == EditState.CanEdit ? Visibility.Visible : Visibility.Collapsed;
-                TextLabel.Foreground = editMode == EditState.Locked ? Brushes.DimGray : Brushes.Black;
+                TextLabel.Foreground = editMode == EditState.Locked ? EDDBrushes.Gray : Brushes.Black;
                 Cursor = editMode == EditState.CanEdit ? Cursors.IBeam : Cursors.Arrow;
             }
         }

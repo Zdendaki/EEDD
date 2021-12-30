@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EEDD.Data.Database
+﻿namespace ServerData.Database
 {
     [Table("Stations")]
     public class Station
@@ -20,11 +14,7 @@ namespace EEDD.Data.Database
         [MaxLength(2)]
         public string Abbr { get; set; }
 
-        public List<Track> Tracks { get; set; } = new List<Track>();
-
-        public List<Signaller> Signallers { get; set; } = new List<Signaller>();
-
-        public Route Route { get; set; }
+        public Client Client { get; set; }
     }
 
     [Table("Tracks")]
@@ -38,6 +28,8 @@ namespace EEDD.Data.Database
         public string Name { get; set; }
 
         public Station Station { get; set; }
+
+        public List<Stop> TrainStops { get; set; } = new List<Stop>();
     }
 
     [Table("Signallers")]
