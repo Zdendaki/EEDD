@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerData.Clients
+namespace Communication.Procedures.Records
 {
-    internal class Client
+    internal class ClientDataResponse
     {
+        
     }
 }

@@ -12,8 +12,8 @@ using ServerData.Database;
 namespace ServerData.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20211230135829_RouteSecured")]
-    partial class RouteSecured
+    [Migration("20211231140559_Timetable")]
+    partial class Timetable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -383,6 +383,9 @@ namespace ServerData.Migrations
                     b.Property<int>("ConnectionId")
                         .HasColumnType("int");
 
+                    b.Property<int>("MinimalDelay")
+                        .HasColumnType("int");
+
                     b.Property<byte>("Number")
                         .HasColumnType("tinyint");
 
@@ -540,7 +543,7 @@ namespace ServerData.Migrations
                     b.Property<int?>("FromId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StationTrackId")
+                    b.Property<int?>("StationTrackId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ToId")
@@ -552,6 +555,9 @@ namespace ServerData.Migrations
                     b.Property<int>("TrainId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TrainType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FromId")
@@ -559,7 +565,8 @@ namespace ServerData.Migrations
                         .HasFilter("[FromId] IS NOT NULL");
 
                     b.HasIndex("StationTrackId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[StationTrackId] IS NOT NULL");
 
                     b.HasIndex("ToId")
                         .IsUnique()
@@ -570,6 +577,93 @@ namespace ServerData.Migrations
                     b.HasIndex("TrainId");
 
                     b.ToTable("Stops");
+                });
+
+            modelBuilder.Entity("ServerData.Database.Timetable", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RouteId");
+
+                    b.ToTable("Timetables");
+                });
+
+            modelBuilder.Entity("ServerData.Database.TimetableStop", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<short?>("Arrival")
+                        .HasColumnType("smallint");
+
+                    b.Property<short?>("Departure")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("FromId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StationTrackId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromId");
+
+                    b.HasIndex("StationTrackId");
+
+                    b.HasIndex("ToId");
+
+                    b.HasIndex("TrainId");
+
+                    b.ToTable("TimetableStops");
+                });
+
+            modelBuilder.Entity("ServerData.Database.TimetableTrain", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Number")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimetableId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Number");
+
+                    b.HasIndex("TimetableId");
+
+                    b.ToTable("TimetableTrains");
                 });
 
             modelBuilder.Entity("ServerData.Database.Track", b =>
@@ -609,9 +703,6 @@ namespace ServerData.Migrations
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Number");
@@ -628,6 +719,9 @@ namespace ServerData.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -824,11 +918,10 @@ namespace ServerData.Migrations
                         .HasForeignKey("ServerData.Database.Stop", "FromId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("ServerData.Database.Track", "StationTrack")
+                    b.HasOne("ServerData.Database.Track", "Track")
                         .WithOne()
                         .HasForeignKey("ServerData.Database.Stop", "StationTrackId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("ServerData.Database.RouteTrack", "To")
                         .WithOne()
@@ -847,11 +940,62 @@ namespace ServerData.Migrations
 
                     b.Navigation("From");
 
-                    b.Navigation("StationTrack");
+                    b.Navigation("To");
+
+                    b.Navigation("Track");
+
+                    b.Navigation("Train");
+                });
+
+            modelBuilder.Entity("ServerData.Database.Timetable", b =>
+                {
+                    b.HasOne("ServerData.Database.Route", "Route")
+                        .WithMany("Timetables")
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Route");
+                });
+
+            modelBuilder.Entity("ServerData.Database.TimetableStop", b =>
+                {
+                    b.HasOne("ServerData.Database.RouteTrack", "From")
+                        .WithMany()
+                        .HasForeignKey("FromId");
+
+                    b.HasOne("ServerData.Database.Track", "Track")
+                        .WithMany()
+                        .HasForeignKey("StationTrackId");
+
+                    b.HasOne("ServerData.Database.RouteTrack", "To")
+                        .WithMany()
+                        .HasForeignKey("ToId");
+
+                    b.HasOne("ServerData.Database.TimetableTrain", "Train")
+                        .WithMany("Stops")
+                        .HasForeignKey("TrainId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("From");
 
                     b.Navigation("To");
 
+                    b.Navigation("Track");
+
                     b.Navigation("Train");
+                });
+
+            modelBuilder.Entity("ServerData.Database.TimetableTrain", b =>
+                {
+                    b.HasOne("ServerData.Database.Timetable", "Timetable")
+                        .WithMany("Trains")
+                        .HasForeignKey("TimetableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Timetable");
                 });
 
             modelBuilder.Entity("ServerData.Database.Track", b =>
@@ -889,12 +1033,24 @@ namespace ServerData.Migrations
 
                     b.Navigation("Connections");
 
+                    b.Navigation("Timetables");
+
                     b.Navigation("Trains");
                 });
 
             modelBuilder.Entity("ServerData.Database.StationConnection", b =>
                 {
                     b.Navigation("RouteTracks");
+                });
+
+            modelBuilder.Entity("ServerData.Database.Timetable", b =>
+                {
+                    b.Navigation("Trains");
+                });
+
+            modelBuilder.Entity("ServerData.Database.TimetableTrain", b =>
+                {
+                    b.Navigation("Stops");
                 });
 
             modelBuilder.Entity("ServerData.Database.Track", b =>

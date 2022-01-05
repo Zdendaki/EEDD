@@ -1,4 +1,8 @@
-﻿using ServerData.Database;
+﻿using Communication.Procedures;
+using Communication.Procedures.Users;
+using Newtonsoft.Json;
+using ServerData;
+using ServerData.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +15,7 @@ namespace Server.Behaviors
 {
     internal class ManagerBehavior : WebSocketBehavior
     {
-        User UserData;
+        User? userData;
         
         protected override void OnOpen()
         {
@@ -20,7 +24,22 @@ namespace Server.Behaviors
 
         protected override void OnMessage(MessageEventArgs e)
         {
+            VoidProcedure? procedure;
+            try
+            {
+                procedure = JsonConvert.DeserializeObject<VoidProcedure>(e.Data);
+            }
+            catch { return; }
 
+            if (procedure is not null)
+            {
+                switch (procedure.Type)
+                {
+                    case ProcedureType.LoginRequest:
+                        ProcessLogin(e.Data);
+                        break;
+                }
+            }
         }
 
         protected override void OnClose(CloseEventArgs e)
@@ -31,6 +50,17 @@ namespace Server.Behaviors
         protected override void OnError(WebSocketSharp.ErrorEventArgs e)
         {
 
+        }
+
+        private void ProcessLogin(string data)
+        {
+            LoginRequest? request = JsonConvert.DeserializeObject<LoginRequest>(data);
+            if (request is not null)
+            {
+                var response = ServerWorker.DoLogin(request, UserRole.Manager);
+                userData = response.u;
+                Send(JsonConvert.SerializeObject(response.res));
+            }
         }
     }
 }

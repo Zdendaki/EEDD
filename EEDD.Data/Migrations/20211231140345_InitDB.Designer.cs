@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServerData.Database;
 
@@ -11,9 +12,10 @@ using ServerData.Database;
 namespace ServerData.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20211231140345_InitDB")]
+    partial class InitDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -120,8 +122,8 @@ namespace ServerData.Migrations
                         .HasPrecision(0)
                         .HasColumnType("datetime2(0)");
 
-                    b.Property<byte?>("AType")
-                        .HasColumnType("tinyint");
+                    b.Property<int?>("AType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Arrival")
                         .HasPrecision(0)
@@ -208,8 +210,8 @@ namespace ServerData.Migrations
                         .HasPrecision(0)
                         .HasColumnType("datetime2(0)");
 
-                    b.Property<byte?>("DType")
-                        .HasColumnType("tinyint");
+                    b.Property<int?>("DType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Departure")
                         .HasPrecision(0)
@@ -238,11 +240,8 @@ namespace ServerData.Migrations
                         .HasPrecision(0)
                         .HasColumnType("datetime2(0)");
 
-                    b.Property<bool>("RowComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<byte>("RowType")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("RowType")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Sig1A")
                         .HasPrecision(0)
@@ -341,6 +340,9 @@ namespace ServerData.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Occupied")
+                        .HasColumnType("bit");
 
                     b.Property<int>("RouteId")
                         .HasColumnType("int");
@@ -544,6 +546,12 @@ namespace ServerData.Migrations
                     b.Property<int?>("StationTrackId")
                         .HasColumnType("int");
 
+                    b.Property<short?>("TimetableArrival")
+                        .HasColumnType("smallint");
+
+                    b.Property<short?>("TimetableDeparture")
+                        .HasColumnType("smallint");
+
                     b.Property<int?>("ToId")
                         .HasColumnType("int");
 
@@ -553,8 +561,8 @@ namespace ServerData.Migrations
                     b.Property<int>("TrainId")
                         .HasColumnType("int");
 
-                    b.Property<byte>("TrainType")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("TrainType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -625,8 +633,8 @@ namespace ServerData.Migrations
                     b.Property<int>("TrainId")
                         .HasColumnType("int");
 
-                    b.Property<byte>("TrainType")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("TrainType")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -731,8 +739,8 @@ namespace ServerData.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<byte>("Role")
-                        .HasColumnType("tinyint");
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.Property<string>("Token")
                         .HasMaxLength(64)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServerData.Database
+﻿namespace ServerData.Database
 {
     [Table("Clients")]
     public class Client
@@ -15,8 +9,6 @@ namespace ServerData.Database
         public string Name { get; set; }
 
         public Route Route { get; set; }
-
-        public bool Occupied { get; set; } = false;
 
         public List<Station> Stations { get; set; } = new List<Station>();
 

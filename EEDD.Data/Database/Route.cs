@@ -10,12 +10,14 @@
         [MaxLength(32)]
         public string Name { get; set; }
 
-        public List<Client> Clients { get; set; } = new List<Client>();
+        public List<Client> Clients { get; set; } = new();
 
-        public List<StationConnection> Connections { get; set; } = new List<StationConnection>();
+        public List<StationConnection> Connections { get; set; } = new();
 
-        public List<Train> Trains { get; set; } = new List<Train>();
+        public List<Train> Trains { get; set; } = new();
 
-        public List<User> Users { get; set; } = new List<User>();
+        public List<User> Users { get; set; } = new();
+
+        public List<Timetable> Timetables { get; set; } = new();
     }
 }

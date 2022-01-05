@@ -1,6 +1,6 @@
 ﻿namespace ServerData
 {
-    public enum RowType
+    public enum RowType : byte
     {
         Arrival,
         Departure,
@@ -11,7 +11,7 @@
         LongBlue
     }
 
-    public enum TrainType
+    public enum TrainType : byte
     {
         Ex,
         R,
@@ -27,7 +27,7 @@
         ND
     }
 
-    public enum TrainContact
+    public enum TrainContact : byte
     {
         None,
         GSMR,
@@ -36,10 +36,10 @@
         TRSS
     }
 
-    public enum UserRole
+    public enum UserRole : byte
     {
-        Administrator,
+        User,
         Manager,
-        User
+        Administrator
     }
 }

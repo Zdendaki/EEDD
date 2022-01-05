@@ -33,7 +33,8 @@ namespace ServerData.Migrations
                     Name = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: false),
                     Token = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
                     TokenIssued = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: true),
-                    Role = table.Column<int>(type: "int", nullable: false)
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    IsBanned = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,12 +63,31 @@ namespace ServerData.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Timetables",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RouteId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Timetables", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Timetables_Routes_RouteId",
+                        column: x => x.RouteId,
+                        principalTable: "Routes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trains",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<int>(type: "int", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
                     RouteId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -156,6 +176,26 @@ namespace ServerData.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "TimetableTrains",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Number = table.Column<int>(type: "int", nullable: false),
+                    TimetableId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimetableTrains", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TimetableTrains_Timetables_TimetableId",
+                        column: x => x.TimetableId,
+                        principalTable: "Timetables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Signallers",
                 columns: table => new
                 {
@@ -236,7 +276,9 @@ namespace ServerData.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<byte>(type: "tinyint", nullable: false),
-                    ConnectionId = table.Column<int>(type: "int", nullable: false)
+                    ConnectionId = table.Column<int>(type: "int", nullable: false),
+                    Secured = table.Column<bool>(type: "bit", nullable: false),
+                    MinimalDelay = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -374,9 +416,12 @@ namespace ServerData.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TrainType = table.Column<int>(type: "int", nullable: false),
                     Arrival = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: true),
                     Departure = table.Column<DateTime>(type: "datetime2(0)", precision: 0, nullable: true),
-                    StationTrackId = table.Column<int>(type: "int", nullable: false),
+                    TimetableArrival = table.Column<short>(type: "smallint", nullable: true),
+                    TimetableDeparture = table.Column<short>(type: "smallint", nullable: true),
+                    StationTrackId = table.Column<int>(type: "int", nullable: true),
                     TrainId = table.Column<int>(type: "int", nullable: false),
                     FromId = table.Column<int>(type: "int", nullable: true),
                     ToId = table.Column<int>(type: "int", nullable: true),
@@ -411,6 +456,46 @@ namespace ServerData.Migrations
                         principalTable: "Trains",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TimetableStops",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TrainType = table.Column<int>(type: "int", nullable: false),
+                    Arrival = table.Column<short>(type: "smallint", nullable: true),
+                    Departure = table.Column<short>(type: "smallint", nullable: true),
+                    StationTrackId = table.Column<int>(type: "int", nullable: true),
+                    TrainId = table.Column<int>(type: "int", nullable: false),
+                    FromId = table.Column<int>(type: "int", nullable: true),
+                    ToId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimetableStops", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TimetableStops_RouteTracks_FromId",
+                        column: x => x.FromId,
+                        principalTable: "RouteTracks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TimetableStops_RouteTracks_ToId",
+                        column: x => x.ToId,
+                        principalTable: "RouteTracks",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TimetableStops_TimetableTrains_TrainId",
+                        column: x => x.TrainId,
+                        principalTable: "TimetableTrains",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TimetableStops_Tracks_StationTrackId",
+                        column: x => x.StationTrackId,
+                        principalTable: "Tracks",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -511,7 +596,8 @@ namespace ServerData.Migrations
                 name: "IX_Stops_StationTrackId",
                 table: "Stops",
                 column: "StationTrackId",
-                unique: true);
+                unique: true,
+                filter: "[StationTrackId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Stops_ToId",
@@ -529,6 +615,41 @@ namespace ServerData.Migrations
                 name: "IX_Stops_TrainId",
                 table: "Stops",
                 column: "TrainId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Timetables_RouteId",
+                table: "Timetables",
+                column: "RouteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimetableStops_FromId",
+                table: "TimetableStops",
+                column: "FromId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimetableStops_StationTrackId",
+                table: "TimetableStops",
+                column: "StationTrackId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimetableStops_ToId",
+                table: "TimetableStops",
+                column: "ToId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimetableStops_TrainId",
+                table: "TimetableStops",
+                column: "TrainId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimetableTrains_Number",
+                table: "TimetableTrains",
+                column: "Number");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TimetableTrains_TimetableId",
+                table: "TimetableTrains",
+                column: "TimetableId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tracks_StationId",
@@ -570,19 +691,28 @@ namespace ServerData.Migrations
                 name: "Stops");
 
             migrationBuilder.DropTable(
+                name: "TimetableStops");
+
+            migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "RouteTracks");
-
-            migrationBuilder.DropTable(
-                name: "Tracks");
 
             migrationBuilder.DropTable(
                 name: "Trains");
 
             migrationBuilder.DropTable(
+                name: "RouteTracks");
+
+            migrationBuilder.DropTable(
+                name: "TimetableTrains");
+
+            migrationBuilder.DropTable(
+                name: "Tracks");
+
+            migrationBuilder.DropTable(
                 name: "StationConnections");
+
+            migrationBuilder.DropTable(
+                name: "Timetables");
 
             migrationBuilder.DropTable(
                 name: "Stations");

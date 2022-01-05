@@ -1,6 +1,9 @@
 ﻿using Communication.Procedures;
+using Communication.Procedures.Records;
 using Communication.Procedures.Users;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using ServerData;
 using ServerData.Database;
 using System;
 using System.Collections.Generic;
@@ -14,7 +17,7 @@ namespace Server.Behaviors
 {
     internal class ClientBehavior : WebSocketBehavior
     {
-        User UserData;
+        User? userData;
         
         protected override void OnOpen()
         {
@@ -37,6 +40,12 @@ namespace Server.Behaviors
                     case ProcedureType.LoginRequest:
                         ProcessLogin(e.Data);
                         break;
+                    case ProcedureType.ClientsListRequest:
+                        ProcessClientsListRequest(e.Data);
+                        break;
+                    case ProcedureType.StartShiftRequest:
+                        ProcessStartShiftRequest(e.Data);
+                        break;
                 }
             }
         }
@@ -48,16 +57,85 @@ namespace Server.Behaviors
 
         protected override void OnError(WebSocketSharp.ErrorEventArgs e)
         {
-
+            
         }
 
         private void ProcessLogin(string data)
         {
+            Worker.Logger.LogInformation("Login requested");
             LoginRequest? request = JsonConvert.DeserializeObject<LoginRequest>(data);
             if (request is not null)
             {
-                LoginResponse response = ServerWorker.DoLogin(request);
-                Send(JsonConvert.SerializeObject(response));
+                var (res, u) = ServerWorker.DoLogin(request, UserRole.User);
+                userData = u;
+                Send(JsonConvert.SerializeObject(res));
+                Worker.Logger.LogInformation("Login response sent");
+            }
+        }
+
+        private void ProcessClientsListRequest(string data)
+        {
+            ClientsListRequest? request = JsonConvert.DeserializeObject<ClientsListRequest>(data);
+
+            if (request is not null)
+            {
+                Send(JsonConvert.SerializeObject(ServerWorker.GetClients(request)));
+            }
+        }
+
+        private void ProcessStartShiftRequest(string data)
+        {
+            using (Context database = new Context())
+            {
+                StartShiftRequest? request = JsonConvert.DeserializeObject<StartShiftRequest>(data);
+
+                if (request is not null)
+                {
+                    var auth = database.CheckToken(request.Token, UserRole.User);
+
+                    if (auth == TokenState.Expired)
+                        Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false)));
+                    else if (auth == TokenState.UnsufficentRights)
+                        Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
+                    else if (auth == TokenState.Ok)
+                    {
+                        User? user = database.GetUser(request.Token);
+                        if (user is null)
+                        {
+                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
+                            return;
+                        }
+
+                        int? clientId = database.Routes.Include(x => x.Users).Include(x => x.Clients).FirstOrDefault(x => x.Users.Contains(user) && x.Clients.Any(x => x.Id == request.ClientId))?.Clients.FirstOrDefault(x => x.Id == request.ClientId)?.Id;
+                        if (clientId is null)
+                        {
+                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
+                            return;
+                        }
+
+                        Client client = database.Clients.Include(x => x.Stations).Include(x => x.Shifts).First(x => x.Id == clientId);
+                        bool occupied = client.Shifts.Any(x => x.StartTime is not null && x.EndTime is null);
+
+                        if (!occupied)
+                        {
+                            Shift shift = new Shift()
+                            {
+                                StartTime = DateTime.Now,
+                                User = user,
+                                Client = client
+                            };
+                            var sh = database.Shifts.Add(shift);
+                            database.SaveChanges();
+                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id)));
+                        }
+                        else
+                        {
+                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, false)));
+                        }
+                    }
+                    else
+                        Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
+                }
             }
         }
     }

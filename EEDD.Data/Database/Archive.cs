@@ -15,6 +15,9 @@
         [Required]
         public Client Client { get; set; }
 
+        [Required]
+        public bool RowComplete { get; set; } = false;
+
         public Train? Train { get; set; }
 
         [MaxLength(256)]

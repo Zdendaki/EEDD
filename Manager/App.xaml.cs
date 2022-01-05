@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace EEDD
+namespace Manager
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -24,15 +24,15 @@ namespace EEDD
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Client = new WSClient(ClientType.Client);
-
+            Client = new WSClient(ClientType.Manager);
+            
             base.OnStartup(e);
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             Client.Disconnect();
-
+            
             base.OnExit(e);
         }
     }

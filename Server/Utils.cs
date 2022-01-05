@@ -17,14 +17,9 @@ namespace Server
 
         internal static byte[] GenerateToken(User user)
         {
-            string input = ScrambleString(user.Password + DateTime.Now.Ticks.ToString() + user.Username);
+            string input = (user.Password + DateTime.Now.Ticks.ToString() + user.Username).Scramble();
             byte[] buffer = Encoding.GetEncoding(1251).GetBytes(input);
             return GetSHA256(buffer);
-        }
-
-        public static string ScrambleString(this string s)
-        {
-            return new string(s.ToCharArray().OrderBy(x => Guid.NewGuid()).ToArray());
         }
     }
 }

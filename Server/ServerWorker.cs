@@ -1,4 +1,5 @@
 ﻿using Communication.Procedures;
+using Communication.Procedures.Records;
 using Communication.Procedures.Users;
 using Microsoft.EntityFrameworkCore;
 using ServerData;
@@ -14,29 +15,32 @@ namespace Server
 {
     internal static class ServerWorker
     {
-        public static LoginResponse DoLogin(LoginRequest request)
+        public static (LoginResponse res, User? u) DoLogin(LoginRequest request, UserRole role)
         {
             using (Context context = new Context())
             {
                 var users = context.Users.Include(u => u.Routes).ToList();
-                
-                User? user = users?.FirstOrDefault(x => x.Username == request.Username && x.Password == request.PasswordHash);
+                User? user = users?.FirstOrDefault(x => x.Username == request.Username.ToLower() && x.Password == request.PasswordHash);
 
                 if (user is null)
-                    return new LoginResponse(LoginState.BadPassword, Procedure.Void, request.GUID, null);
+                    return (new LoginResponse(LoginState.BadPassword, Procedure.Void, request.GUID, ResponseState.Error, null, null), null);
+                else if (user.IsBanned)
+                    return (new LoginResponse(LoginState.UserBanned, Procedure.Void, request.GUID, ResponseState.Error, user.Name, null), null);
+                else if (user.Role < role)
+                    return (new LoginResponse(LoginState.UnsufficentRights, Procedure.Void, request.GUID, ResponseState.Error, user.Name, null), user);
                 else
                 {
                     byte[] token = Utils.GenerateToken(user);
                     user.Token = token.GetString();
                     user.TokenIssued = DateTime.Now;
                     context.SaveChanges();
-                    
-                    return new LoginResponse(LoginState.Success, token, request.GUID, GetRoutes(user, context));
+
+                    return (new LoginResponse(LoginState.Success, token, request.GUID, ResponseState.Success, user.Name, GetRoutes(context, user)), user);
                 }
             }
         }
 
-        private static List<UserRoute> GetRoutes(User user, Context context)
+        private static List<UserRoute> GetRoutes(Context context, User user)
         {
             List<UserRoute> routes = new();
 
@@ -45,23 +49,50 @@ namespace Server
                 if (route is null)
                     continue;
 
-                List<D.Client> clients = new();
-                foreach (var client in route.Clients)
-                {
-                    bool occupied = client.Shifts.Any(x => x.StartTime is not null && x.EndTime is null);
-                    clients.Add(new(client.Id, client.Name, !occupied));
-                }
-
                 bool isPrimary = user.Role != UserRole.Administrator;
                 if (!isPrimary)
                     isPrimary = user.Routes.Any(x => x.Id == route.Id);
 
-                routes.Add(new UserRoute(route.Id, route.Name, clients, isPrimary));
+                routes.Add(new UserRoute(route.Id, route.Name, isPrimary));
             }
 
             return routes;
         }
 
+        public static ClientsListResponse GetClients(ClientsListRequest request)
+        {
+            using (Context context = new Context())
+            {
+                var auth = context.CheckToken(request.Token, UserRole.User);
 
+                if (auth == TokenState.Expired)
+                    return new ClientsListResponse(request.GUID, ResponseState.ExpiredToken, null);
+                else if (auth == TokenState.UnsufficentRights)
+                    return new ClientsListResponse(request.GUID, ResponseState.UnsufficentRights, null);
+                else if (auth == TokenState.Ok)
+                {
+                    User? user = context.GetUser(request.Token);
+                    if (user is null)
+                        return new ClientsListResponse(request.GUID, ResponseState.InvalidToken, null);
+
+                    bool isAdmin = user.Role > UserRole.Manager;
+
+                    List<D.ClientInfo> clients = new();
+                    var list = context.Routes.Include(x => x.Users).Include(x => x.Clients).FirstOrDefault(x => x.Id == request.RouteId && (x.Users.Contains(user) || isAdmin))?.Clients;
+                    if (list is null)
+                        return new ClientsListResponse(request.GUID, ResponseState.UnsufficentRights, null);
+
+                    foreach (var client in list)
+                    {
+                        bool occupied = client.Shifts.Any(x => x.StartTime is not null && x.EndTime is null);
+                        clients.Add(new(client.Id, client.Name, !occupied));
+                    }
+
+                    return new ClientsListResponse(request.GUID, ResponseState.Success, clients);
+                }
+                else
+                    return new ClientsListResponse(request.GUID, ResponseState.InvalidToken, null);
+            }
+        }
     }
 }

@@ -12,20 +12,19 @@ namespace Communication.Procedures
 
         public string Name { get; set; }
 
-        public List<Client> Clients { get; set; }
-
         public bool Primary { get; set; }
 
-        public UserRoute(int id, string name, List<Client> clients, bool primary)
+        public UserRoute(int id, string name, bool primary)
         {
             Id = id;
             Name = name;
-            Clients = clients;
             Primary = primary;
         }
+
+        public override string ToString() => Name;
     }
 
-    public class Client
+    public class ClientInfo
     {
         public int Id { get; set; }
 
@@ -33,13 +32,58 @@ namespace Communication.Procedures
 
         public bool Free { get; set; }
 
-        public Client(int id, string name, bool free)
+        public ClientInfo(int id, string name, bool free)
         {
             Id = id;
             Name = name;
             Free = free;
         }
+
+        public override string ToString() => Name;
     }
 
-    
+    public class ClientData
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Abbr { get; set; }
+
+        public List<RowData> PreviousShift { get; set; }
+    }
+
+    public enum LoginState
+    {
+        Success,
+        BadPassword,
+        UserBanned,
+        UnsufficentRights
+    }
+
+    public enum TokenState
+    {
+        Ok,
+        Invalid,
+        Expired,
+        UnsufficentRights
+    }
+
+    public enum ResponseState
+    {
+        Success,
+        InvalidToken,
+        ExpiredToken,
+        UnsufficentRights,
+        Error
+    }
+
+    public enum AnnounceState
+    {
+        None,
+        Announced,
+        Accepted,
+        Rejected,
+        Error
+    }
 }

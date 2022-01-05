@@ -8,21 +8,20 @@
 
         public byte[] RequestGUID { get; set; }
 
+        public string? Name { get; set; }
+
         public List<UserRoute>? Routes { get; set; }
 
-        public LoginResponse(LoginState state, byte[] loginToken, byte[] requestGuid, List<UserRoute>? routes) : base(ProcedureType.LoginResponse)
+        public ResponseState ResponseState { get; set; }
+
+        public LoginResponse(LoginState state, byte[] loginToken, byte[] requestGuid, ResponseState resState, string? name, List<UserRoute>? routes) : base(ProcedureType.LoginResponse)
         {
             State = state;
             LoginToken = loginToken;
             RequestGUID = requestGuid;
+            ResponseState = resState;
+            Name = name;
             Routes = routes;
         }
-    }
-
-    public enum LoginState
-    {
-        Success,
-        BadPassword,
-        UserBanned
     }
 }
