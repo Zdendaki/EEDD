@@ -13,22 +13,12 @@ namespace Server
     {
         internal static TokenState CheckToken(this Context context, string token, UserRole role)
         {
-            User? user = context.GetUser(token);
-
-            if (user is null || !user.TokenIssued.HasValue || user.IsBanned)
-                return TokenState.Invalid;
-            else if ((DateTime.Now - user.TokenIssued.Value).TotalDays > 1)
-                return TokenState.Expired;
-            else if (user.Role < role)
-                return TokenState.UnsufficentRights;
-            else
-                return TokenState.Ok;
+            return CheckUser(context, token, role).token;
         }
 
         internal static TokenState CheckToken(this Context context, byte[] token, UserRole role)
         {
-            string buffer = BitConverter.ToString(token).ToLower().Replace("-", null);
-            return CheckToken(context, buffer, role);
+            return CheckUser(context, token, role).token;
         }
 
         internal static User? GetUser(this Context context, string token)
@@ -40,6 +30,26 @@ namespace Server
         {
             string buffer = BitConverter.ToString(token).ToLower().Replace("-", null);
             return context.Users.FirstOrDefault(x => x.Token == buffer);
+        }
+
+        internal static (TokenState token, User? user) CheckUser(this Context context, string token, UserRole role)
+        {
+            User? user = context.GetUser(token);
+
+            if (user is null || !user.TokenIssued.HasValue || user.IsBanned)
+                return (TokenState.Invalid, user);
+            else if ((DateTime.Now - user.TokenIssued.Value).TotalDays > 1)
+                return (TokenState.Expired, user);
+            else if (user.Role < role)
+                return (TokenState.UnsufficentRights, user);
+            else
+                return (TokenState.Ok, user);
+        }
+
+        internal static (TokenState token, User? user) CheckUser(this Context context, byte[] token, UserRole role)
+        {
+            string buffer = BitConverter.ToString(token).ToLower().Replace("-", null);
+            return CheckUser(context, buffer, role);
         }
 
         public static string GetString(this byte[] input)

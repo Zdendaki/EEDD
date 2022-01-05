@@ -1,6 +1,6 @@
 ﻿using Communication.Procedures;
 using Communication.Procedures.Basic;
-using Communication.Procedures.Records;
+using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
 using Newtonsoft.Json;
 using System;
@@ -74,6 +74,9 @@ namespace Communication
                             break;
                         case ProcedureType.ClientsListResponse:
                             p = JsonConvert.DeserializeObject<ClientsListResponse>(e.Data);
+                            break;
+                        case ProcedureType.StartShiftResponse:
+                            p = JsonConvert.DeserializeObject<StartShiftResponse>(e.Data);
                             break;
                     }
 

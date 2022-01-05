@@ -1,6 +1,6 @@
 ﻿using Communication;
 using Communication.Procedures;
-using Communication.Procedures.Records;
+using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
 using System;
 using System.Collections.Generic;
@@ -139,6 +139,10 @@ namespace EEDD
                                     break;
                             }
                         });
+                    }
+                    else if (proc.Type == ProcedureType.StartShiftResponse)
+                    {
+
                     }
                 };
 

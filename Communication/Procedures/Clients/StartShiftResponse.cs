@@ -1,4 +1,4 @@
-﻿namespace Communication.Procedures.Records
+﻿namespace Communication.Procedures.Clients
 {
     public class StartShiftResponse : Procedure, IResponse
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Communication
+namespace Communication.Procedures
 {
     public class RowData
     {

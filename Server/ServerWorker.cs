@@ -1,5 +1,5 @@
 ﻿using Communication.Procedures;
-using Communication.Procedures.Records;
+using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
 using Microsoft.EntityFrameworkCore;
 using ServerData;
@@ -63,15 +63,14 @@ namespace Server
         {
             using (Context context = new Context())
             {
-                var auth = context.CheckToken(request.Token, UserRole.User);
+                (TokenState token, User? user) = context.CheckUser(request.Token, UserRole.User);
 
-                if (auth == TokenState.Expired)
+                if (token == TokenState.Expired)
                     return new ClientsListResponse(request.GUID, ResponseState.ExpiredToken, null);
-                else if (auth == TokenState.UnsufficentRights)
+                else if (token == TokenState.UnsufficentRights)
                     return new ClientsListResponse(request.GUID, ResponseState.UnsufficentRights, null);
-                else if (auth == TokenState.Ok)
+                else if (token == TokenState.Ok)
                 {
-                    User? user = context.GetUser(request.Token);
                     if (user is null)
                         return new ClientsListResponse(request.GUID, ResponseState.InvalidToken, null);
 

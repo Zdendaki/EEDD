@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Communication.Procedures.Records
+namespace Communication.Procedures.Clients
 {
-    public class EndShiftRequest : Procedure
+    internal class ClientDataResponse
     {
         
     }

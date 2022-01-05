@@ -1,5 +1,5 @@
 ﻿using Communication.Procedures;
-using Communication.Procedures.Records;
+using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -17,7 +17,8 @@ namespace Server.Behaviors
 {
     internal class ClientBehavior : WebSocketBehavior
     {
-        User? userData;
+        User? userData = null;
+        Shift? userShift = null;
         
         protected override void OnOpen()
         {
@@ -46,12 +47,16 @@ namespace Server.Behaviors
                     case ProcedureType.StartShiftRequest:
                         ProcessStartShiftRequest(e.Data);
                         break;
+                    case ProcedureType.ClientDataRequest:
+                        ProcessClientDataRequest(e.Data);
+                        break;
                 }
             }
         }
 
         protected override void OnClose(CloseEventArgs e)
         {
+            EndShift();
             Worker.Logger.LogInformation("Client disconnected");
         }
 
@@ -91,15 +96,14 @@ namespace Server.Behaviors
 
                 if (request is not null)
                 {
-                    var auth = database.CheckToken(request.Token, UserRole.User);
+                    (TokenState token, User? user) = database.CheckUser(request.Token, UserRole.User);
 
-                    if (auth == TokenState.Expired)
+                    if (token == TokenState.Expired)
                         Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false)));
-                    else if (auth == TokenState.UnsufficentRights)
+                    else if (token == TokenState.UnsufficentRights)
                         Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
-                    else if (auth == TokenState.Ok)
+                    else if (token == TokenState.Ok)
                     {
-                        User? user = database.GetUser(request.Token);
                         if (user is null)
                         {
                             Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
@@ -135,6 +139,33 @@ namespace Server.Behaviors
                     }
                     else
                         Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
+                }
+            }
+        }
+
+        private void ProcessClientDataRequest(string data)
+        {
+            using (Context database = new Context())
+            {
+                ClientDataRequest? request = JsonConvert.DeserializeObject<ClientDataRequest>(data);
+
+                if (request is not null)
+                {
+
+                }
+            }
+        }
+
+        private void EndShift()
+        {
+            if (userShift is not null)
+            {
+                using (Context context = new Context())
+                {
+                    Shift shift = context.Shifts.First(x => x.Id == userShift.Id);
+                    shift.EndTime = DateTime.Now;
+                    context.SaveChanges();
+                    userShift = null;
                 }
             }
         }
