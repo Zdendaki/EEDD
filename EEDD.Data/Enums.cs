@@ -42,4 +42,19 @@
         Manager,
         Administrator
     }
+
+    public enum AcceptionState : byte
+    {
+        None,
+        Proposed,
+        Accepted,
+        Declined,
+        Error
+    }
+
+    public enum DelayReason : byte
+    {
+        None,
+
+    }
 }

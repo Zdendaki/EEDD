@@ -20,9 +20,11 @@ namespace ServerData.Database
 
         public DbSet<Signaller> Signallers { get; set; }
 
-        public DbSet<Archive> Archive { get; set; }
+        public DbSet<Row> Rows { get; set; }
 
         public DbSet<Train> Trains { get; set; }
+
+        public DbSet<TrainHistory> TrainHistories { get; set; }
 
         public DbSet<Client> Clients { get; set; }
 
@@ -40,7 +42,7 @@ namespace ServerData.Database
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=vps.zdendaki.net;Database=EEDD;User Id=edd;Password=HusSNne5Z5vVSqsz;"); //HusSNne5Z5vVSqsz
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(@"Server=vps.zdendaki.net;Database=EEDD;User Id=sa;Password=Zdenda2782433278ki;"); //HusSNne5Z5vVSqsz
             }
         }
 

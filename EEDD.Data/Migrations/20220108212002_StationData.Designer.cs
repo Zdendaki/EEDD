@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServerData.Database;
 
@@ -11,9 +12,10 @@ using ServerData.Database;
 namespace ServerData.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220108212002_StationData")]
+    partial class StationData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +38,298 @@ namespace ServerData.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("RouteUser");
+                });
+
+            modelBuilder.Entity("ServerData.Database.Archive", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime?>("AActualDep")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("AActualDepTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("AAnnounced")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("AAnnouncedTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<bool?>("AApproval")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("AComment")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTime?>("ACommentTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<short?>("ADelay")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime?>("ADeparted")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("ADepartedTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("AExceptions")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ANote")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<DateTime?>("ANoteTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("ANumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("APMD")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("APMDTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("ARouteId")
+                        .HasColumnType("int");
+
+                    b.Property<short?>("ASentMessages")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("ATrackId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ATrackTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<byte?>("AType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("Arrival")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("ArrivalTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DActualDep")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("DActualDepTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("DAnnounced")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("DAnnouncedTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<bool?>("DApproval")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("DComment")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<DateTime?>("DCommentTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<short?>("DDelay")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime?>("DDeparted")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("DDepartedTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("DExceptions")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("DNote")
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
+
+                    b.Property<DateTime?>("DNoteTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("DNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DPMD")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("DPMDTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("DRouteId")
+                        .HasColumnType("int");
+
+                    b.Property<short?>("DSentMessages")
+                        .HasColumnType("smallint");
+
+                    b.Property<int?>("DTrackId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DTrackTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<byte?>("DType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("Departure")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("DepartureTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("Left")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("LeftTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("ResponsibleUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Right")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime?>("RightTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<bool>("RowComplete")
+                        .HasColumnType("bit");
+
+                    b.Property<byte>("RowType")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime?>("Sig1A")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig1ATime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig1D")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig1DTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig2A")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig2ATime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig2D")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig2DTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig3A")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig3ATime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig3D")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig3DTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig4A")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig4ATime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig4D")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<DateTime?>("Sig4DTime")
+                        .HasPrecision(0)
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("TrainId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ARouteId");
+
+                    b.HasIndex("ATrackId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("DRouteId");
+
+                    b.HasIndex("DTrackId");
+
+                    b.HasIndex("ResponsibleUserId");
+
+                    b.HasIndex("TrainId");
+
+                    b.ToTable("ArchiveRecords");
                 });
 
             modelBuilder.Entity("ServerData.Database.Client", b =>
@@ -103,341 +397,6 @@ namespace ServerData.Migrations
                     b.HasIndex("ConnectionId");
 
                     b.ToTable("RouteTracks");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Row", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<short?>("ADelay")
-                        .HasColumnType("smallint");
-
-                    b.Property<int?>("APMDId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ActualDepAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ActualDepDId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AnnouncedAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AnnouncedDId")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("ApprovalA")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("ApprovalD")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ArrivalId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CaptionId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CommentAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CommentDId")
-                        .HasColumnType("int");
-
-                    b.Property<short?>("DDelay")
-                        .HasColumnType("smallint");
-
-                    b.Property<int?>("DPMDId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DepartedAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DepartedDId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DepartureId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ExceptionsA")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("ExceptionsD")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<DateTime>("LastUpdate")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<int?>("MessageId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoteAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NoteDId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberA")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumberD")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResponsibleUserId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RouteA")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("RouteD")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<bool>("RowComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<byte>("RowType")
-                        .HasColumnType("tinyint");
-
-                    b.Property<short?>("SentMessagesA")
-                        .HasColumnType("smallint");
-
-                    b.Property<short?>("SentMessagesD")
-                        .HasColumnType("smallint");
-
-                    b.Property<int?>("Sig1AId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Sig1DId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Sig2AId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Sig2DId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Sig3AId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Sig3DId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Sig4AId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Sig4DId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrackAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrackDId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrainId")
-                        .HasColumnType("int");
-
-                    b.Property<byte?>("TypeA")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte?>("TypeD")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("APMDId");
-
-                    b.HasIndex("ActualDepAId");
-
-                    b.HasIndex("ActualDepDId");
-
-                    b.HasIndex("AnnouncedAId");
-
-                    b.HasIndex("AnnouncedDId");
-
-                    b.HasIndex("ArrivalId");
-
-                    b.HasIndex("CaptionId");
-
-                    b.HasIndex("CommentAId");
-
-                    b.HasIndex("CommentDId");
-
-                    b.HasIndex("DPMDId");
-
-                    b.HasIndex("DepartedAId");
-
-                    b.HasIndex("DepartedDId");
-
-                    b.HasIndex("DepartureId");
-
-                    b.HasIndex("MessageId");
-
-                    b.HasIndex("NoteAId");
-
-                    b.HasIndex("NoteDId");
-
-                    b.HasIndex("ResponsibleUserId");
-
-                    b.HasIndex("Sig1AId");
-
-                    b.HasIndex("Sig1DId");
-
-                    b.HasIndex("Sig2AId");
-
-                    b.HasIndex("Sig2DId");
-
-                    b.HasIndex("Sig3AId");
-
-                    b.HasIndex("Sig3DId");
-
-                    b.HasIndex("Sig4AId");
-
-                    b.HasIndex("Sig4DId");
-
-                    b.HasIndex("StationId");
-
-                    b.HasIndex("TrackAId");
-
-                    b.HasIndex("TrackDId");
-
-                    b.HasIndex("TrainId");
-
-                    b.ToTable("Rows");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RowDataAcception", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("Accepted")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<DateTime>("Changed")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<DateTime>("Data")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<byte>("State")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RowDataAcceptions");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RowDataDate", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("Changed")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<DateTime>("Data")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RowDataDates");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RowDataDelay", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<short>("Minutes")
-                        .HasColumnType("smallint");
-
-                    b.Property<byte>("Reason")
-                        .HasColumnType("tinyint");
-
-                    b.Property<int?>("RowId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrainNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RowId");
-
-                    b.ToTable("RowDataDelays");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RowDataString", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("Changed")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<string>("Data")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RowDataStrings");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RowDataTrack", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("Changed")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<bool>("Occupied")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Track")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RowDataTracks");
                 });
 
             modelBuilder.Entity("ServerData.Database.Shift", b =>
@@ -750,54 +709,6 @@ namespace ServerData.Migrations
                     b.ToTable("Trains");
                 });
 
-            modelBuilder.Entity("ServerData.Database.TrainHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ARoute")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ATrack")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Arrival")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<string>("DRoute")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DTrack")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<short>("Delay")
-                        .HasColumnType("smallint");
-
-                    b.Property<byte>("DelayReason")
-                        .HasColumnType("tinyint");
-
-                    b.Property<DateTime?>("Departure")
-                        .HasPrecision(0)
-                        .HasColumnType("datetime2(0)");
-
-                    b.Property<string>("Stop")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TrainId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TrainId");
-
-                    b.ToTable("TrainHistories");
-                });
-
             modelBuilder.Entity("ServerData.Database.User", b =>
                 {
                     b.Property<int>("Id")
@@ -858,6 +769,55 @@ namespace ServerData.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ServerData.Database.Archive", b =>
+                {
+                    b.HasOne("ServerData.Database.RouteTrack", "ARoute")
+                        .WithMany()
+                        .HasForeignKey("ARouteId");
+
+                    b.HasOne("ServerData.Database.Track", "ATrack")
+                        .WithMany()
+                        .HasForeignKey("ATrackId");
+
+                    b.HasOne("ServerData.Database.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServerData.Database.RouteTrack", "DRoute")
+                        .WithMany()
+                        .HasForeignKey("DRouteId");
+
+                    b.HasOne("ServerData.Database.Track", "DTrack")
+                        .WithMany()
+                        .HasForeignKey("DTrackId");
+
+                    b.HasOne("ServerData.Database.User", "ResponsibleUser")
+                        .WithMany()
+                        .HasForeignKey("ResponsibleUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServerData.Database.Train", "Train")
+                        .WithMany()
+                        .HasForeignKey("TrainId");
+
+                    b.Navigation("ARoute");
+
+                    b.Navigation("ATrack");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("DRoute");
+
+                    b.Navigation("DTrack");
+
+                    b.Navigation("ResponsibleUser");
+
+                    b.Navigation("Train");
+                });
+
             modelBuilder.Entity("ServerData.Database.Client", b =>
                 {
                     b.HasOne("ServerData.Database.Route", "Route")
@@ -878,194 +838,6 @@ namespace ServerData.Migrations
                         .IsRequired();
 
                     b.Navigation("Connection");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Row", b =>
-                {
-                    b.HasOne("ServerData.Database.RowDataDate", "APMD")
-                        .WithMany()
-                        .HasForeignKey("APMDId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "ActualDepA")
-                        .WithMany()
-                        .HasForeignKey("ActualDepAId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "ActualDepD")
-                        .WithMany()
-                        .HasForeignKey("ActualDepDId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "AnnouncedA")
-                        .WithMany()
-                        .HasForeignKey("AnnouncedAId");
-
-                    b.HasOne("ServerData.Database.RowDataAcception", "AnnouncedD")
-                        .WithMany()
-                        .HasForeignKey("AnnouncedDId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Arrival")
-                        .WithMany()
-                        .HasForeignKey("ArrivalId");
-
-                    b.HasOne("ServerData.Database.RowDataString", "Caption")
-                        .WithMany()
-                        .HasForeignKey("CaptionId");
-
-                    b.HasOne("ServerData.Database.RowDataString", "CommentA")
-                        .WithMany()
-                        .HasForeignKey("CommentAId");
-
-                    b.HasOne("ServerData.Database.RowDataString", "CommentD")
-                        .WithMany()
-                        .HasForeignKey("CommentDId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "DPMD")
-                        .WithMany()
-                        .HasForeignKey("DPMDId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "DepartedA")
-                        .WithMany()
-                        .HasForeignKey("DepartedAId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "DepartedD")
-                        .WithMany()
-                        .HasForeignKey("DepartedDId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Departure")
-                        .WithMany()
-                        .HasForeignKey("DepartureId");
-
-                    b.HasOne("ServerData.Database.RowDataString", "Message")
-                        .WithMany()
-                        .HasForeignKey("MessageId");
-
-                    b.HasOne("ServerData.Database.RowDataString", "NoteA")
-                        .WithMany()
-                        .HasForeignKey("NoteAId");
-
-                    b.HasOne("ServerData.Database.RowDataString", "NoteD")
-                        .WithMany()
-                        .HasForeignKey("NoteDId");
-
-                    b.HasOne("ServerData.Database.User", "ResponsibleUser")
-                        .WithMany()
-                        .HasForeignKey("ResponsibleUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig1A")
-                        .WithMany()
-                        .HasForeignKey("Sig1AId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig1D")
-                        .WithMany()
-                        .HasForeignKey("Sig1DId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig2A")
-                        .WithMany()
-                        .HasForeignKey("Sig2AId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig2D")
-                        .WithMany()
-                        .HasForeignKey("Sig2DId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig3A")
-                        .WithMany()
-                        .HasForeignKey("Sig3AId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig3D")
-                        .WithMany()
-                        .HasForeignKey("Sig3DId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig4A")
-                        .WithMany()
-                        .HasForeignKey("Sig4AId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "Sig4D")
-                        .WithMany()
-                        .HasForeignKey("Sig4DId");
-
-                    b.HasOne("ServerData.Database.Station", "Station")
-                        .WithMany("Archive")
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ServerData.Database.RowDataTrack", "TrackA")
-                        .WithMany()
-                        .HasForeignKey("TrackAId");
-
-                    b.HasOne("ServerData.Database.RowDataTrack", "TrackD")
-                        .WithMany()
-                        .HasForeignKey("TrackDId");
-
-                    b.HasOne("ServerData.Database.Train", "Train")
-                        .WithMany()
-                        .HasForeignKey("TrainId");
-
-                    b.Navigation("APMD");
-
-                    b.Navigation("ActualDepA");
-
-                    b.Navigation("ActualDepD");
-
-                    b.Navigation("AnnouncedA");
-
-                    b.Navigation("AnnouncedD");
-
-                    b.Navigation("Arrival");
-
-                    b.Navigation("Caption");
-
-                    b.Navigation("CommentA");
-
-                    b.Navigation("CommentD");
-
-                    b.Navigation("DPMD");
-
-                    b.Navigation("DepartedA");
-
-                    b.Navigation("DepartedD");
-
-                    b.Navigation("Departure");
-
-                    b.Navigation("Message");
-
-                    b.Navigation("NoteA");
-
-                    b.Navigation("NoteD");
-
-                    b.Navigation("ResponsibleUser");
-
-                    b.Navigation("Sig1A");
-
-                    b.Navigation("Sig1D");
-
-                    b.Navigation("Sig2A");
-
-                    b.Navigation("Sig2D");
-
-                    b.Navigation("Sig3A");
-
-                    b.Navigation("Sig3D");
-
-                    b.Navigation("Sig4A");
-
-                    b.Navigation("Sig4D");
-
-                    b.Navigation("Station");
-
-                    b.Navigation("TrackA");
-
-                    b.Navigation("TrackD");
-
-                    b.Navigation("Train");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RowDataDelay", b =>
-                {
-                    b.HasOne("ServerData.Database.Row", null)
-                        .WithMany("Delays")
-                        .HasForeignKey("RowId");
                 });
 
             modelBuilder.Entity("ServerData.Database.Shift", b =>
@@ -1245,13 +1017,6 @@ namespace ServerData.Migrations
                     b.Navigation("Route");
                 });
 
-            modelBuilder.Entity("ServerData.Database.TrainHistory", b =>
-                {
-                    b.HasOne("ServerData.Database.Train", null)
-                        .WithMany("History")
-                        .HasForeignKey("TrainId");
-                });
-
             modelBuilder.Entity("ServerData.Database.Client", b =>
                 {
                     b.Navigation("Shifts");
@@ -1268,16 +1033,6 @@ namespace ServerData.Migrations
                     b.Navigation("Timetables");
 
                     b.Navigation("Trains");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Row", b =>
-                {
-                    b.Navigation("Delays");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Station", b =>
-                {
-                    b.Navigation("Archive");
                 });
 
             modelBuilder.Entity("ServerData.Database.StationConnection", b =>
@@ -1302,8 +1057,6 @@ namespace ServerData.Migrations
 
             modelBuilder.Entity("ServerData.Database.Train", b =>
                 {
-                    b.Navigation("History");
-
                     b.Navigation("Stops");
                 });
 

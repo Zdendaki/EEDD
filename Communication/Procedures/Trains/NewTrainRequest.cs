@@ -14,20 +14,4 @@ namespace Communication.Procedures.Trains
 
         
     }
-
-    public enum TrainType
-    {
-        Ex,
-        R,
-        Sp,
-        Os,
-        Sv,
-        Nex,
-        Pn,
-        Mn,
-        Lv,
-        Sluz,
-        PMD,
-        ND
-    }
 }

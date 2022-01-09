@@ -10,8 +10,8 @@
         public string Name { get; set; }
 
         [Required]
-        public Route Route { get; set; }
+        public virtual Route Route { get; set; }
 
-        public List<TimetableTrain> Trains { get; set; } = new();
+        public virtual List<TimetableTrain> Trains { get; set; } = new();
     }
 }

@@ -110,14 +110,16 @@ namespace Server.Behaviors
                             return;
                         }
 
-                        int? clientId = database.Routes.Include(x => x.Users).Include(x => x.Clients).FirstOrDefault(x => x.Users.Contains(user) && x.Clients.Any(x => x.Id == request.ClientId))?.Clients.FirstOrDefault(x => x.Id == request.ClientId)?.Id;
-                        if (clientId is null)
+                        Client? client = database.Routes
+                            .Include(x => x.Users).Include(x => x.Clients).ThenInclude(x => x.Stations)
+                            .FirstOrDefault(x => x.Users.Contains(user) && x.Clients.Any(x => x.Id == request.ClientId))?.Clients.SingleOrDefault(x => x.Id == request.ClientId);
+
+                        if (client is null)
                         {
                             Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
                             return;
                         }
 
-                        Client client = database.Clients.Include(x => x.Stations).Include(x => x.Shifts).First(x => x.Id == clientId);
                         bool occupied = client.Shifts.Any(x => x.StartTime is not null && x.EndTime is null);
 
                         if (!occupied)
@@ -145,14 +147,11 @@ namespace Server.Behaviors
 
         private void ProcessClientDataRequest(string data)
         {
-            using (Context database = new Context())
+            ClientDataRequest? request = JsonConvert.DeserializeObject<ClientDataRequest>(data);
+
+            if (request is not null)
             {
-                ClientDataRequest? request = JsonConvert.DeserializeObject<ClientDataRequest>(data);
-
-                if (request is not null)
-                {
-
-                }
+                Send(JsonConvert.SerializeObject(ServerWorker.GetClientData(request)));
             }
         }
 

@@ -8,10 +8,11 @@
 
         public string Name { get; set; }
 
-        public Route Route { get; set; }
+        public virtual Route Route { get; set; }
 
-        public List<Station> Stations { get; set; } = new List<Station>();
+        public virtual List<Station> Stations { get; set; } = new List<Station>();
 
-        public List<Shift> Shifts { get; set; } = new List<Shift>();
+        public virtual List<Shift> Shifts { get; set; } = new List<Shift>();
+
     }
 }

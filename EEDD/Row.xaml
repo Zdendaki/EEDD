@@ -45,7 +45,7 @@
             <l:EDDTextBox Text="Nex" x:Name="AType" Grid.Row="0" Grid.Column="2" Align="Left" Type="Static" MaxLength="4" />
             <l:EDDTextBox Text="Ko" x:Name="ADirection" Grid.Row="0" Grid.Column="3" Align="Left" Type="Static" EditMode="Locked" MaxLength="2" Cursor="Arrow" />
             <l:EDDTextBox Text="1" x:Name="ARoute" Grid.Row="0" Grid.Column="4" Align="Left" Type="Number" EditMode="CanModify" Cursor="Arrow" />
-            <l:EDDTextBox Text="" x:Name="AAnnounced" Grid.Row="0" Grid.Column="5" Align="Left" Type="Time" EditMode="CanModify" />
+            <l:EDDTextBox Text="" x:Name="AAnnounced" Grid.Row="0" Grid.Column="5" Align="Left" Type="Time" EditMode="CanModify" Cursor="Arrow" />
             <l:EDDTextBox Text="" Grid.Row="0" Grid.Column="6" Align="Center" Type="Static" EditMode="Locked" MaxLength="1" />
             <l:EDDTextBox Text="" x:Name="APMD" Grid.Row="0" Grid.Column="7" Align="Left" Type="Time" EditMode="Locked" />
             <l:EDDTextBox Text="" x:Name="AActualDep" Grid.Row="0" Grid.Column="8" Align="Left" Type="Time" EditMode="CanEdit" />

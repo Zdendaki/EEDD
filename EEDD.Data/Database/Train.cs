@@ -9,9 +9,11 @@
 
         public int Number { get; set; }
 
-        public List<Stop> Stops { get; set; } = new List<Stop>();
+        public virtual List<Stop> Stops { get; set; } = new();
 
-        public Route Route { get; set; }
+        public virtual List<TrainHistory> History { get; set; } = new();
+
+        public virtual Route Route { get; set; }
 
         public Train()
         {
@@ -30,6 +32,33 @@
         }
     }
 
+    [Table("TrainHistories")]
+    public class TrainHistory
+    {
+        public int Id { get; set; }
+
+        [Required]
+        public string Stop { get; set; }
+
+        [Precision(0)]
+        public DateTime? Arrival { get; set; }
+
+        [Precision(0)]
+        public DateTime? Departure { get; set; }
+
+        public string? ARoute { get; set; }
+
+        public string? ATrack { get; set; }
+
+        public string? DTrack { get; set; }
+
+        public string? DRoute { get; set; }
+
+        public DelayReason DelayReason { get; set; }
+
+        public short Delay { get; set; }
+    }
+
     [Table("Stops")]
     public class Stop
     {
@@ -46,16 +75,16 @@
         public DateTime? Departure { get; set; }
 
         [ForeignKey("StationTrackId")]
-        public Track? Track { get; set; }
+        public virtual Track? Track { get; set; }
 
         [Required]
-        public Train Train { get; set; }
+        public virtual Train Train { get; set; }
 
         [ForeignKey("FromId")]
-        public RouteTrack? From { get; set; }
+        public virtual RouteTrack? From { get; set; }
 
         [ForeignKey("ToId")]
-        public RouteTrack? To { get; set; }
+        public virtual RouteTrack? To { get; set; }
 
         public Stop()
         {
@@ -85,9 +114,9 @@
 
         public int Number { get; set; }
 
-        public List<TimetableStop> Stops { get; set; } = new();
+        public virtual List<TimetableStop> Stops { get; set; } = new();
 
-        public Timetable Timetable { get; set; }
+        public virtual Timetable Timetable { get; set; }
     }
 
     [Table("TimetableStops")]
@@ -104,15 +133,15 @@
         public short? Departure { get; set; }
 
         [ForeignKey("StationTrackId")]
-        public Track? Track { get; set; }
+        public virtual Track? Track { get; set; }
 
         [Required]
-        public TimetableTrain Train { get; set; }
+        public virtual TimetableTrain Train { get; set; }
 
         [ForeignKey("FromId")]
-        public RouteTrack? From { get; set; }
+        public virtual RouteTrack? From { get; set; }
 
         [ForeignKey("ToId")]
-        public RouteTrack? To { get; set; }
+        public virtual RouteTrack? To { get; set; }
     }
 }

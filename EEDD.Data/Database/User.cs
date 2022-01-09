@@ -31,8 +31,8 @@
         [Required]
         public bool IsBanned { get; set; } = false;
 
-        public List<Route> Routes { get; set; } = new List<Route>();
+        public virtual List<Route> Routes { get; set; } = new List<Route>();
 
-        public List<Shift> Shifts { get; set; } = new List<Shift>();
+        public virtual List<Shift> Shifts { get; set; } = new List<Shift>();
     }
 }

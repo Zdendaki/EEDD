@@ -1,0 +1,28 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace ServerData.Migrations
+{
+    public partial class Archive : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<DateTime>(
+                name: "LastUpdate",
+                table: "ArchiveRecords",
+                type: "datetime2(0)",
+                precision: 0,
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "LastUpdate",
+                table: "ArchiveRecords");
+        }
+    }
+}

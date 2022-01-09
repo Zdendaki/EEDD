@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using D = Communication.Procedures;
+using S = ServerData;
 
 namespace Server
 {
@@ -19,8 +20,8 @@ namespace Server
         {
             using (Context context = new Context())
             {
-                var users = context.Users.Include(u => u.Routes).ToList();
-                User? user = users?.FirstOrDefault(x => x.Username == request.Username.ToLower() && x.Password == request.PasswordHash);
+                var users = context.Users.ToList();
+                User? user = users?.SingleOrDefault(x => x.Username == request.Username.ToLower() && x.Password == request.PasswordHash);
 
                 if (user is null)
                     return (new LoginResponse(LoginState.BadPassword, Procedure.Void, request.GUID, ResponseState.Error, null, null), null);
@@ -69,15 +70,12 @@ namespace Server
                     return new ClientsListResponse(request.GUID, ResponseState.ExpiredToken, null);
                 else if (token == TokenState.UnsufficentRights)
                     return new ClientsListResponse(request.GUID, ResponseState.UnsufficentRights, null);
-                else if (token == TokenState.Ok)
+                else if (token == TokenState.Ok && user is not null)
                 {
-                    if (user is null)
-                        return new ClientsListResponse(request.GUID, ResponseState.InvalidToken, null);
-
                     bool isAdmin = user.Role > UserRole.Manager;
 
-                    List<D.ClientInfo> clients = new();
-                    var list = context.Routes.Include(x => x.Users).Include(x => x.Clients).FirstOrDefault(x => x.Id == request.RouteId && (x.Users.Contains(user) || isAdmin))?.Clients;
+                    List<ClientInfo> clients = new();
+                    var list = context.Routes.SingleOrDefault(x => x.Id == request.RouteId && (x.Users.Contains(user) || isAdmin))?.Clients;
                     if (list is null)
                         return new ClientsListResponse(request.GUID, ResponseState.UnsufficentRights, null);
 
@@ -91,6 +89,46 @@ namespace Server
                 }
                 else
                     return new ClientsListResponse(request.GUID, ResponseState.InvalidToken, null);
+            }
+        }
+
+        public static ClientDataResponse GetClientData(ClientDataRequest request)
+        {
+            using (Context context = new Context())
+            {
+                (TokenState token, User? user) = context.CheckUser(request.Token, UserRole.User);
+
+                if (token == TokenState.Expired)
+                    return new ClientDataResponse(request.GUID, ResponseState.ExpiredToken, null);
+                else if (token == TokenState.UnsufficentRights)
+                    return new ClientDataResponse(request.GUID, ResponseState.UnsufficentRights, null);
+                else if (token == TokenState.Ok && user is not null)
+                {
+                    var clients = context.Routes.Where(x => x.Clients.Any(x => x.Id == request.ClientId) && x.Users.Contains(user))?.SelectMany(x => x.Clients);
+                    if (clients is null)
+                        return new ClientDataResponse(request.GUID, ResponseState.Error, null);
+
+                    Client client = clients.Single(x => x.Id == request.ClientId);
+                    var connections = context.Connections.Where(x => client.Stations.Contains(x.Primary) || client.Stations.Contains(x.Secondary));
+                    if (client.Stations is null || connections is null)
+                        return new ClientDataResponse(request.GUID, ResponseState.Error, null);
+
+                    List<StationData> stations = new();
+                    foreach (var station in client.Stations)
+                        stations.Add(new StationData(station.Id, station.Name, station.Abbr, connections.GetConnections(station).ToList()));
+
+                    return new ClientDataResponse(request.GUID, ResponseState.Success, new ClientData(client.Id, client.Name, GetRows(context, client).ToList(), stations));
+                }
+                else
+                    return new ClientDataResponse(request.GUID, ResponseState.InvalidToken, null);
+            }
+        }
+
+        private static IEnumerable<RowData> GetRows(Context context, Client client)
+        {
+            foreach (var row in client.Stations.SelectMany(x => x.Archive).Where(x => (DateTime.Now - x.LastUpdate).TotalHours <= 12d).OrderBy(x => x.Id))
+            {
+                yield return row.GetRowData(context);
             }
         }
     }

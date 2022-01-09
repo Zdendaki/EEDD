@@ -78,6 +78,9 @@ namespace Communication
                         case ProcedureType.StartShiftResponse:
                             p = JsonConvert.DeserializeObject<StartShiftResponse>(e.Data);
                             break;
+                        case ProcedureType.ClientDataResponse:
+                            p = JsonConvert.DeserializeObject<ClientDataResponse>(e.Data);
+                            break;
                     }
 
                     if (p is not null)

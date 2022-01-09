@@ -14,7 +14,9 @@
         [MaxLength(2)]
         public string Abbr { get; set; }
 
-        public Client Client { get; set; }
+        public virtual Client Client { get; set; }
+
+        public virtual List<Row> Archive { get; set; } = new List<Row>();
     }
 
     [Table("Tracks")]
@@ -27,9 +29,9 @@
         [Required]
         public string Name { get; set; }
 
-        public Station Station { get; set; }
+        public virtual Station Station { get; set; }
 
-        public List<Stop> TrainStops { get; set; } = new List<Stop>();
+        public virtual List<Stop> TrainStops { get; set; } = new List<Stop>();
     }
 
     [Table("Signallers")]
@@ -46,6 +48,6 @@
         [Required]
         public string Comment { get; set; }
 
-        public Station Station { get; set; }
+        public virtual Station Station { get; set; }
     }
 }

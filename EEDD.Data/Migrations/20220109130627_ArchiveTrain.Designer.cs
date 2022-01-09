@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServerData.Database;
 
@@ -11,9 +12,10 @@ using ServerData.Database;
 namespace ServerData.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220109130627_ArchiveTrain")]
+    partial class ArchiveTrain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,74 +40,7 @@ namespace ServerData.Migrations
                     b.ToTable("RouteUser");
                 });
 
-            modelBuilder.Entity("ServerData.Database.Client", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RouteId");
-
-                    b.ToTable("Clients");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Route", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Routes");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RouteTrack", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("ConnectionId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Interlocking")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MinimumInterval")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Number")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ConnectionId");
-
-                    b.ToTable("RouteTracks");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Row", b =>
+            modelBuilder.Entity("ServerData.Database.Archive", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -319,6 +254,73 @@ namespace ServerData.Migrations
                     b.ToTable("Rows");
                 });
 
+            modelBuilder.Entity("ServerData.Database.Client", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RouteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RouteId");
+
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("ServerData.Database.Route", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Routes");
+                });
+
+            modelBuilder.Entity("ServerData.Database.RouteTrack", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ConnectionId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Interlocking")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MinimumInterval")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Number")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConnectionId");
+
+                    b.ToTable("RouteTracks");
+                });
+
             modelBuilder.Entity("ServerData.Database.RowDataAcception", b =>
                 {
                     b.Property<int>("Id")
@@ -376,21 +378,21 @@ namespace ServerData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("ArchiveId")
+                        .HasColumnType("int");
+
                     b.Property<short>("Minutes")
                         .HasColumnType("smallint");
 
                     b.Property<byte>("Reason")
                         .HasColumnType("tinyint");
 
-                    b.Property<int?>("RowId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("TrainNumber")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RowId");
+                    b.HasIndex("ArchiveId");
 
                     b.ToTable("RowDataDelays");
                 });
@@ -858,29 +860,7 @@ namespace ServerData.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ServerData.Database.Client", b =>
-                {
-                    b.HasOne("ServerData.Database.Route", "Route")
-                        .WithMany("Clients")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Route");
-                });
-
-            modelBuilder.Entity("ServerData.Database.RouteTrack", b =>
-                {
-                    b.HasOne("ServerData.Database.StationConnection", "Connection")
-                        .WithMany("RouteTracks")
-                        .HasForeignKey("ConnectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Connection");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Row", b =>
+            modelBuilder.Entity("ServerData.Database.Archive", b =>
                 {
                     b.HasOne("ServerData.Database.RowDataDate", "APMD")
                         .WithMany()
@@ -1061,11 +1041,33 @@ namespace ServerData.Migrations
                     b.Navigation("Train");
                 });
 
+            modelBuilder.Entity("ServerData.Database.Client", b =>
+                {
+                    b.HasOne("ServerData.Database.Route", "Route")
+                        .WithMany("Clients")
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Route");
+                });
+
+            modelBuilder.Entity("ServerData.Database.RouteTrack", b =>
+                {
+                    b.HasOne("ServerData.Database.StationConnection", "Connection")
+                        .WithMany("RouteTracks")
+                        .HasForeignKey("ConnectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Connection");
+                });
+
             modelBuilder.Entity("ServerData.Database.RowDataDelay", b =>
                 {
-                    b.HasOne("ServerData.Database.Row", null)
+                    b.HasOne("ServerData.Database.Archive", null)
                         .WithMany("Delays")
-                        .HasForeignKey("RowId");
+                        .HasForeignKey("ArchiveId");
                 });
 
             modelBuilder.Entity("ServerData.Database.Shift", b =>
@@ -1252,6 +1254,11 @@ namespace ServerData.Migrations
                         .HasForeignKey("TrainId");
                 });
 
+            modelBuilder.Entity("ServerData.Database.Archive", b =>
+                {
+                    b.Navigation("Delays");
+                });
+
             modelBuilder.Entity("ServerData.Database.Client", b =>
                 {
                     b.Navigation("Shifts");
@@ -1268,11 +1275,6 @@ namespace ServerData.Migrations
                     b.Navigation("Timetables");
 
                     b.Navigation("Trains");
-                });
-
-            modelBuilder.Entity("ServerData.Database.Row", b =>
-                {
-                    b.Navigation("Delays");
                 });
 
             modelBuilder.Entity("ServerData.Database.Station", b =>
