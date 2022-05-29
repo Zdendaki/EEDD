@@ -1,4 +1,6 @@
-﻿namespace Communication.Procedures.Users
+﻿using Communication.Data;
+
+namespace Communication.Procedures.Users
 {
     public class LoginResponse : Procedure, IResponse
     {

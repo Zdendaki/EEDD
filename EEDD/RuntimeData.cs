@@ -4,15 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Communication.Procedures.Clients
+namespace EEDD
 {
-    public class EndShiftRequest : Procedure
+    internal class RuntimeData
     {
         public int ShiftId { get; set; }
 
-        public EndShiftRequest(int shiftId)
+        
+        
+        public RuntimeData()
         {
-            ShiftId = shiftId;
+
         }
+
+
     }
 }

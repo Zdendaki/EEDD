@@ -22,7 +22,7 @@ namespace Manager
                 {
                     App.Client.Connect();
 
-                    if (!App.Client.Connected)
+                    if (!App.Client.IsConnected)
                         throw new Exception();
 
                     Dispatcher.Invoke(() =>

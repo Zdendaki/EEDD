@@ -1,4 +1,6 @@
-﻿namespace ServerData.Database
+﻿using Communication.Data;
+
+namespace ServerData.Database
 {
     [Table("Users")]
     [Index(nameof(Username), IsUnique = true)]
@@ -26,7 +28,7 @@
         public DateTime? TokenIssued { get; set; }
 
         [Required]
-        public UserRole Role { get; set; } = UserRole.User;
+        public UserRole Role { get; set; } = UserRole.Dispatcher;
 
         [Required]
         public bool IsBanned { get; set; } = false;

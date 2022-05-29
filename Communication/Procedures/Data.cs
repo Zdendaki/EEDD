@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Communication.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,13 +70,16 @@ namespace Communication.Procedures
 
         public string Abbr { get; set; }
 
+        public float TimePenalty { get; set; }
+
         public List<Connection> Connections { get; set; }
 
-        public StationData(int id, string name, string abbr, List<Connection> connections)
+        public StationData(int id, string name, string abbr, float penalty, List<Connection> connections)
         {
             Id = id;
             Name = name;
             Abbr = abbr;
+            TimePenalty = penalty;
             Connections = connections;
         }
     }
@@ -88,11 +92,11 @@ namespace Communication.Procedures
 
             public int Number { get; set; }
 
-            public bool Interlocking { get; set; }
+            public RouteInterlocking Interlocking { get; set; }
 
             public int MinimumInterval { get; set; }
 
-            public Track(int id, int number, bool interlocking, int minimumInterval)
+            public Track(int id, int number, RouteInterlocking interlocking, int minimumInterval)
             {
                 Id = id;
                 Number = number;
@@ -118,73 +122,5 @@ namespace Communication.Procedures
         }
     }
 
-    public enum LoginState : byte
-    {
-        Success,
-        BadPassword,
-        UserBanned,
-        UnsufficentRights
-    }
 
-    public enum TokenState : byte
-    {
-        Ok,
-        Invalid,
-        Expired,
-        UnsufficentRights
-    }
-
-    public enum ResponseState : byte
-    {
-        Success,
-        InvalidToken,
-        ExpiredToken,
-        UnsufficentRights,
-        Error
-    }
-
-    public enum AnnounceState : byte
-    {
-        None,
-        Announced,
-        Accepted,
-        Rejected,
-        Error
-    }
-
-    public enum TrainContact : byte
-    {
-        None,
-        GSMR,
-        GSMP,
-        TRST,
-        TRSS
-    }
-
-    public enum RowType : byte
-    {
-        Arrival,
-        Departure,
-        Both,
-        ShortBlue,
-        ShortRed,
-        LongRed,
-        LongBlue
-    }
-
-    public enum TrainType : byte
-    {
-        Ex,
-        R,
-        Sp,
-        Os,
-        Sv,
-        Nex,
-        Pn,
-        Mn,
-        Lv,
-        Sluz,
-        PMD,
-        ND
-    }
 }

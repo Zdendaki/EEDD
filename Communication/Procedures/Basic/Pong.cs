@@ -1,4 +1,6 @@
-﻿namespace Communication.Procedures.Basic
+﻿using Communication.Data;
+
+namespace Communication.Procedures.Basic
 {
     public class Pong : Procedure, IResponse
     {

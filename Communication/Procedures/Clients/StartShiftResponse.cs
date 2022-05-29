@@ -1,4 +1,6 @@
-﻿namespace Communication.Procedures.Clients
+﻿using Communication.Data;
+
+namespace Communication.Procedures.Clients
 {
     public class StartShiftResponse : Procedure, IResponse
     {

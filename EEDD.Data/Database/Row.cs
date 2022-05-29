@@ -1,4 +1,6 @@
-﻿namespace ServerData.Database
+﻿using Communication.Data;
+
+namespace ServerData.Database
 {
     [Table("Rows")]
     public class Row
@@ -22,6 +24,14 @@
 
         [Precision(0)]
         public DateTime LastUpdate { get; set; }
+        
+        [Required]
+        public bool CancelledA { get; set; } = false;
+
+        [Required]
+        public bool CancelledD { get; set; } = false;
+
+        public char? RowChar { get; set; }
 
         public virtual RowDataString? Caption { get; set; }
 
@@ -44,6 +54,10 @@
         public virtual RowDataDate? AnnouncedA { get; set; }
 
         public virtual RowDataAcception? AnnouncedD { get; set; }
+
+        public virtual RowDataDate? AcceptedA { get; set; }
+
+        public virtual RowDataDate? AcceptedD { get; set; }
 
         public virtual RowDataDate? APMD { get; set; }
 

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 
 namespace EEDD
 {
@@ -9,34 +13,76 @@ namespace EEDD
     /// </summary>
     public partial class InitWindow : Window
     {
-        public InitWindow()
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        bool downloading;
+        bool closing = false;
+
+        public InitWindow(bool dl = false)
         {
             InitializeComponent();
+
+            downloading = dl;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Task.Run(() =>
-            {
-                try
-                {
-                    App.Client.Connect();
+            var hwnd = new WindowInteropHelper(this).Handle;
+            SetWindowLong(hwnd, -16, GetWindowLong(hwnd, -16) & ~0x80000);
 
-                    if (!App.Client.Connected)
-                        throw new Exception();
+
+            if (downloading)
+            {
+                MainLabel.Content = "Probíhá stahování dat stanice...";
+
+                Task.Run(() =>
+                {
+                    Thread.Sleep(5000);
 
                     Dispatcher.Invoke(() =>
                     {
-                        new LoginWindow().Show();
+                        closing = true;
+                        new MainWindow().Show();
                         Close();
                     });
-                }
-                catch
+                });
+            }
+            else
+            {
+                MainLabel.Content = "Probíhá připojování k serveru...";
+
+                Task.Run(() =>
                 {
-                    Dispatcher.Invoke(() => MessageBox.Show("Připojení k serveru dopravního deníku se nezdařilo. Kontaktujte administrátora aplikace.", "Připojení nelze navázat", MessageBoxButton.OK, MessageBoxImage.Error));
-                    Environment.Exit(0);
-                }
-            });
+                    try
+                    {
+                        if (!App.Client.ConnectAsync())
+                            throw new Exception();
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            closing = true;
+                            new LoginWindow().Show();
+                            Close();
+                        });
+                    }
+                    catch
+                    {
+                        closing = true;
+                        Dispatcher.Invoke(() => MessageBox.Show("Připojení k serveru dopravního deníku se nezdařilo. Kontaktujte administrátora aplikace.", "Připojení nelze navázat", MessageBoxButton.OK, MessageBoxImage.Error));
+                        Environment.Exit(0);
+                    }
+                });
+            }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (!closing)
+                e.Cancel = true;
         }
     }
 }

@@ -1,36 +1,49 @@
-﻿using Communication.Procedures;
+﻿using Communication;
+using Communication.Data;
+using Communication.Procedures;
 using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
 using Microsoft.EntityFrameworkCore;
+using NetCoreServer;
 using Newtonsoft.Json;
 using ServerData;
 using ServerData.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using WebSocketSharp;
-using WebSocketSharp.Server;
 
-namespace Server.Behaviors
+namespace Server.TCP
 {
-    internal class ClientBehavior : WebSocketBehavior
+    internal class EDDSession : TcpSession
     {
+        const bool ZIP = false;
+
         User? userData = null;
         Shift? userShift = null;
-        
-        protected override void OnOpen()
+        DiffieHellman diffie;
+
+        public EDDSession(TcpServer server) : base (server)
         {
-            Worker.Logger.LogInformation("Client connected");
+            diffie = ((TCPServer)Server).Diffie;
         }
 
-        protected override void OnMessage(MessageEventArgs e)
+        protected override void OnConnected()
         {
+            Worker.Logger.LogInformation($"[{Id}] Client connected");
+            SendAsync(Utils.Combine(new byte[] { 0x05, 0x07, 0x16, 0x06 }, diffie.PublicKey));
+        }
+
+        protected override void OnReceived(byte[] buffer, long offset, long size)
+        {
+            string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+            
             VoidProcedure? procedure;
             try
             {
-                procedure = JsonConvert.DeserializeObject<VoidProcedure>(e.Data);
+                procedure = JsonConvert.DeserializeObject<VoidProcedure>(message);
             }
             catch { return; }
 
@@ -39,42 +52,47 @@ namespace Server.Behaviors
                 switch (procedure.Type)
                 {
                     case ProcedureType.LoginRequest:
-                        ProcessLogin(e.Data);
+                        ProcessLogin(message);
                         break;
                     case ProcedureType.ClientsListRequest:
-                        ProcessClientsListRequest(e.Data);
+                        ProcessClientsListRequest(message);
                         break;
                     case ProcedureType.StartShiftRequest:
-                        ProcessStartShiftRequest(e.Data);
+                        ProcessStartShiftRequest(message);
                         break;
                     case ProcedureType.ClientDataRequest:
-                        ProcessClientDataRequest(e.Data);
+                        ProcessClientDataRequest(message);
                         break;
                 }
             }
         }
 
-        protected override void OnClose(CloseEventArgs e)
+        protected override void OnDisconnected()
         {
             EndShift();
-            Worker.Logger.LogInformation("Client disconnected");
+            Worker.Logger.LogInformation($"[{Id}] Client disconnected");
         }
 
-        protected override void OnError(WebSocketSharp.ErrorEventArgs e)
+        protected override void OnError(SocketError error)
         {
             
         }
 
+        internal bool SendMessageAsync(string message)
+        {
+            return SendAsync(message);
+        }
+
         private void ProcessLogin(string data)
         {
-            Worker.Logger.LogInformation("Login requested");
+            Worker.Logger.LogInformation($"[{Id}] Login requested");
             LoginRequest? request = JsonConvert.DeserializeObject<LoginRequest>(data);
             if (request is not null)
             {
-                var (res, u) = ServerWorker.DoLogin(request, UserRole.User);
+                var (res, u) = ServerWorker.DoLogin(request, UserRole.Dispatcher);
                 userData = u;
-                Send(JsonConvert.SerializeObject(res));
-                Worker.Logger.LogInformation("Login response sent");
+                SendAsync(JsonConvert.SerializeObject(res));
+                Worker.Logger.LogInformation($"[{Id}] Login response sent");
             }
         }
 
@@ -84,7 +102,7 @@ namespace Server.Behaviors
 
             if (request is not null)
             {
-                Send(JsonConvert.SerializeObject(ServerWorker.GetClients(request)));
+                SendAsync(JsonConvert.SerializeObject(ServerWorker.GetClients(request)));
             }
         }
 
@@ -96,17 +114,17 @@ namespace Server.Behaviors
 
                 if (request is not null)
                 {
-                    (TokenState token, User? user) = database.CheckUser(request.Token, UserRole.User);
+                    (TokenState token, User? user) = database.CheckUser(request.Token, UserRole.Dispatcher);
 
                     if (token == TokenState.Expired)
-                        Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false)));
+                        SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false)));
                     else if (token == TokenState.UnsufficentRights)
-                        Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
+                        SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
                     else if (token == TokenState.Ok)
                     {
                         if (user is null)
                         {
-                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
+                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
                             return;
                         }
 
@@ -116,7 +134,7 @@ namespace Server.Behaviors
 
                         if (client is null)
                         {
-                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
+                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
                             return;
                         }
 
@@ -132,15 +150,15 @@ namespace Server.Behaviors
                             };
                             var sh = database.Shifts.Add(shift);
                             database.SaveChanges();
-                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id)));
+                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id)));
                         }
                         else
                         {
-                            Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, false)));
+                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, false)));
                         }
                     }
                     else
-                        Send(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
+                        SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
                 }
             }
         }
@@ -151,7 +169,7 @@ namespace Server.Behaviors
 
             if (request is not null)
             {
-                Send(JsonConvert.SerializeObject(ServerWorker.GetClientData(request)));
+                SendAsync(JsonConvert.SerializeObject(ServerWorker.GetClientData(request)));
             }
         }
 
@@ -168,5 +186,7 @@ namespace Server.Behaviors
                 }
             }
         }
+
+        
     }
 }

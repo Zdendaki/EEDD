@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServerData.Database;
 
@@ -11,9 +12,10 @@ using ServerData.Database;
 namespace ServerData.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220528215916_TrainEvents")]
+    partial class TrainEvents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,8 +91,8 @@ namespace ServerData.Migrations
                     b.Property<int>("ConnectionId")
                         .HasColumnType("int");
 
-                    b.Property<byte>("Interlocking")
-                        .HasColumnType("tinyint");
+                    b.Property<bool>("Interlocking")
+                        .HasColumnType("bit");
 
                     b.Property<int>("MinimumInterval")
                         .HasColumnType("int");
@@ -119,12 +121,6 @@ namespace ServerData.Migrations
                     b.Property<int?>("APMDId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AcceptedAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AcceptedDId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("ActualDepAId")
                         .HasColumnType("int");
 
@@ -145,12 +141,6 @@ namespace ServerData.Migrations
 
                     b.Property<int?>("ArrivalId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("CancelledA")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("CancelledD")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("CaptionId")
                         .HasColumnType("int");
@@ -214,9 +204,6 @@ namespace ServerData.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
-                    b.Property<string>("RowChar")
-                        .HasColumnType("nvarchar(1)");
-
                     b.Property<bool>("RowComplete")
                         .HasColumnType("bit");
 
@@ -274,10 +261,6 @@ namespace ServerData.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("APMDId");
-
-                    b.HasIndex("AcceptedAId");
-
-                    b.HasIndex("AcceptedDId");
 
                     b.HasIndex("ActualDepAId");
 
@@ -539,9 +522,6 @@ namespace ServerData.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("nvarchar(64)");
 
-                    b.Property<float>("TimePenalty")
-                        .HasColumnType("real");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
@@ -570,9 +550,6 @@ namespace ServerData.Migrations
 
                     b.Property<int>("SecondaryId")
                         .HasColumnType("int");
-
-                    b.Property<float>("TravelTime")
-                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
@@ -742,9 +719,6 @@ namespace ServerData.Migrations
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
-                    b.Property<bool>("Platform")
-                        .HasColumnType("bit");
-
                     b.Property<int>("StationId")
                         .HasColumnType("int");
 
@@ -792,9 +766,6 @@ namespace ServerData.Migrations
 
                     b.Property<byte>("EventType")
                         .HasColumnType("tinyint");
-
-                    b.Property<bool>("Expired")
-                        .HasColumnType("bit");
 
                     b.Property<int>("StationId")
                         .HasColumnType("int");
@@ -901,14 +872,6 @@ namespace ServerData.Migrations
                     b.HasOne("ServerData.Database.RowDataDate", "APMD")
                         .WithMany()
                         .HasForeignKey("APMDId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "AcceptedA")
-                        .WithMany()
-                        .HasForeignKey("AcceptedAId");
-
-                    b.HasOne("ServerData.Database.RowDataDate", "AcceptedD")
-                        .WithMany()
-                        .HasForeignKey("AcceptedDId");
 
                     b.HasOne("ServerData.Database.RowDataDate", "ActualDepA")
                         .WithMany()
@@ -1028,10 +991,6 @@ namespace ServerData.Migrations
 
                     b.Navigation("APMD");
 
-                    b.Navigation("AcceptedA");
-
-                    b.Navigation("AcceptedD");
-
                     b.Navigation("ActualDepA");
 
                     b.Navigation("ActualDepD");
@@ -1118,7 +1077,7 @@ namespace ServerData.Migrations
             modelBuilder.Entity("ServerData.Database.Signaller", b =>
                 {
                     b.HasOne("ServerData.Database.Station", "Station")
-                        .WithMany("Signallers")
+                        .WithMany()
                         .HasForeignKey("StationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1254,7 +1213,7 @@ namespace ServerData.Migrations
             modelBuilder.Entity("ServerData.Database.Track", b =>
                 {
                     b.HasOne("ServerData.Database.Station", "Station")
-                        .WithMany("Tracks")
+                        .WithMany()
                         .HasForeignKey("StationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1282,7 +1241,7 @@ namespace ServerData.Migrations
                         .IsRequired();
 
                     b.HasOne("ServerData.Database.Train", null)
-                        .WithMany("Events")
+                        .WithMany("History")
                         .HasForeignKey("TrainId");
 
                     b.Navigation("Station");
@@ -1314,10 +1273,6 @@ namespace ServerData.Migrations
             modelBuilder.Entity("ServerData.Database.Station", b =>
                 {
                     b.Navigation("Archive");
-
-                    b.Navigation("Signallers");
-
-                    b.Navigation("Tracks");
                 });
 
             modelBuilder.Entity("ServerData.Database.StationConnection", b =>
@@ -1342,7 +1297,7 @@ namespace ServerData.Migrations
 
             modelBuilder.Entity("ServerData.Database.Train", b =>
                 {
-                    b.Navigation("Events");
+                    b.Navigation("History");
 
                     b.Navigation("Stops");
                 });

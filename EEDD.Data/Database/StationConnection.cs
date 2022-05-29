@@ -1,4 +1,6 @@
-﻿namespace ServerData.Database
+﻿using Communication.Data;
+
+namespace ServerData.Database
 {
     [Table("StationConnections")]
     public class StationConnection
@@ -18,6 +20,9 @@
 
         public virtual Route Route { get; set; }
 
+        [Required]
+        public float TravelTime { get; set; }
+
         public int PrimaryId { get; set; }
 
         public int SecondaryId { get; set; }
@@ -32,8 +37,9 @@
         public byte Number { get; set; }
 
         public virtual StationConnection Connection { get; set; }
-        
-        public bool Interlocking { get; set; } = true;
+
+        [Required]
+        public RouteInterlocking Interlocking { get; set; }
 
         public int MinimumInterval { get; set; } = 0;
     }

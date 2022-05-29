@@ -24,7 +24,7 @@ namespace ServerData.Database
 
         public DbSet<Train> Trains { get; set; }
 
-        public DbSet<TrainHistory> TrainHistories { get; set; }
+        public DbSet<TrainEvent> TrainHistories { get; set; }
 
         public DbSet<Client> Clients { get; set; }
 
@@ -42,7 +42,7 @@ namespace ServerData.Database
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(@"Server=vps.zdendaki.net;Database=EEDD;User Id=sa;Password=Zdenda2782433278ki;"); //HusSNne5Z5vVSqsz
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(AppSecretsReader.ReadSection<string>("ZdendakiVPS-SQL-EDD"));
             }
         }
 

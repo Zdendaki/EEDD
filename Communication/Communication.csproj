@@ -8,13 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NetCoreServer" Version="6.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="websocket-sharp">
-      <HintPath>..\..\websocket-sharp\websocket-sharp\bin\Release\net6.0\publish\websocket-sharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

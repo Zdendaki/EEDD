@@ -1,13 +1,13 @@
-using Server.Behaviors;
+using Server.TCP;
 using ServerData.Database;
-using WebSocketSharp.Server;
+using System.Net;
 
 namespace Server
 {
     public class Worker : BackgroundService
     {
         internal static ILogger<Worker> Logger;
-        internal static WebSocketServer Server;
+        TCPServer server;
         bool criticalError = false;
 
         public Worker(ILogger<Worker> logger)
@@ -23,7 +23,7 @@ namespace Server
             }
             catch (Exception e)
             {
-                Logger.LogCritical("Couldn't start websocket server. Exception: " + e.Message);
+                Logger.LogCritical("Couldn't start TCP service. Exception: " + e.Message);
                 criticalError = true;
                 return base.StartAsync(cancellationToken);
             }
@@ -37,8 +37,8 @@ namespace Server
             }
             catch (Exception e)
             {
-                Logger.LogCritical("Couldn't connect to database. Stopping Websocket service. Exception: " + e.Message);
-                Server.Stop();
+                Logger.LogCritical("Couldn't connect to database. Stopping TCP service. Exception: " + e.Message);
+                server.Stop();
                 criticalError = true;
             }
             finally
@@ -55,21 +55,21 @@ namespace Server
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                if (Server?.IsListening == false && !criticalError)
+                if (!server.IsStarted && !criticalError)
                 {
-                    Logger.LogWarning("Websocket service isn't listening, trying to start again.");
+                    Logger.LogWarning("TCP service isn't listening, trying to start again.");
                     try
                     {
-                        Server.Start();
+                        server.Start();
                     }
                     catch
                     {
-                        Logger.LogError("Couldn't start Websocket service. Performing hard restart of Websocket service.");
+                        Logger.LogError("Couldn't start TCP service. Performing hard restart of TCP service.");
                         try
                         {
                             try
                             {
-                                Server.Stop();
+                                server.Stop();
                             }
                             catch { }
 
@@ -78,13 +78,13 @@ namespace Server
                         catch
                         {
                             criticalError = true;
-                            Logger.LogCritical("Couldn't start Websocket service after hard reset.");
+                            Logger.LogCritical("Couldn't start TCP service after hard reset.");
                         }
                     }
                 }
                 else
                 {
-                    Logger.LogInformation("Websocket service is OK");
+                    Logger.LogInformation("TCP service is OK");
                 }
 
                 await Task.Delay(60000, stoppingToken);
@@ -93,17 +93,17 @@ namespace Server
 
         public override Task StopAsync(CancellationToken cancellationToken)
         {
-            Server.Stop();
+            server.Stop();
             return base.StopAsync(cancellationToken);
         }
 
         private void InitServer()
         {
-            Server = new WebSocketServer(9180);
-            Server.AddWebSocketService<TestBehavior>("/Test");
-            Server.AddWebSocketService<ClientBehavior>("/Client");
-            Server.AddWebSocketService<ClientBehavior>("/Manager");
-            Server.Start();
+            Logger.LogInformation("Starting TCP service");
+            int port = 9180;
+            server = new TCPServer(IPAddress.Any, port);
+            server.Start();
+            Logger.LogInformation("TCP service started on port " + port);
         }
     }
 }

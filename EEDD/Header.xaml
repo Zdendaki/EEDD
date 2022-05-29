@@ -50,6 +50,13 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
+            <Label Width="37">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="přijetí" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
             <Label Width="15" Content="ch" />
             <Label Width="35">
                 <Label.Content>
@@ -117,11 +124,11 @@
             </Label>
             <Label Width="35" Content="zpož." />
             <Label Width="35" Content="odhl." />
-            <Label Width="15" Content="P" />
-            <Label Width="15" Content="J" />
-            <Label Width="15" Content="!" />
-            <Label Width="15" Content="K" />
-            <Label Width="20" Content="V" />
+            <Label Width="15" Content="P" ToolTip="Poznámka" />
+            <Label Width="15" Content="J" ToolTip="Souhlas s jízdou" />
+            <Label Width="15" Content="!" ToolTip="Mimořádnosti" />
+            <Label Width="15" Content="K" ToolTip="Komunikace" />
+            <Label Width="20" Content="V" ToolTip="Odeslání informace 080" />
             <Label Width="80" Content="cesta" />
         </StackPanel>
     </Grid>

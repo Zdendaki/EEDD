@@ -1,4 +1,6 @@
-﻿namespace ServerData.Database
+﻿using Communication.Data;
+
+namespace ServerData.Database
 {
     [Table("Trains")]
     [Index(nameof(Number))]
@@ -11,7 +13,7 @@
 
         public virtual List<Stop> Stops { get; set; } = new();
 
-        public virtual List<TrainHistory> History { get; set; } = new();
+        public virtual List<TrainEvent> Events { get; set; } = new();
 
         public virtual Route Route { get; set; }
 
@@ -32,31 +34,26 @@
         }
     }
 
-    [Table("TrainHistories")]
-    public class TrainHistory
+    [Table("TrainEvents")]
+    public class TrainEvent
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
-        public string Stop { get; set; }
+        public virtual Station Station { get; set; }
 
-        [Precision(0)]
-        public DateTime? Arrival { get; set; }
+        [Required]
+        public EventType EventType { get; set; }
 
-        [Precision(0)]
-        public DateTime? Departure { get; set; }
+        [Required]
+        public byte[] Data { get; set; }
 
-        public string? ARoute { get; set; }
+        [Required]
+        public DateTime Timestamp { get; set; }
 
-        public string? ATrack { get; set; }
-
-        public string? DTrack { get; set; }
-
-        public string? DRoute { get; set; }
-
-        public DelayReason DelayReason { get; set; }
-
-        public short Delay { get; set; }
+        [Required]
+        public bool Expired { get; set; } = false;
     }
 
     [Table("Stops")]

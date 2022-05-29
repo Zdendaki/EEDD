@@ -20,6 +20,8 @@
         NewTrainRequest,
         NewTrainResponse,
         TrainOfferRequest,
-        TrainOfferResponse
+        TrainOfferResponse,
+        HandshakeRequest,
+        HandshakeResponse
     }
 }

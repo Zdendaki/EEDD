@@ -14,7 +14,7 @@ namespace EEDD
     /// </summary>
     public partial class App : Application
     {
-        internal static WSClient Client { get; set; }
+        internal static EDDClient Client { get; set; }
 
         internal static byte[]? Token { get; set; }
 
@@ -22,9 +22,12 @@ namespace EEDD
 
         internal static string? UserName { get; set; }
 
+        internal static RuntimeData Data { get; set; }
+
         protected override void OnStartup(StartupEventArgs e)
         {
-            Client = new WSClient(ClientType.Client);
+            Data = new RuntimeData();
+            Client = new EDDClient("127.0.0.1", 9180);
 
             base.OnStartup(e);
         }

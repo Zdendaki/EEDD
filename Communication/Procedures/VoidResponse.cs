@@ -1,4 +1,6 @@
-﻿namespace Communication.Procedures
+﻿using Communication.Data;
+
+namespace Communication.Procedures
 {
     public sealed class VoidResponse : Procedure, IResponse
     {

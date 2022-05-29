@@ -2,58 +2,45 @@
 using Communication.Procedures.Basic;
 using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
+using TcpClient = NetCoreServer.TcpClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using WebSocketSharp;
 
 namespace Communication
 {
     public delegate void MessageReceivedEventHandler(Procedure procedure);
 
-    public class WSClient
+    public class EDDClient : TcpClient
     {
-        WebSocket client;
-        List<MessageData> sentMessages;
+        List<MessageData> sentMessages = new();
 
-        public bool Connected { get => client?.ReadyState == WebSocketState.Open; }
+        bool handshakeReceived = false;
 
         public event MessageReceivedEventHandler MessageReceived;
 
-        public WSClient(ClientType type)
-        {
-            string clientType;
-            switch (type)
-            {
-                case ClientType.Client:
-                    clientType = "/Client";
-                    break;
-                case ClientType.Manager:
-                    clientType = "/Manager";
-                    break;
-                default:
-                    clientType = "/";
-                    break;
-            }
+        public EDDClient(string address, int port) : base(address, port) { }
 
-            sentMessages = new();
-            client = new WebSocket("ws://localhost:9180" + clientType);
-            client.Compression = CompressionMethod.Deflate;
-            client.OnMessage += ReceiveMessage;
+        protected override void OnConnected()
+        {
+            
         }
 
-        private void ReceiveMessage(object? sender, MessageEventArgs e)
+        protected override void OnReceived(byte[] buffer, long offset, long size)
         {
-            if (!e.IsText)
+            string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+
+            if (string.IsNullOrWhiteSpace(message))
                 return;
-            
+
             VoidProcedure? voidProc;
             try
             {
-                voidProc = JsonConvert.DeserializeObject<VoidProcedure>(e.Data);
+                voidProc = JsonConvert.DeserializeObject<VoidProcedure>(message);
             }
             catch { return; }
 
@@ -61,7 +48,7 @@ namespace Communication
             {
                 if (voidProc.Type == ProcedureType.Ping)
                 {
-                    client.Send(JsonConvert.SerializeObject(new Pong(voidProc.GUID)));
+                    Send(JsonConvert.SerializeObject(new Pong(voidProc.GUID)));
                 }
                 else
                 {
@@ -70,25 +57,25 @@ namespace Communication
                     switch (voidProc.Type)
                     {
                         case ProcedureType.LoginResponse:
-                            p = JsonConvert.DeserializeObject<LoginResponse>(e.Data);
+                            p = JsonConvert.DeserializeObject<LoginResponse>(message);
                             break;
                         case ProcedureType.ClientsListResponse:
-                            p = JsonConvert.DeserializeObject<ClientsListResponse>(e.Data);
+                            p = JsonConvert.DeserializeObject<ClientsListResponse>(message);
                             break;
                         case ProcedureType.StartShiftResponse:
-                            p = JsonConvert.DeserializeObject<StartShiftResponse>(e.Data);
+                            p = JsonConvert.DeserializeObject<StartShiftResponse>(message);
                             break;
                         case ProcedureType.ClientDataResponse:
-                            p = JsonConvert.DeserializeObject<ClientDataResponse>(e.Data);
+                            p = JsonConvert.DeserializeObject<ClientDataResponse>(message);
                             break;
                     }
 
                     if (p is not null)
                         MessageReceived?.Invoke(p);
 
-                    if (e.Data.Contains("RequestGUID"))
+                    if (message.Contains("RequestGUID"))
                     {
-                        VoidResponse? response = JsonConvert.DeserializeObject<VoidResponse>(e.Data);
+                        VoidResponse? response = JsonConvert.DeserializeObject<VoidResponse>(message);
                         if (response is not null)
                             sentMessages.RemoveAll(x => x.Message.GUID == response?.RequestGUID);
                     }
@@ -96,25 +83,21 @@ namespace Communication
             }
         }
 
+        protected override void OnDisconnected()
+        {
+            handshakeReceived = false;
+            // TODO: Restore connection
+        }
+
         public bool SendMessage(Procedure proc)
         {
-            if (Connected)
+            if (IsConnected)
             {
-                client.Send(JsonConvert.SerializeObject(proc));
+                Send(JsonConvert.SerializeObject(proc));
                 sentMessages.Add(new MessageData(proc));
                 return true;
             }
             return false;
-        }
-
-        public void Connect()
-        {
-            client.Connect();
-        }
-
-        public void Disconnect()
-        {
-            client.Close();
         }
     }
 

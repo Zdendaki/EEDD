@@ -9,8 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using D = Communication.Procedures;
-using S = ServerData;
+using Communication.Data;
 
 namespace Server
 {
@@ -64,7 +63,7 @@ namespace Server
         {
             using (Context context = new Context())
             {
-                (TokenState token, User? user) = context.CheckUser(request.Token, UserRole.User);
+                (TokenState token, User? user) = context.CheckUser(request.Token, UserRole.Dispatcher);
 
                 if (token == TokenState.Expired)
                     return new ClientsListResponse(request.GUID, ResponseState.ExpiredToken, null);
@@ -96,7 +95,7 @@ namespace Server
         {
             using (Context context = new Context())
             {
-                (TokenState token, User? user) = context.CheckUser(request.Token, UserRole.User);
+                (TokenState token, User? user) = context.CheckUser(request.Token, UserRole.Dispatcher);
 
                 if (token == TokenState.Expired)
                     return new ClientDataResponse(request.GUID, ResponseState.ExpiredToken, null);
@@ -115,7 +114,7 @@ namespace Server
 
                     List<StationData> stations = new();
                     foreach (var station in client.Stations)
-                        stations.Add(new StationData(station.Id, station.Name, station.Abbr, connections.GetConnections(station).ToList()));
+                        stations.Add(new StationData(station.Id, station.Name, station.Abbr, station.TimePenalty, connections.GetConnections(station).ToList()));
 
                     return new ClientDataResponse(request.GUID, ResponseState.Success, new ClientData(client.Id, client.Name, GetRows(context, client).ToList(), stations));
                 }

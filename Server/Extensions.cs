@@ -1,4 +1,5 @@
-﻿using Communication.Procedures;
+﻿using Communication.Data;
+using Communication.Procedures;
 using ServerData;
 using ServerData.Database;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using D = Communication.Procedures;
+using P = Communication.Procedures;
 using S = ServerData;
 
 namespace Server
@@ -64,7 +65,7 @@ namespace Server
             return new string(s.ToCharArray().OrderBy(x => Guid.NewGuid()).ToArray());
         }
 
-        public static D.RowType? GetRowType(this S.RowType? rowType)
+        public static RowType? GetRowType(this RowType? rowType)
         {
             if (rowType is null)
                 return null;
@@ -72,12 +73,12 @@ namespace Server
                 return rowType.Value.GetRowType();
         }
 
-        public static D.RowType GetRowType(this S.RowType rowType)
+        public static RowType GetRowType(this RowType rowType)
         {
-            return (D.RowType)(short)rowType;
+            return (RowType)(short)rowType;
         }
 
-        public static D.TrainType? GetTrainType(this S.TrainType? trainType)
+        public static TrainType? GetTrainType(this TrainType? trainType)
         {
             if (trainType is null)
                 return null;
@@ -85,9 +86,9 @@ namespace Server
                 return trainType.Value.GetTrainType();
         }
 
-        public static D.TrainType GetTrainType(this S.TrainType trainType)
+        public static TrainType GetTrainType(this TrainType trainType)
         {
-            return (D.TrainType)(short)trainType;
+            return (TrainType)(short)trainType;
         }
 
         public static string GetAbbr(this RouteTrack track, IEnumerable<StationConnection> connections, Station station)

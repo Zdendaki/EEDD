@@ -22,7 +22,7 @@
                 <Label Content="Výběr stanice:" Margin="0,10,0,0" Padding="2" />
                 <ComboBox x:Name="StationSelect" SelectionChanged="StationSelect_SelectionChanged" />
                 <Label x:Name="IsOccupied" Content="Obsazeno" Foreground="Red" Padding="0" HorizontalContentAlignment="Right" Visibility="Hidden" />
-                <Button x:Name="SelectStationButton" Content="Zvolit stanici" Padding="2" />
+                <Button x:Name="SelectStationButton" Content="Zvolit stanici" Padding="2" Click="SelectStationButton_Click" />
             </StackPanel>
         </StackPanel>
     </StackPanel>

@@ -14,9 +14,16 @@
         [MaxLength(2)]
         public string Abbr { get; set; }
 
+        [Required]
+        public float TimePenalty { get; set; } = 0f;
+
         public virtual Client Client { get; set; }
 
         public virtual List<Row> Archive { get; set; } = new List<Row>();
+
+        public virtual List<Track> Tracks { get; set; } = new List<Track>();
+
+        public virtual List<Signaller> Signallers { get; set; } = new List<Signaller>();
     }
 
     [Table("Tracks")]
@@ -28,6 +35,9 @@
         [MaxLength(6)]
         [Required]
         public string Name { get; set; }
+
+        [Required]
+        public bool Platform { get; set; } = false;
 
         public virtual Station Station { get; set; }
 

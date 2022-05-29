@@ -43,7 +43,7 @@ namespace Manager
 
         private void InitStatusBar()
         {
-            IsConnected.Content = App.Client.Connected ? "Připojeno" : "Odpojeno";
+            IsConnected.Content = App.Client.IsConnected ? "Připojeno" : "Odpojeno";
             LoggedUser.Content = "Přihlášený uživatel: " + App.UserName;
         }
     }

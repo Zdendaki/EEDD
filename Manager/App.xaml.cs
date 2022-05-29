@@ -14,7 +14,7 @@ namespace Manager
     /// </summary>
     public partial class App : Application
     {
-        internal static WSClient Client { get; set; }
+        internal static EDDClient Client { get; set; }
 
         internal static byte[]? Token { get; set; }
 
@@ -24,7 +24,7 @@ namespace Manager
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Client = new WSClient(ClientType.Manager);
+            Client = new EDDClient("127.0.0.1", 9180);
             
             base.OnStartup(e);
         }
