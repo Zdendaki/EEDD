@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NetCoreServer" Version="6.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Communication\Communication.csproj" />
     <ProjectReference Include="..\EEDD.Data\ServerData.csproj" />
   </ItemGroup>

@@ -91,7 +91,7 @@ namespace Manager
 
                 Task.Run(() =>
                 {
-                    App.Client.SendMessage(new LoginRequest(username, password));
+                    App.Client.SendMessageAsync(new LoginRequest(username, password));
                 });
             }
         }

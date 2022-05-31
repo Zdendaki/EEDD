@@ -22,12 +22,14 @@ namespace EEDD
         bool downloading;
         bool closing = false;
 
-        public InitWindow(bool dl = false)
+        public InitWindow(bool dl)
         {
             InitializeComponent();
 
             downloading = dl;
         }
+
+        public InitWindow() : this(false) { }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

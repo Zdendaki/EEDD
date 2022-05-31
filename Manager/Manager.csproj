@@ -11,10 +11,4 @@
     <ProjectReference Include="..\Communication\Communication.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="websocket-sharp">
-      <HintPath>..\..\websocket-sharp\websocket-sharp\bin\Release\net6.0\publish\websocket-sharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

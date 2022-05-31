@@ -19,11 +19,17 @@ namespace Communication
     {
         List<MessageData> sentMessages = new();
 
-        bool handshakeReceived = false;
+        DiffieHellman diffie;
+        DiffieHellman.AesKeys aesKeys;
+        byte[] publicKey = new byte[158];
+        bool handshaked = false;
 
         public event MessageReceivedEventHandler MessageReceived;
 
-        public EDDClient(string address, int port) : base(address, port) { }
+        public EDDClient(string address, int port) : base(address, port) 
+        {
+            diffie = new DiffieHellman();
+        }
 
         protected override void OnConnected()
         {
@@ -32,14 +38,27 @@ namespace Communication
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
-            string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+            if (size == 166 && buffer.StartsWith((int)offset, DiffieHellman.Handshake))
+            {
+                Array.Copy(buffer, offset + 8, publicKey, 0, 158);
+                handshaked = SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
+                aesKeys = diffie.GenerateKeys(publicKey);
 
-            if (string.IsNullOrWhiteSpace(message))
+                return;
+            }
+
+            if (!handshaked)
                 return;
 
+            string message;
             VoidProcedure? voidProc;
             try
             {
+                message = DecryptMessage(buffer, offset, size);
+
+                if (string.IsNullOrWhiteSpace(message))
+                    return;
+
                 voidProc = JsonConvert.DeserializeObject<VoidProcedure>(message);
             }
             catch { return; }
@@ -85,19 +104,28 @@ namespace Communication
 
         protected override void OnDisconnected()
         {
-            handshakeReceived = false;
             // TODO: Restore connection
         }
 
-        public bool SendMessage(Procedure proc)
+        public bool SendMessageAsync(Procedure proc)
         {
-            if (IsConnected)
+            if (IsConnected && handshaked)
             {
-                Send(JsonConvert.SerializeObject(proc));
+                byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(proc));
+                
+                bool flag = SendAsync(diffie.Encrypt(buffer, aesKeys));
                 sentMessages.Add(new MessageData(proc));
-                return true;
+                return flag;
             }
             return false;
+        }
+
+        public string DecryptMessage(byte[] data, long offset, long size)
+        {
+            byte[] buffer = new byte[size];
+            Array.Copy(data, offset, buffer, 0, size);
+
+            return Encoding.UTF8.GetString(diffie.Decrypt(buffer, aesKeys));
         }
     }
 

@@ -19,33 +19,58 @@ namespace Server.TCP
 {
     internal class EDDSession : TcpSession
     {
-        const bool ZIP = false;
+        List<TCPError> Errors { get; set; }
+        
+        readonly DiffieHellman diffie;
+        DiffieHellman.AesKeys aesKeys;
 
         User? userData = null;
         Shift? userShift = null;
-        DiffieHellman diffie;
+        byte[] publicKey = new byte[158];
+        bool handshaked = false;
 
         public EDDSession(TcpServer server) : base (server)
         {
             diffie = ((TCPServer)Server).Diffie;
+            Errors = new();
         }
 
         protected override void OnConnected()
         {
             Worker.Logger.LogInformation($"[{Id}] Client connected");
-            SendAsync(Utils.Combine(new byte[] { 0x05, 0x07, 0x16, 0x06 }, diffie.PublicKey));
+            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
-            string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-            
+            if (size == 166 && buffer.StartsWith((int)offset, DiffieHellman.Handshake))
+            {
+                Array.Copy(buffer, offset + 8, publicKey, 0, 158);
+                handshaked = true;
+                aesKeys = diffie.GenerateKeys(publicKey);
+                Worker.Logger.LogDebug($"[{Id}] Client handshaked");
+                return;
+            }
+
+            if (!handshaked)
+            {
+                Worker.Logger.LogWarning($"[{Id}] Client requested message without handshake");
+                return;
+            }
+
+            string message;
             VoidProcedure? procedure;
             try
             {
+                message = DecryptMessage(buffer, offset, size);
+
+                if (string.IsNullOrWhiteSpace(message))
+                    return;
+
                 procedure = JsonConvert.DeserializeObject<VoidProcedure>(message);
             }
             catch { return; }
+
 
             if (procedure is not null)
             {
@@ -75,12 +100,26 @@ namespace Server.TCP
 
         protected override void OnError(SocketError error)
         {
-            
+            Errors.Add(new(error));
         }
 
-        internal bool SendMessageAsync(string message)
+        internal bool SendMessageAsync(object? message)
         {
-            return SendAsync(message);
+            if (handshaked)
+            {
+                byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                return SendAsync(diffie.Encrypt(buffer, aesKeys));
+            }
+            else
+                return false;
+        }
+
+        internal string DecryptMessage(byte[] data, long offset, long size)
+        {
+            byte[] buffer = new byte[size];
+            Array.Copy(data, offset, buffer, 0, size);
+
+            return Encoding.UTF8.GetString(diffie.Decrypt(buffer, aesKeys));
         }
 
         private void ProcessLogin(string data)
@@ -186,7 +225,5 @@ namespace Server.TCP
                 }
             }
         }
-
-        
     }
 }
