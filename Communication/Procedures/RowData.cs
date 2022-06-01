@@ -2,99 +2,187 @@
 
 namespace Communication.Procedures
 {
-    public class RowData
+    public abstract class RowData
     {
         public int Id { get; set; }
 
-        public int? TrainId { get; set; }
-
-        public bool CanModify { get; set; }
-
         public RowType RowType { get; set; }
 
-        public (string text, DateTime time)? Caption { get; set; }
+        public bool Archived { get; set; }
 
-        public (string text, DateTime time)? Message { get; set; }
+        public bool Cancelled { get; set; }
 
-        public RowValue<int> TrainNumber { get; set; }
+        public bool Complete { get; set; }
 
-        public RowValue<TrainType> TrainType { get; set; }
-
-        public RowValue<string> Stations { get; set; }
-
-        public RowValue<byte> TrackNumbers { get; set; }
-
-        public RowValue<DateTime> Announcements { get; set; }
-
-        public RowValue<DateTime> PMD { get; set; }
-
-        public RowValue<DateTime> ActualDeparture { get; set; }
-
-        public RowValue<DateTime> Signaller1 { get; set; }
-
-        public RowValue<DateTime> Signaller2 { get; set; }
-
-        public RowValue<DateTime> Signaller3 { get; set; }
-
-        public RowValue<DateTime> Signaller4 { get; set; }
-
-        public RowValue<DateTime> ArrivalDeparture { get; set; }
-
-        public RowValue<int> Delay { get; set; }
-
-        public RowValue<DateTime> Departed { get; set; }
-
-        public RowValue<string> Description { get; set; }
-
-        public RowValue<bool> Approval { get; set; }
-
-        public RowValue<bool> Exceptions { get; set; }
-
-        public RowValue<TrainContact> TrainContact { get; set; }
-
-        public RowValue<short> InformationsSent { get; set; }
-
-        public RowData(int id, int? trainId, bool canModify, RowType rowType, (string, DateTime)? caption, (string, DateTime)? message)
+        protected RowData(int id, RowType rowType, bool archived)
         {
             Id = id;
-            TrainId = trainId;
-            CanModify = canModify;
             RowType = rowType;
+            Archived = archived;
+        }
+
+        protected RowData()
+        {
+
+        }
+    }
+    
+    public class MessageRow : RowData
+    {
+        public char? RowChar { get; set; }
+
+        public string Caption { get; set; }
+
+        public SingleRowValue<string> Message { get; set; }
+
+        public SingleRowValue<string?> Note { get; set; }
+
+        public RowColor Color { get; set; }
+
+        public MessageRow(int id, RowType rowType, bool archived, char? rowChar, string caption, SingleRowValue<string> message, SingleRowValue<string?> note) : base(id, rowType, archived)
+        {
+            RowChar = rowChar;
             Caption = caption;
             Message = message;
+            Note = note;
+            Color = rowType == RowType.Blue ? RowColor.Blue : RowColor.Red;
         }
-
-        public RowData(int id, int? trainId, bool canModify, RowType rowType, RowValue<int> trainNumber, RowValue<TrainType> trainType, RowValue<string> stations, RowValue<byte> trackNumbers, RowValue<DateTime> announcements, RowValue<DateTime> pmd, RowValue<DateTime> actualDeparture, RowValue<DateTime> signaller1, RowValue<DateTime> signaller2, RowValue<DateTime> signaller3, RowValue<DateTime> signaller4, RowValue<DateTime> arrivalDeparture, RowValue<int> delay, RowValue<DateTime> departed, RowValue<string> description, RowValue<bool> approval, RowValue<bool> exceptions, RowValue<TrainContact> trainContact, RowValue<short> informationsSent)
-        {
-            Id = id;
-            TrainId = trainId;
-            CanModify = canModify;
-            RowType = rowType;
-            TrainNumber = trainNumber;
-            TrainType = trainType;
-            Stations = stations;
-            TrackNumbers = trackNumbers;
-            Announcements = announcements;
-            PMD = pmd;
-            ActualDeparture = actualDeparture;
-            Signaller1 = signaller1;
-            Signaller2 = signaller2;
-            Signaller3 = signaller3;
-            Signaller4 = signaller4;
-            ArrivalDeparture = arrivalDeparture;
-            Delay = delay;
-            Departed = departed;
-            Description = description;
-            Approval = approval;
-            Exceptions = exceptions;
-            TrainContact = trainContact;
-            InformationsSent = informationsSent;
-        }
-
-        public RowData() { }
     }
 
-    public class RowValue<T>
+    public class SingleTrainRow : RowData, ITrainRow
+    {
+        public TrainData? Train { get; set; }
+
+        public int Number { get; set; }
+
+        public TrainType Type { get; set; }
+
+        public string Route { get; set; }
+
+        public SingleRowValue<DateTime?> Announced { get; set; }
+
+        public AcceptionState? AcceptionState { get; set; }
+
+        public SingleRowValue<DateTime?> Accepted { get; set; }
+
+        public SingleRowValue<DateTime?> PMD { get; set; }
+
+        public SingleRowValue<DateTime?> ActualDeparture { get; set; }
+
+        public SingleRowValue<RowTrackValue?> Track { get; set; }
+
+        public SingleRowValue<SignallerValue?> Sig1 { get; set; }
+
+        public SingleRowValue<SignallerValue?> Sig2 { get; set; }
+
+        public SingleRowValue<SignallerValue?> Sig3 { get; set; }
+
+        public SingleRowValue<SignallerValue?> Sig4 { get; set; }
+
+        public SingleRowValue<DateTime?> Time { get; set; }
+
+        public short? Delay { get; set; }
+
+        public List<RowDelayValue> Delays { get; set; }
+
+        public SingleRowValue<DateTime?> Departed { get; set; }
+
+        public SingleRowValue<string?> Note { get; set; }
+
+        public bool? Approval { get; set; }
+
+        public string? Exceptions { get; set; }
+
+        public short? SentMessages { get; set; }
+
+        public SingleRowValue<string?> Comment { get; set; }
+
+        public SingleTrainRow(int id, RowType rowType, bool archived, TrainData? train, int number, TrainType type, string route) : base(id, rowType, archived)
+        {
+            Train = train;
+            Number = number;
+            Type = type;
+            Route = route;
+        }
+    }
+
+    public class DoubleTrainRow : RowData, ITrainRow
+    {
+        public TrainData? Train { get; set; }
+
+        public int NumberA { get; set; }
+
+        public int NumberD { get; set; }
+
+        public TrainType TypeA { get; set; }
+
+        public TrainType TypeD { get; set; }
+
+        public string RouteA { get; set; }
+
+        public string RouteD { get; set; }
+
+        public DoubleRowValue<DateTime?> Announced { get; set; }
+
+        public AcceptionState? AcceptionState { get; set; }
+
+        public DoubleRowValue<DateTime?> Accepted { get; set; }
+
+        public DoubleRowValue<DateTime?> PMD { get; set; }
+
+        public DoubleRowValue<DateTime?> ActualDeparture { get; set; }
+
+        public DoubleRowValue<RowTrackValue?> Track { get; set; }
+
+        public DoubleRowValue<SignallerValue?> Sig1 { get; set; }
+
+        public DoubleRowValue<SignallerValue?> Sig2 { get; set; }
+
+        public DoubleRowValue<SignallerValue?> Sig3 { get; set; }
+
+        public DoubleRowValue<SignallerValue?> Sig4 { get; set; }
+
+        public DoubleRowValue<DateTime?> Time { get; set; }
+
+        public short? DelayA { get; set; }
+
+        public short? DelayD { get; set; }
+
+        public List<RowDelayValue> DelaysA { get; set; }
+
+        public List<RowDelayValue> DelaysD { get; set; }
+
+        public DoubleRowValue<DateTime?> Departed { get; set; }
+
+        public DoubleRowValue<string?> Note { get; set; }
+
+        public bool? ApprovalA { get; set; }
+
+        public bool? ApprovalD { get; set; }
+
+        public string? ExceptionsA { get; set; }
+
+        public string? ExceptionsD { get; set; }
+
+        public short? SentMessagesA { get; set; }
+
+        public short? SentMessagesD { get; set; }
+
+        public DoubleRowValue<string?> Comment { get; set; }
+
+        public DoubleTrainRow(int id, RowType rowType, bool archived, TrainData? train, int numberA, int numberD, TrainType typeA, TrainType typeD, string routeA, string routeD) : base(id, rowType, archived)
+        {
+            Train = train;
+            NumberA = numberA;
+            NumberD = numberD;
+            TypeA = typeA;
+            TypeD = typeD;
+            RouteA = routeA;
+            RouteD = routeD;
+        }
+    }
+
+    public class DoubleRowValue<T>
     {
         public T? AValue { get; set; }
 
@@ -104,7 +192,7 @@ namespace Communication.Procedures
 
         public DateTime? DChanged { get; set; }
 
-        public RowValue(T? Avalue, DateTime? Achanged, T? Dvalue, DateTime? Dchanged)
+        public DoubleRowValue(T? Avalue, DateTime? Achanged, T? Dvalue, DateTime? Dchanged)
         {
             AValue = Avalue;
             AChanged = Achanged;
@@ -112,16 +200,100 @@ namespace Communication.Procedures
             DChanged = Dchanged;
         }
 
-        public static implicit operator RowValue<T>((T? Avalue, DateTime? Achanged, T? Dvalue, DateTime? Dchanged) val) => new(val.Avalue, val.Achanged, val.Dvalue, val.Dchanged);
-        public static implicit operator RowValue<T>((T? Avalue, T? Dvalue) val) => new(val.Avalue, null, val.Dvalue, null);
+        public static implicit operator DoubleRowValue<T>((T? Avalue, DateTime? Achanged, T? Dvalue, DateTime? Dchanged) val) => new(val.Avalue, val.Achanged, val.Dvalue, val.Dchanged);
+        public static implicit operator DoubleRowValue<T>((T? Avalue, T? Dvalue) val) => new(val.Avalue, null, val.Dvalue, null);
+
+        public static DoubleRowValue<T>? GetData(T? Avalue, DateTime? Achanged, T? Dvalue, DateTime? Dchanged)
+        {
+            if (Avalue is not null || Dvalue is not null)
+                return new DoubleRowValue<T>(Avalue, Achanged, Dvalue, Dchanged);
+            else
+                return null;
+        }
     }
 
-    public class SignallerData
+    public class SingleRowValue<T>
+    {
+        public T Value { get; set; }
+
+        public DateTime? Changed { get; set; }
+
+        public SingleRowValue(T value, DateTime? changed)
+        {
+            Value = value!;
+            Changed = changed;
+        }
+
+        public static implicit operator SingleRowValue<T>((T? value, DateTime? changed) val) => new(val.value!, val.changed);
+
+        public static SingleRowValue<T>? GetData(T? value, DateTime? changed)
+        {
+            if (value is not null)
+                return new SingleRowValue<T>(value, changed);
+            else
+                return null;
+        }
+    }
+
+    public class SignallerValue
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public StationData.Signaller Signaller { get; set; }
 
-        public string Comment { get; set; }
+        public DateTime? Time { get; set; }
+
+        public SignallerType Type { get; set; }
+
+        public string? Name { get; set; }
+
+        public SignallerValue(int id, StationData.Signaller signaller, DateTime? time, SignallerType type, string? name)
+        {
+            Id = id;
+            Signaller = signaller;
+            Time = time;
+            Type = type;
+            Name = name;
+        }
+    }
+
+    public interface ITrainRow
+    {
+        TrainData? Train { get; set; }
+    }
+
+    public struct RowDelayValue
+    {
+        public int Id { get; set; }
+
+        public DelayReason Reason { get; set; }
+
+        public short Minutes { get; set; }
+
+        public int? TrainNumber { get; set; }
+
+        public string? Description { get; set; }
+
+        public RowDelayValue(int id, DelayReason reason, short minutes, int? trainNumber, string? description)
+        {
+            Id = id;
+            Reason = reason;
+            Minutes = minutes;
+            TrainNumber = trainNumber;
+            Description = description;
+        }
+    }
+
+    public struct RowTrackValue
+    {
+        public string Track { get; set; }
+
+        public bool Occupied { get; set; }
+
+        public RowTrackValue(string track, bool occupied)
+        {
+            Track = track;
+            Occupied = occupied;
+        }
     }
 }

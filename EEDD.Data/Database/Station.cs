@@ -1,4 +1,6 @@
-﻿namespace ServerData.Database
+﻿using Communication.Data;
+
+namespace ServerData.Database
 {
     [Table("Stations")]
     public class Station
@@ -16,6 +18,9 @@
 
         [Required]
         public float TimePenalty { get; set; } = 0f;
+
+        [Required]
+        public StationColor Color { get; set; } = StationColor.Gray;
 
         public virtual Client Client { get; set; }
 

@@ -53,17 +53,55 @@ namespace Communication.Procedures
 
         public List<StationData> Stations { get; set; }
 
-        public ClientData(int id, string name, List<RowData> previousShift, List<StationData> stations)
+        public List<TrainData> Trains { get; set; }
+
+        public UserData User { get; set; }
+
+        public ClientData(int id, string name, List<RowData> previousShift, List<StationData> stations, List<TrainData> trains, UserData user)
         {
             Id = id;
             Name = name;
             PreviousShift = previousShift;
             Stations = stations;
+            Trains = trains;
+            User = user;
         }
     }
 
     public class StationData
     {
+        public class Track
+        {
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+
+            public bool Platform { get; set; } = false;
+
+            public Track(int id, string name, bool platform)
+            {
+                Id = id;
+                Name = name;
+                Platform = platform;
+            }
+        }
+
+        public class Signaller
+        {
+            public int Id { get; set; }
+
+            public string Name { get; set; }
+
+            public string Comment { get; set; }
+
+            public Signaller(int id, string name, string comment)
+            {
+                Id = id;
+                Name = name;
+                Comment = comment;
+            }
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -72,31 +110,40 @@ namespace Communication.Procedures
 
         public float TimePenalty { get; set; }
 
-        public List<Connection> Connections { get; set; }
+        public StationColor Color { get; set; }
 
-        public StationData(int id, string name, string abbr, float penalty, List<Connection> connections)
+        public List<ConnectionData> Connections { get; set; }
+
+        public List<Track> Tracks { get; set; }
+
+        public List<Signaller> Signallers { get; set; }
+
+        public StationData(int id, string name, string abbr, float penalty, StationColor color, List<ConnectionData> connections, List<Track> tracks, List<Signaller> signallers)
         {
             Id = id;
             Name = name;
             Abbr = abbr;
             TimePenalty = penalty;
+            Color = color;
             Connections = connections;
+            Tracks = tracks;
+            Signallers = signallers;
         }
     }
 
-    public class Connection
+    public class ConnectionData
     {
         public class Track
         {
             public int Id { get; set; }
 
-            public int Number { get; set; }
+            public byte Number { get; set; }
 
             public RouteInterlocking Interlocking { get; set; }
 
             public int MinimumInterval { get; set; }
 
-            public Track(int id, int number, RouteInterlocking interlocking, int minimumInterval)
+            public Track(int id, byte number, RouteInterlocking interlocking, int minimumInterval)
             {
                 Id = id;
                 Number = number;
@@ -113,7 +160,7 @@ namespace Communication.Procedures
 
         public List<Track> Tracks { get; set; } = new();
 
-        public Connection(int id, int stationId, string abbr, List<Track> connectionTracks)
+        public ConnectionData(int id, int stationId, string abbr, List<Track> connectionTracks)
         {
             Id = id;
             StationId = stationId;
@@ -122,5 +169,27 @@ namespace Communication.Procedures
         }
     }
 
+    public class TrainData
+    {
 
+    }
+
+    public class UserData
+    {
+        public int Id { get; set; }
+
+        public string Username { get; set; }
+
+        public string Name { get; set; }
+
+        public UserRole Role { get; set; }
+
+        public UserData(int id, string username, string name, UserRole role)
+        {
+            Id = id;
+            Username = username;
+            Name = name;
+            Role = role;
+        }
+    }
 }

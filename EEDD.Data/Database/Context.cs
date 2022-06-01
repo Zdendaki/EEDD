@@ -42,7 +42,7 @@ namespace ServerData.Database
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(AppSecretsReader.ReadSection<string>("ZdendakiVPS-SQL-EDD"));
+                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(AppSecretsReader.ReadSection<string>("ZdendakiVPS-SQL-SA"));
             }
         }
 

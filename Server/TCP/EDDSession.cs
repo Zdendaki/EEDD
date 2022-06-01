@@ -10,6 +10,7 @@ using ServerData;
 using ServerData.Database;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -46,8 +47,8 @@ namespace Server.TCP
             if (size == 166 && buffer.StartsWith((int)offset, DiffieHellman.Handshake))
             {
                 Array.Copy(buffer, offset + 8, publicKey, 0, 158);
-                handshaked = true;
                 aesKeys = diffie.GenerateKeys(publicKey);
+                handshaked = true;
                 Worker.Logger.LogDebug($"[{Id}] Client handshaked");
                 return;
             }
@@ -69,8 +70,11 @@ namespace Server.TCP
 
                 procedure = JsonConvert.DeserializeObject<VoidProcedure>(message);
             }
-            catch { return; }
-
+            catch 
+            {
+                Worker.Logger.LogWarning($"[{Id}] Couldn't parse message");
+                return;
+            }
 
             if (procedure is not null)
             {
@@ -114,6 +118,17 @@ namespace Server.TCP
                 return false;
         }
 
+        internal bool MulticastMessage(object? message)
+        {
+            if (handshaked)
+            {
+                byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
+                return Server.Multicast(diffie.Encrypt(buffer, aesKeys));
+            }
+            else
+                return false;
+        }
+
         internal string DecryptMessage(byte[] data, long offset, long size)
         {
             byte[] buffer = new byte[size];
@@ -122,6 +137,7 @@ namespace Server.TCP
             return Encoding.UTF8.GetString(diffie.Decrypt(buffer, aesKeys));
         }
 
+        #region Process requests
         private void ProcessLogin(string data)
         {
             Worker.Logger.LogInformation($"[{Id}] Login requested");
@@ -130,7 +146,7 @@ namespace Server.TCP
             {
                 var (res, u) = ServerWorker.DoLogin(request, UserRole.Dispatcher);
                 userData = u;
-                SendAsync(JsonConvert.SerializeObject(res));
+                SendMessageAsync(res);
                 Worker.Logger.LogInformation($"[{Id}] Login response sent");
             }
         }
@@ -141,7 +157,7 @@ namespace Server.TCP
 
             if (request is not null)
             {
-                SendAsync(JsonConvert.SerializeObject(ServerWorker.GetClients(request)));
+                SendMessageAsync(ServerWorker.GetClients(request));
             }
         }
 
@@ -156,14 +172,14 @@ namespace Server.TCP
                     (TokenState token, User? user) = database.CheckUser(request.Token, UserRole.Dispatcher);
 
                     if (token == TokenState.Expired)
-                        SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false)));
+                        SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false));
                     else if (token == TokenState.UnsufficentRights)
-                        SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
+                        SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false));
                     else if (token == TokenState.Ok)
                     {
                         if (user is null)
                         {
-                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
+                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false));
                             return;
                         }
 
@@ -173,7 +189,7 @@ namespace Server.TCP
 
                         if (client is null)
                         {
-                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false)));
+                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false));
                             return;
                         }
 
@@ -189,15 +205,15 @@ namespace Server.TCP
                             };
                             var sh = database.Shifts.Add(shift);
                             database.SaveChanges();
-                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id)));
+                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id));
                         }
                         else
                         {
-                            SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.Success, false)));
+                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.Success, false));
                         }
                     }
                     else
-                        SendAsync(JsonConvert.SerializeObject(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false)));
+                        SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false));
                 }
             }
         }
@@ -208,9 +224,11 @@ namespace Server.TCP
 
             if (request is not null)
             {
-                SendAsync(JsonConvert.SerializeObject(ServerWorker.GetClientData(request)));
+                SendMessageAsync(ServerWorker.GetClientData(request));
             }
         }
+
+        #endregion
 
         private void EndShift()
         {

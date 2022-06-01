@@ -33,7 +33,7 @@ namespace Communication
 
         protected override void OnConnected()
         {
-            
+            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
@@ -41,8 +41,8 @@ namespace Communication
             if (size == 166 && buffer.StartsWith((int)offset, DiffieHellman.Handshake))
             {
                 Array.Copy(buffer, offset + 8, publicKey, 0, 158);
-                handshaked = SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
                 aesKeys = diffie.GenerateKeys(publicKey);
+                handshaked = true;
 
                 return;
             }
@@ -67,7 +67,7 @@ namespace Communication
             {
                 if (voidProc.Type == ProcedureType.Ping)
                 {
-                    Send(JsonConvert.SerializeObject(new Pong(voidProc.GUID)));
+                    SendMessageAsync(new Pong(voidProc.GUID));
                 }
                 else
                 {

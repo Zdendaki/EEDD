@@ -72,19 +72,64 @@
         /// <summary>
         /// Krátký modrý
         /// </summary>
-        ShortBlue,
+        Blue,
         /// <summary>
         /// Krátký červený
         /// </summary>
-        ShortRed,
+        Red
+    }
+
+    /// <summary>
+    /// Barva stanice
+    /// </summary>
+    public enum StationColor : byte
+    {
         /// <summary>
-        /// Dlouhý červený
+        /// Šedá
         /// </summary>
-        LongRed,
+        Gray,
         /// <summary>
-        /// Dlouhý modrý
+        /// Zelená
         /// </summary>
-        LongBlue
+        Green,
+        /// <summary>
+        /// Žlutá
+        /// </summary>
+        Yellow
+    }
+
+    /// <summary>
+    /// Barva řádku s poznámkou
+    /// </summary>
+    public enum RowColor : byte
+    {
+        /// <summary>
+        /// Červená
+        /// </summary>
+        Red,
+        /// <summary>
+        /// Modrá
+        /// </summary>
+        Blue
+    }
+
+    /// <summary>
+    /// Typ zápisu stanoviště
+    /// </summary>
+    public enum SignallerType : byte
+    {
+        /// <summary>
+        /// Čas
+        /// </summary>
+        Time,
+        /// <summary>
+        /// Obsazeno
+        /// </summary>
+        Occupied,
+        /// <summary>
+        /// Zaškrtnuto
+        /// </summary>
+        Crossed
     }
 
     /// <summary>

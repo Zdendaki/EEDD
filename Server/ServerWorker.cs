@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Communication.Data;
+using Server.Builders;
 
 namespace Server
 {
@@ -103,31 +104,15 @@ namespace Server
                     return new ClientDataResponse(request.GUID, ResponseState.UnsufficentRights, null);
                 else if (token == TokenState.Ok && user is not null)
                 {
-                    var clients = context.Routes.Where(x => x.Clients.Any(x => x.Id == request.ClientId) && x.Users.Contains(user))?.SelectMany(x => x.Clients);
+                    var clients = context.Routes.Where(x => x.Clients.Any(x => x.Id == request.ShiftId) && x.Users.Contains(user))?.SelectMany(x => x.Clients);
                     if (clients is null)
                         return new ClientDataResponse(request.GUID, ResponseState.Error, null);
 
-                    Client client = clients.Single(x => x.Id == request.ClientId);
-                    var connections = context.Connections.Where(x => client.Stations.Contains(x.Primary) || client.Stations.Contains(x.Secondary));
-                    if (client.Stations is null || connections is null)
-                        return new ClientDataResponse(request.GUID, ResponseState.Error, null);
-
-                    List<StationData> stations = new();
-                    foreach (var station in client.Stations)
-                        stations.Add(new StationData(station.Id, station.Name, station.Abbr, station.TimePenalty, connections.GetConnections(station).ToList()));
-
-                    return new ClientDataResponse(request.GUID, ResponseState.Success, new ClientData(client.Id, client.Name, GetRows(context, client).ToList(), stations));
+                    ClientDataBuilder builder = new ClientDataBuilder(context, request.ShiftId, user);
+                    return new ClientDataResponse(request.GUID, ResponseState.Success, builder.BuildClientData());
                 }
                 else
                     return new ClientDataResponse(request.GUID, ResponseState.InvalidToken, null);
-            }
-        }
-
-        private static IEnumerable<RowData> GetRows(Context context, Client client)
-        {
-            foreach (var row in client.Stations.SelectMany(x => x.Archive).Where(x => (DateTime.Now - x.LastUpdate).TotalHours <= 12d).OrderBy(x => x.Id))
-            {
-                yield return row.GetRowData(context);
             }
         }
     }

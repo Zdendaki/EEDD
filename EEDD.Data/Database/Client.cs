@@ -13,6 +13,5 @@
         public virtual List<Station> Stations { get; set; } = new List<Station>();
 
         public virtual List<Shift> Shifts { get; set; } = new List<Shift>();
-
     }
 }

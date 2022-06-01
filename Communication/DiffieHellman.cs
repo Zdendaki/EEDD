@@ -1,5 +1,4 @@
-﻿using System.IO.Compression;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace Communication
 {
@@ -17,7 +16,7 @@ namespace Communication
                 IV = iv;
             }
         }
-        
+
         static readonly byte[] salt = new byte[] { 0xf5, 0xf9, 0x5f, 0xc1, 0x41, 0x83, 0xeb, 0xde, 0xdc, 0x3e, 0x50, 0x5d, 0x36, 0x49, 0xe3, 0x4e };
 
         ECDiffieHellman diffie;
@@ -78,7 +77,7 @@ namespace Communication
                 {
                     using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write))
                     {
-                         cs.Write(data, 0, data.Length);
+                        cs.Write(data, 0, data.Length);
                     }
 
                     return ms.ToArray();
