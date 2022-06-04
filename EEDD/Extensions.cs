@@ -34,5 +34,10 @@ namespace EEDD
 
             return str.Substring(0, Math.Min(str.Length, length));
         }
+
+        public static string Truncate(this string value, int length)
+        {
+            return (value.Length > length) ? value.Substring(0, length) : value.PadRight(2);
+        }
     }
 }

@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Communication.Data;
+using Communication.Procedures.Clients;
+using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,14 +46,35 @@ namespace EEDD
 
                 Task.Run(() =>
                 {
-                    Thread.Sleep(5000);
+                    App.Client.SendMessageAsync(new ClientDataRequest(App.Data.ShiftId));
 
-                    Dispatcher.Invoke(() =>
+                    App.Client.MessageReceived += (proc) =>
                     {
-                        closing = true;
-                        new MainWindow().Show();
-                        Close();
-                    });
+                        if (proc is ClientDataResponse)
+                        {
+                            ClientDataResponse res = (ClientDataResponse)proc;
+
+                            if (res.ResponseState == ResponseState.Success && res.Data is not null)
+                            {
+                                App.Data.Client = res.Data;
+                                App.Data.Signallers = res.Data.Stations.SelectMany(x => x.Signallers).DistinctBy(x => x.Id).OrderBy(x => x.Id).ToList();
+
+                                Dispatcher.Invoke(() =>
+                                {
+                                    closing = true;
+                                    new MainWindow().Show();
+                                    Close();
+                                });
+                            }
+                            else
+                            {
+                                MessageBox.Show(this, "Nepodařilo se stáhnout data stanice. Aplikace bude ukončena.", "Stahování dat se nezdařilo", MessageBoxButton.OK, MessageBoxImage.Error);
+                                App.Client.SendMessageAsync(new EndShiftRequest(App.Data.ShiftId));
+                                closing = true;
+                                Environment.Exit(0);
+                            }
+                        }
+                    };
                 });
             }
             else

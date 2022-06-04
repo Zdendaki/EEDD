@@ -1,6 +1,7 @@
 ﻿using Communication;
 using Communication.Data;
 using Communication.Procedures;
+using Communication.Procedures.Basic;
 using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+using T = System.Timers;
 
 namespace Server.TCP
 {
@@ -23,33 +24,62 @@ namespace Server.TCP
         List<TCPError> Errors { get; set; }
         
         readonly DiffieHellman diffie;
+        readonly TCPServer server;
+        ClientInfo client;
         DiffieHellman.AesKeys aesKeys;
-
-        User? userData = null;
-        Shift? userShift = null;
-        byte[] publicKey = new byte[158];
+        T.Timer timer;
+        List<MessageData> sentMessages;
+        
         bool handshaked = false;
 
         public EDDSession(TcpServer server) : base (server)
         {
-            diffie = ((TCPServer)Server).Diffie;
+            this.server = (TCPServer)server;
+            diffie = this.server.Diffie;
             Errors = new();
+            timer = new(5000);
+            sentMessages = new();
+            timer.Elapsed += Timer_Elapsed;
+        }
+
+        private void Timer_Elapsed(object? sender, T.ElapsedEventArgs e)
+        {
+            Ping p = new Ping();
+            SendMessageAsync(p);
+
+            if (sentMessages.Any(x => (DateTime.Now - x.Sent).TotalSeconds > 20d))
+            {
+                foreach (MessageData message in sentMessages.Where(x => (DateTime.Now - x.Sent).TotalSeconds > 20d).OrderBy(x => x.Sent))
+                {
+                    sentMessages.Remove(message);
+                    SendMessageAsync(message.Message);
+                }
+            }
         }
 
         protected override void OnConnected()
         {
             Worker.Logger.LogInformation($"[{Id}] Client connected");
             SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
+            client = new ClientInfo(Id);
+            Worker.Clients.Add(client);
+            timer.Enabled = true;
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
             if (size == 166 && buffer.StartsWith((int)offset, DiffieHellman.Handshake))
             {
-                Array.Copy(buffer, offset + 8, publicKey, 0, 158);
-                aesKeys = diffie.GenerateKeys(publicKey);
+                Array.Copy(buffer, offset + 8, client.PublicKey, 0, 158);
+                aesKeys = diffie.GenerateKeys(client.PublicKey);
                 handshaked = true;
                 Worker.Logger.LogDebug($"[{Id}] Client handshaked");
+
+                if (Worker.Clients.Any(x => x.PublicKey == client.PublicKey && x.GUID != Id)) // TODO: fix byte[] == byte[]
+                {
+
+                }
+
                 return;
             }
 
@@ -93,13 +123,21 @@ namespace Server.TCP
                         ProcessClientDataRequest(message);
                         break;
                 }
+
+                if (message.Contains("RequestGUID"))
+                {
+                    VoidResponse? response = JsonConvert.DeserializeObject<VoidResponse>(message);
+                    if (response is not null)
+                        sentMessages.RemoveAll(x => x.Message.GUID == response?.RequestGUID);
+                }
             }
         }
 
         protected override void OnDisconnected()
         {
-            EndShift();
+            EndShift(); // TODO: možná změnit
             Worker.Logger.LogInformation($"[{Id}] Client disconnected");
+            timer.Enabled = false;
         }
 
         protected override void OnError(SocketError error)
@@ -107,12 +145,15 @@ namespace Server.TCP
             Errors.Add(new(error));
         }
 
-        internal bool SendMessageAsync(object? message)
+        internal bool SendMessageAsync(Procedure message)
         {
             if (handshaked)
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-                return SendAsync(diffie.Encrypt(buffer, aesKeys));
+                bool sent = SendAsync(diffie.Encrypt(buffer, aesKeys));
+                if (sent)
+                    sentMessages.Add(new(message));
+                return sent;
             }
             else
                 return false;
@@ -145,7 +186,7 @@ namespace Server.TCP
             if (request is not null)
             {
                 var (res, u) = ServerWorker.DoLogin(request, UserRole.Dispatcher);
-                userData = u;
+                client.User = u;
                 SendMessageAsync(res);
                 Worker.Logger.LogInformation($"[{Id}] Login response sent");
             }
@@ -232,14 +273,14 @@ namespace Server.TCP
 
         private void EndShift()
         {
-            if (userShift is not null)
+            if (client.Shift is not null)
             {
                 using (Context context = new Context())
                 {
-                    Shift shift = context.Shifts.First(x => x.Id == userShift.Id);
+                    Shift shift = context.Shifts.First(x => x.Id == client.Shift.Id);
                     shift.EndTime = DateTime.Now;
                     context.SaveChanges();
-                    userShift = null;
+                    client.Shift = null;
                 }
             }
         }

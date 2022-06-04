@@ -63,6 +63,6 @@ namespace ServerData.Database
         [Required]
         public string Comment { get; set; }
 
-        public virtual Station Station { get; set; }
+        public virtual List<Station> Stations { get; set; }
     }
 }

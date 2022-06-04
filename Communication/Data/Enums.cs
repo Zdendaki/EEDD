@@ -26,6 +26,25 @@
     }
 
     /// <summary>
+    /// Route track default direction
+    /// </summary>
+    public enum DefaultDirection : byte
+    {
+        /// <summary>
+        /// No default direction
+        /// </summary>
+        None,
+        /// <summary>
+        /// From primary to secondary
+        /// </summary>
+        PrimarySecondary,
+        /// <summary>
+        /// From secondary to primary
+        /// </summary>
+        SecondaryPrimary
+    }
+
+    /// <summary>
     /// Traťové zabezpečovací zařízení
     /// </summary>
     public enum RouteInterlocking : byte
@@ -116,7 +135,7 @@
     /// <summary>
     /// Typ zápisu stanoviště
     /// </summary>
-    public enum SignallerType : byte
+    public enum SignallerState : byte
     {
         /// <summary>
         /// Čas

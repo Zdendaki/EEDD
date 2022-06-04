@@ -42,5 +42,8 @@ namespace ServerData.Database
         public RouteInterlocking Interlocking { get; set; }
 
         public int MinimumInterval { get; set; } = 0;
+
+        [Required]
+        public DefaultDirection Direction { get; set; } = DefaultDirection.None;
     }
 }

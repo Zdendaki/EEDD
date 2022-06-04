@@ -1,4 +1,5 @@
-﻿using Communication.Procedures.Clients;
+﻿using Communication.Procedures;
+using Communication.Procedures.Clients;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -33,16 +34,71 @@ namespace EEDD
                 focused = value;
             }
         }
-        
+
+        readonly ClientData client;
+
         public MainWindow()
         {
             InitializeComponent();
 
-            TableScale.ScaleX = TableScale.ScaleY = 1.5f;
+            client = App.Data.Client;
+
+            // Init window
+            Title = $"DOPRAVNÍ DENÍK - [{client.Name} - {client.User.Name}]";
+            TableScale.ScaleX = TableScale.ScaleY = 1d;
+            InitHeader();
+            InitRows();
+
 
             Rows.Children.Add(new Row(StationBackground.Gray, true));
             Rows.Children.Add(new Row(StationBackground.Gray, false));
             Rows.Children.Add(new Row(StationBackground.Gray, true));
+        }
+
+        private void InitHeader()
+        {
+            Header head = RowHeader;
+            int i = 1;
+            foreach(StationData.Signaller sig in App.Data.Signallers)
+            {
+                if (i > 4)
+                    break;
+                else if (i == 1)
+                {
+                    head.Sig1.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig1.Width = 15;
+                }
+                else if (i == 2)
+                {
+                    head.Sig2.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig2.Width = 15;
+                }
+                else if (i == 3)
+                {
+                    head.Sig3.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig3.Width = 15;
+                }
+                else if (i == 4)
+                {
+                    head.Sig4.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig4.Width = 15;
+                }
+                i++;
+            }
+
+            if (i < 4)
+                head.Sig4.Width = 0;
+            if (i < 3)
+                head.Sig3.Width = 0;
+            if (i < 2)
+                head.Sig2.Width = 0;
+            if (i < 1)
+                head.Sig1.Width = 0;
+        }
+
+        private void InitRows()
+        {
+
         }
 
         private void LabelZoomIn_MouseDown(object sender, MouseButtonEventArgs e)

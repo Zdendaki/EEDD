@@ -6,7 +6,10 @@ namespace Server
 {
     public class Worker : BackgroundService
     {
-        internal static ILogger<Worker> Logger;
+        internal static ILogger<Worker> Logger { get; private set; }
+
+        internal static List<ClientInfo> Clients { get; } = new();
+
         TCPServer server;
         bool criticalError = false;
 

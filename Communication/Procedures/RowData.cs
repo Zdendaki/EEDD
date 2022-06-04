@@ -243,11 +243,11 @@ namespace Communication.Procedures
 
         public DateTime? Time { get; set; }
 
-        public SignallerType Type { get; set; }
+        public SignallerState Type { get; set; }
 
         public string? Name { get; set; }
 
-        public SignallerValue(int id, StationData.Signaller signaller, DateTime? time, SignallerType type, string? name)
+        public SignallerValue(int id, StationData.Signaller signaller, DateTime? time, SignallerState type, string? name)
         {
             Id = id;
             Signaller = signaller;

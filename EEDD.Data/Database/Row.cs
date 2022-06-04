@@ -273,7 +273,7 @@ namespace ServerData.Database
         [Precision(0)]
         public DateTime? Changed { get; set; }
 
-        public SignallerType Type { get; set; }
+        public SignallerState Type { get; set; }
 
         [MaxLength(50)]
         public string? Name { get; set; }

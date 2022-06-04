@@ -185,18 +185,25 @@ namespace Server.Builders
             foreach (var connection in db.Connections.Where(x => x.PrimaryId == station.Id || x.SecondaryId == station.Id))
             {
                 bool primary = connection.PrimaryId == station.Id;
-                ConnectionData cd = new ConnectionData(connection.Id, primary ? connection.SecondaryId : connection.PrimaryId, primary ? connection.Secondary.Abbr : connection.Primary.Abbr, GetConnectionTracks(connection));
+                ConnectionData cd = new ConnectionData(connection.Id, primary ? connection.SecondaryId : connection.PrimaryId, primary ? connection.Secondary.Abbr : connection.Primary.Abbr, GetConnectionTracks(connection, primary));
                 data.Add(cd);
             }
             return data;
         }
 
-        private List<ConnectionData.Track> GetConnectionTracks(StationConnection connection)
+        private List<ConnectionData.Track> GetConnectionTracks(StationConnection connection, bool primary)
         {
             List<ConnectionData.Track> data = new();
             foreach (var track in connection.RouteTracks)
             {
-                ConnectionData.Track ct = new ConnectionData.Track(track.Id, track.Number, track.Interlocking, track.MinimumInterval);
+                DefaultDirection direction = DefaultDirection.None;
+
+                if ((track.Direction == DefaultDirection.PrimarySecondary && primary) || (track.Direction == DefaultDirection.SecondaryPrimary && !primary))
+                    direction = DefaultDirection.PrimarySecondary;
+                else if ((track.Direction == DefaultDirection.SecondaryPrimary && primary) || (track.Direction == DefaultDirection.PrimarySecondary && !primary))
+                    direction = DefaultDirection.SecondaryPrimary;
+
+                ConnectionData.Track ct = new ConnectionData.Track(track.Id, track.Number, track.Interlocking, direction, track.MinimumInterval);
                 data.Add(ct);
             }
             return data;

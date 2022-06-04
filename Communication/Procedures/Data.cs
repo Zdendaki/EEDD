@@ -1,12 +1,23 @@
 ﻿using Communication.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Communication.Procedures
 {
+    public struct MessageData
+    {
+        public DateTime Sent { get; set; }
+
+        public Procedure Message { get; set; }
+
+        public int Tries { get; set; }
+
+        public MessageData(Procedure message, int tries = 1)
+        {
+            Sent = DateTime.Now;
+            Message = message;
+            Tries = tries;
+        }
+    }
+
     public class UserRoute
     {
         public int Id { get; set; }
@@ -141,13 +152,16 @@ namespace Communication.Procedures
 
             public RouteInterlocking Interlocking { get; set; }
 
+            public DefaultDirection Direction { get; set; }
+
             public int MinimumInterval { get; set; }
 
-            public Track(int id, byte number, RouteInterlocking interlocking, int minimumInterval)
+            public Track(int id, byte number, RouteInterlocking interlocking, DefaultDirection direction, int minimumInterval)
             {
                 Id = id;
                 Number = number;
                 Interlocking = interlocking;
+                Direction = direction;
                 MinimumInterval = minimumInterval;
             }
         }

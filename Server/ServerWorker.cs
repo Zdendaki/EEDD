@@ -74,7 +74,7 @@ namespace Server
                 {
                     bool isAdmin = user.Role > UserRole.Manager;
 
-                    List<ClientInfo> clients = new();
+                    List<Communication.Procedures.ClientInfo> clients = new();
                     var list = context.Routes.SingleOrDefault(x => x.Id == request.RouteId && (x.Users.Contains(user) || isAdmin))?.Clients;
                     if (list is null)
                         return new ClientsListResponse(request.GUID, ResponseState.UnsufficentRights, null);

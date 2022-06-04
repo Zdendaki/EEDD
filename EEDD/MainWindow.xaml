@@ -103,7 +103,7 @@
                     <ScaleTransform x:Name="TableScale" ScaleX="1" ScaleY="1" />
                 </Grid.LayoutTransform>
 
-                <local:Header Grid.Row="0" />
+                <local:Header x:Name="RowHeader" Grid.Row="0" />
 
                 <StackPanel x:Name="Rows" Grid.Row="1">
                 </StackPanel>

@@ -84,7 +84,7 @@
             </Label>
             <Label Width="15">
                 <Label.Content>
-                    <TextBlock LineHeight="14">
+                    <TextBlock LineHeight="14" x:Name="Sig1">
                         <Run Text="S" /><LineBreak />
                         <Run Text="1" />
                     </TextBlock>
@@ -92,7 +92,7 @@
             </Label>
             <Label Width="15">
                 <Label.Content>
-                    <TextBlock LineHeight="14">
+                    <TextBlock LineHeight="14" x:Name="Sig2">
                         <Run Text="S" /><LineBreak />
                         <Run Text="2" />
                     </TextBlock>
@@ -100,7 +100,7 @@
             </Label>
             <Label Width="0">
                 <Label.Content>
-                    <TextBlock LineHeight="14">
+                    <TextBlock LineHeight="14" x:Name="Sig3">
                         <Run Text="S" /><LineBreak />
                         <Run Text="3" />
                     </TextBlock>
@@ -108,7 +108,7 @@
             </Label>
             <Label Width="0">
                 <Label.Content>
-                    <TextBlock LineHeight="14">
+                    <TextBlock LineHeight="14" x:Name="Sig4">
                         <Run Text="S" /><LineBreak />
                         <Run Text="4" />
                     </TextBlock>

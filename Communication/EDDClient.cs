@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using T = System.Timers;
 
 namespace Communication
 {
@@ -21,19 +22,30 @@ namespace Communication
 
         DiffieHellman diffie;
         DiffieHellman.AesKeys aesKeys;
-        byte[] publicKey = new byte[158];
-        bool handshaked = false;
+        byte[] publicKey;
+        bool handshaked;
+        T.Timer timer;
 
         public event MessageReceivedEventHandler MessageReceived;
 
         public EDDClient(string address, int port) : base(address, port) 
         {
             diffie = new DiffieHellman();
+            timer = new(5000);
+            handshaked = false;
+            publicKey = new byte[158];
+            timer.Elapsed += Timer_Elapsed; ;
+        }
+
+        private void Timer_Elapsed(object? sender, T.ElapsedEventArgs e)
+        {
+            
         }
 
         protected override void OnConnected()
         {
             SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
+            timer.Enabled = true;
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
@@ -105,16 +117,17 @@ namespace Communication
         protected override void OnDisconnected()
         {
             // TODO: Restore connection
+            timer.Enabled = false;
         }
 
-        public bool SendMessageAsync(Procedure proc)
+        public bool SendMessageAsync(Procedure proc, int tries = 1)
         {
             if (IsConnected && handshaked)
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(proc));
                 
                 bool flag = SendAsync(diffie.Encrypt(buffer, aesKeys));
-                sentMessages.Add(new MessageData(proc));
+                sentMessages.Add(new MessageData(proc, tries));
                 return flag;
             }
             return false;
@@ -126,19 +139,6 @@ namespace Communication
             Array.Copy(data, offset, buffer, 0, size);
 
             return Encoding.UTF8.GetString(diffie.Decrypt(buffer, aesKeys));
-        }
-    }
-
-    public struct MessageData
-    {
-        public DateTime Sent { get; set; }
-
-        public Procedure Message { get; set; }
-
-        public MessageData(Procedure message)
-        {
-            Sent = DateTime.Now;
-            Message = message;
         }
     }
 
