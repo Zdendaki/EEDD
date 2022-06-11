@@ -63,6 +63,19 @@ namespace ServerData.Database
         [Required]
         public string Comment { get; set; }
 
-        public virtual List<Station> Stations { get; set; }
+        [Required]
+        public byte Order { get; set; } = 1;
+
+        [Required]
+        public SignallerType Type { get; set; }
+
+        [Precision(0)]
+        public DateTime? ValidFrom { get; set; }
+
+        [Precision(0)]
+        public DateTime? ValidTo { get; set; }
+
+        [Required]
+        public virtual Station Station { get; set; }
     }
 }

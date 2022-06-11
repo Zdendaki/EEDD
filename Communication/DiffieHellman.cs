@@ -25,7 +25,12 @@ namespace Communication
 
         public static byte[] Handshake
         {
-            get => new byte[] { 0x05, 0x07, 0x07, 0x07, 0x07, 0x16, 0x16, 0x06 };
+            get => new byte[] { 0x02, 0x07, 0x07, 0x07, 0x07, 0x05, 0x16, 0x03 };
+        }
+
+        public static byte[] Delimiter
+        {
+            get => new byte[] { 0x02, 0x07, 0x07, 0x07, 0x07, 0x1d, 0x1e, 0x03 };
         }
 
         public static int PublicKeyLength
@@ -61,7 +66,7 @@ namespace Communication
                         cs.Write(data, 0, data.Length);
                     }
 
-                    return ms.ToArray();
+                    return Utils.Combine(ms.ToArray(), Delimiter);
                 }
             }
         }

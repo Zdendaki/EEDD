@@ -1,6 +1,7 @@
 ﻿global using Microsoft.EntityFrameworkCore;
 global using System.ComponentModel.DataAnnotations;
 global using System.ComponentModel.DataAnnotations.Schema;
+using T = System.Timers;
 
 namespace ServerData.Database
 {
@@ -38,11 +39,18 @@ namespace ServerData.Database
 
         public DbSet<TimetableStop> TimetableStops { get; set; }
 
+        private Queue<LogEvent> events;
+        private T.Timer timer;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseLazyLoadingProxies().UseSqlServer(AppSecretsReader.ReadSection<string>("ZdendakiVPS-SQL-SA"));
+                events = new();
+                timer = new(1000);
+                timer.Enabled = true;
+                timer.Elapsed += FlushLog;
+                optionsBuilder.LogTo(LogToFile).UseLazyLoadingProxies().UseSqlServer(AppSecretsReader.ReadSection<string>("ZdendakiVPS-SQL-SA"));
             }
         }
 
@@ -54,6 +62,54 @@ namespace ServerData.Database
             modelBuilder.Entity<Stop>().HasOne(x => x.Track).WithOne().OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Stop>().HasOne(x => x.From).WithOne().OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Stop>().HasOne(x => x.To).WithOne().OnDelete(DeleteBehavior.NoAction);
+        }
+
+        private void LogToFile(string text)
+        {
+            LogEvent le = new(text);
+            lock (events)
+                events.Enqueue(le);
+        }
+
+        private void FlushLog(object? sender, T.ElapsedEventArgs e)
+        {
+            lock (events)
+            {
+                if (events.Count == 0)
+                    return;
+
+                try
+                {
+                    using (FileStream fs = new FileStream("dbLog.txt", FileMode.OpenOrCreate, FileAccess.Write))
+                    {
+                        using (StreamWriter sw = new StreamWriter(fs))
+                        {
+                            while (events.Count > 0)
+                            {
+                                var ev = events.Dequeue();
+                                sw.WriteLine($"[{ev.Timestamp:dd.MM.yyyy HH:mm:ss:fff}]\t{ev.Text}");
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Couldn't flush DB log to file. Exception: " + ex.Message);
+                }
+            }
+        }
+    }
+
+    internal record LogEvent
+    {
+        public DateTime Timestamp { get; init; }
+
+        public string Text { get; set; }
+
+        public LogEvent(string text)
+        {
+            Timestamp = DateTime.Now;
+            Text = text;
         }
     }
 }

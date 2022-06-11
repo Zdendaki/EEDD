@@ -223,9 +223,9 @@ namespace Server.Builders
         private List<StationData.Signaller> GetSignallers(Station station)
         {
             List<StationData.Signaller> data = new();
-            foreach (var signaller in station.Signallers)
+            foreach (var signaller in station.Signallers.Where(x => (x.ValidFrom is null || x.ValidFrom.Value.Date <= DateTime.Today) && (x.ValidTo is null || x.ValidTo.Value.Date >= DateTime.Today.AddDays(1))))
             {
-                StationData.Signaller ss = new StationData.Signaller(signaller.Id, signaller.Name, signaller.Comment);
+                StationData.Signaller ss = new StationData.Signaller(signaller.Id, signaller.Name, signaller.Comment, signaller.Type, signaller.Order);
                 data.Add(ss);
             }
             return data;

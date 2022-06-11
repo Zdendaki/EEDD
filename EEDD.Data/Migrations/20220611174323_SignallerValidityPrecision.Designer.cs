@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServerData.Database;
 
@@ -11,9 +12,10 @@ using ServerData.Database;
 namespace ServerData.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220611174323_SignallerValidityPrecision")]
+    partial class SignallerValidityPrecision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -550,9 +552,6 @@ namespace ServerData.Migrations
                     b.Property<byte>("Order")
                         .HasColumnType("tinyint");
 
-                    b.Property<int>("StationId")
-                        .HasColumnType("int");
-
                     b.Property<byte>("Type")
                         .HasColumnType("tinyint");
 
@@ -565,8 +564,6 @@ namespace ServerData.Migrations
                         .HasColumnType("datetime2(0)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StationId");
 
                     b.ToTable("Signallers");
                 });
@@ -915,6 +912,21 @@ namespace ServerData.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("SignallerStation", b =>
+                {
+                    b.Property<int>("SignallersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StationsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SignallersId", "StationsId");
+
+                    b.HasIndex("StationsId");
+
+                    b.ToTable("SignallerStation");
+                });
+
             modelBuilder.Entity("RouteUser", b =>
                 {
                     b.HasOne("ServerData.Database.Route", null)
@@ -1180,17 +1192,6 @@ namespace ServerData.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ServerData.Database.Signaller", b =>
-                {
-                    b.HasOne("ServerData.Database.Station", "Station")
-                        .WithMany("Signallers")
-                        .HasForeignKey("StationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Station");
-                });
-
             modelBuilder.Entity("ServerData.Database.Station", b =>
                 {
                     b.HasOne("ServerData.Database.Client", "Client")
@@ -1353,6 +1354,21 @@ namespace ServerData.Migrations
                     b.Navigation("Station");
                 });
 
+            modelBuilder.Entity("SignallerStation", b =>
+                {
+                    b.HasOne("ServerData.Database.Signaller", null)
+                        .WithMany()
+                        .HasForeignKey("SignallersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ServerData.Database.Station", null)
+                        .WithMany()
+                        .HasForeignKey("StationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ServerData.Database.Client", b =>
                 {
                     b.Navigation("Shifts");
@@ -1381,8 +1397,6 @@ namespace ServerData.Migrations
             modelBuilder.Entity("ServerData.Database.Station", b =>
                 {
                     b.Navigation("Archive");
-
-                    b.Navigation("Signallers");
 
                     b.Navigation("Tracks");
                 });

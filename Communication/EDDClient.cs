@@ -25,6 +25,7 @@ namespace Communication
         byte[] publicKey;
         bool handshaked;
         T.Timer timer;
+        object parseLock = new object();
 
         public event MessageReceivedEventHandler MessageReceived;
 
@@ -34,25 +35,75 @@ namespace Communication
             timer = new(5000);
             handshaked = false;
             publicKey = new byte[158];
-            timer.Elapsed += Timer_Elapsed; ;
+            timer.Elapsed += Timer_Elapsed;
         }
 
         private void Timer_Elapsed(object? sender, T.ElapsedEventArgs e)
         {
-            
+            lock (timer)
+            {
+                Ping p = new Ping();
+                SendMessageAsync(p);
+
+                if (sentMessages.Any(x => (DateTime.Now - x.Sent).TotalSeconds > 10d))
+                {
+                    foreach (MessageData message in sentMessages.Where(x => (DateTime.Now - x.Sent).TotalSeconds > 10d).OrderBy(x => x.Sent))
+                    {
+                        sentMessages.Remove(message);
+                        SendMessageAsync(message.Message);
+                        Thread.Sleep(50);
+                    }
+                }
+            }
         }
 
         protected override void OnConnected()
         {
-            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
+            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey, DiffieHellman.Delimiter));
             timer.Enabled = true;
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
-            if (size == 166 && buffer.StartsWith((int)offset, DiffieHellman.Handshake))
+            lock (parseLock)
             {
-                Array.Copy(buffer, offset + 8, publicKey, 0, 158);
+                int j = 0;
+                long i = offset;
+                long segStart = offset;
+
+                while (i < size)
+                {
+                    if (buffer[i] == DiffieHellman.Delimiter[j])
+                    {
+                        j++;
+                    }
+                    else
+                    {
+                        j = 0;
+                    }
+                    if (j == DiffieHellman.Delimiter.Length)
+                    {
+                        byte[] messageBuffer = new byte[i - segStart - DiffieHellman.Delimiter.LongLength + 1];
+                        Array.Copy(buffer, segStart, messageBuffer, 0, messageBuffer.Length);
+                        segStart = i + 1;
+                        j = 0;
+                        ProcessMessage(messageBuffer);
+                    }
+                    i++;
+                }
+
+                if (segStart < size)
+                {
+
+                }
+            }
+        }
+
+        private void ProcessMessage(byte[] buffer)
+        {
+            if (buffer.LongLength == 166 && buffer.StartsWith(DiffieHellman.Handshake))
+            {
+                Array.Copy(buffer, 8, publicKey, 0, 158);
                 aesKeys = diffie.GenerateKeys(publicKey);
                 handshaked = true;
 
@@ -62,18 +113,18 @@ namespace Communication
             if (!handshaked)
                 return;
 
-            string message;
+            string message = "";
             VoidProcedure? voidProc;
             try
             {
-                message = DecryptMessage(buffer, offset, size);
+                message = DecryptMessage(buffer).Trim();
 
                 if (string.IsNullOrWhiteSpace(message))
                     return;
 
                 voidProc = JsonConvert.DeserializeObject<VoidProcedure>(message);
             }
-            catch { return; }
+            catch { Console.WriteLine(message); return; }
 
             if (voidProc is not null)
             {
@@ -125,20 +176,18 @@ namespace Communication
             if (IsConnected && handshaked)
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(proc));
-                
-                bool flag = SendAsync(diffie.Encrypt(buffer, aesKeys));
-                sentMessages.Add(new MessageData(proc, tries));
-                return flag;
+
+                bool sent = SendAsync(diffie.Encrypt(buffer, aesKeys));
+                if (proc is not IResponse)
+                    sentMessages.Add(new MessageData(proc, tries));
+                return sent;
             }
             return false;
         }
 
-        public string DecryptMessage(byte[] data, long offset, long size)
+        public string DecryptMessage(byte[] data)
         {
-            byte[] buffer = new byte[size];
-            Array.Copy(data, offset, buffer, 0, size);
-
-            return Encoding.UTF8.GetString(diffie.Decrypt(buffer, aesKeys));
+            return Encoding.UTF8.GetString(diffie.Decrypt(data, aesKeys));
         }
     }
 

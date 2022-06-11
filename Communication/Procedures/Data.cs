@@ -105,11 +105,17 @@ namespace Communication.Procedures
 
             public string Comment { get; set; }
 
-            public Signaller(int id, string name, string comment)
+            public SignallerType Type { get; set; }
+
+            public byte Order { get; set; }
+
+            public Signaller(int id, string name, string comment, SignallerType type, byte order)
             {
                 Id = id;
                 Name = name;
                 Comment = comment;
+                Type = type;
+                Order = order;
             }
         }
 

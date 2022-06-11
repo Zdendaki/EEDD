@@ -1,0 +1,109 @@
+[11.06.2022 19:54:07:188]	warn: 11.06.2022 19:54:07.187 CoreEventId.ConflictingShadowForeignKeysWarning[10605] (Microsoft.EntityFrameworkCore.Model) 
+      There are multiple relationships between 'RowDataDelay' and 'Row' without configured foreign key properties. This will cause Entity Framework to create shadow properties on 'RowDataDelay' with names dependent on the discovery order. Consider configuring the foreign key properties using the [ForeignKey] attribute or in 'OnModelCreating'.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'RouteUser (Dictionary<string, object>).RoutesId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'RouteUser (Dictionary<string, object>).UsersId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Client.RouteId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'RouteTrack.ConnectionId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.APMDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.AcceptedAId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.AcceptedDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.ActualDepAId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.ActualDepDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.AnnouncedAId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.AnnouncedDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.ArrivalId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.CommentAId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.CommentDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.DPMDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.DepartedAId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.DepartedDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.DepartureId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.MessageId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.NoteAId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.NoteDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.ResponsibleUserId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig1AId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig1DId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig2AId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig2DId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig3AId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig3DId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig4AId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.Sig4DId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.StationId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.TrackAId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.TrackDId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Row.TrainId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:363]	dbug: 11.06.2022 19:54:07.363 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'RowDataDelay.RowId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	warn: 11.06.2022 19:54:07.364 CoreEventId.ShadowForeignKeyPropertyCreated[10625] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The foreign key property 'RowDataDelay.RowId1' was created in shadow state because a conflicting property with the simple name 'RowId' exists in the entity type, but is either not mapped, is already used for another relationship, or is incompatible with the associated primary key type. See https://aka.ms/efcore-relationships for information on mapping relationships in EF Core.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'RowDataSignaller.SignallerId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Shift.ClientId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Shift.UserId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Signaller.StationId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Station.ClientId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'StationConnection.RouteId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Stop.TrackId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Stop.TrainId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Timetable.RouteId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'TimetableStop.TrainId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'TimetableTrain.TimetableId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Track.StationId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'Train.RouteId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'TrainEvent.StationId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:364]	dbug: 11.06.2022 19:54:07.364 CoreEventId.ShadowPropertyCreated[10600] (Microsoft.EntityFrameworkCore.Model.Validation) 
+      The property 'TrainEvent.TrainId' was created in shadow state because there are no eligible CLR members with a matching name.
+[11.06.2022 19:54:07:533]	info: 11.06.2022 19:54:07.533 CoreEventId.ContextInitialized[10403] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      Entity Framework Core 6.0.5 initialized 'Context' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.5' with options: using lazy loading proxies 
+e are no eligible CLR members with a matching name.
+[11.06.2022 19:43:40:245]	info: 11.06.2022 19:43:40.245 CoreEventId.ContextInitialized[10403] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      Entity Framework Core 6.0.5 initialized 'Context' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.5' with options: using lazy loading proxies 

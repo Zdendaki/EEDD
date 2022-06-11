@@ -1,4 +1,5 @@
-﻿using Communication.Procedures;
+﻿using Communication.Data;
+using Communication.Procedures;
 using Communication.Procedures.Clients;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace EEDD
         }
 
         readonly ClientData client;
+        bool canClose = false;
 
         public MainWindow()
         {
@@ -50,37 +52,48 @@ namespace EEDD
             InitRows();
 
 
-            Rows.Children.Add(new Row(StationBackground.Gray, true));
-            Rows.Children.Add(new Row(StationBackground.Gray, false));
-            Rows.Children.Add(new Row(StationBackground.Gray, true));
+            App.Client.MessageReceived += MessageReceived;
         }
 
+        private void MessageReceived(Procedure procedure)
+        {
+            if (procedure is null)
+                return;
+            
+            if (procedure is EndShiftResponse)
+            {
+                canClose = (procedure as EndShiftResponse)!.ResponseState == ResponseState.Success;
+                if (canClose)
+                    Close();
+            }
+        }
+        
         private void InitHeader()
         {
             Header head = RowHeader;
             int i = 1;
-            foreach(StationData.Signaller sig in App.Data.Signallers)
+            foreach(var sig in App.Data.Signallers)
             {
                 if (i > 4)
                     break;
                 else if (i == 1)
                 {
-                    head.Sig1.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig1.Text = sig.Key.name.Truncate(2).Insert(1, Environment.NewLine);
                     head.Sig1.Width = 15;
                 }
                 else if (i == 2)
                 {
-                    head.Sig2.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig2.Text = sig.Key.name.Truncate(2).Insert(1, Environment.NewLine);
                     head.Sig2.Width = 15;
                 }
                 else if (i == 3)
                 {
-                    head.Sig3.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig3.Text = sig.Key.name.Truncate(2).Insert(1, Environment.NewLine);
                     head.Sig3.Width = 15;
                 }
                 else if (i == 4)
                 {
-                    head.Sig4.Text = sig.Name.Truncate(2).Insert(1, Environment.NewLine);
+                    head.Sig4.Text = sig.Key.name.Truncate(2).Insert(1, Environment.NewLine);
                     head.Sig4.Width = 15;
                 }
                 i++;
@@ -115,6 +128,9 @@ namespace EEDD
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (canClose)
+                return;
+            
             var result = MessageBox.Show(this, "Opravdu chcete ukončit dopravní deník?", "Ukončení směny", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.No)

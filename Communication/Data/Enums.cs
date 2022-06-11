@@ -152,6 +152,45 @@
     }
 
     /// <summary>
+    /// Typ stanoviště
+    /// </summary>
+    public enum SignallerType : byte
+    {
+        /// <summary>
+        /// Výpravčí, vede dopravní deník
+        /// </summary>
+        Dispatcher,
+        /// <summary>
+        /// Předvídaný odjezd ve stanici
+        /// </summary>
+        AnnouncedDepartureStation,
+        /// <summary>
+        /// Pro rušící posun a volnost a postavení vlakové cesty
+        /// </summary>
+        TrainRoutePrep,
+        /// <summary>
+        /// Vlak vjel/odjel celý
+        /// </summary>
+        TrainArrivedDepartured,
+        /// <summary>
+        /// Dopravna
+        /// </summary>
+        Station,
+        /// <summary>
+        /// Rušící posun zastaven
+        /// </summary>
+        ShuntingStopped,
+        /// <summary>
+        /// Pro vlak postaveno a volno
+        /// </summary>
+        RouteForTrainSetAndFree,
+        /// <summary>
+        /// Pro předvídaný odjezd na trati
+        /// </summary>
+        AnnouncedDepartureRoute
+    }
+
+    /// <summary>
     /// Typ vlaku
     /// </summary>
     public enum TrainType : byte

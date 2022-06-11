@@ -29,6 +29,7 @@ namespace Server.TCP
         DiffieHellman.AesKeys aesKeys;
         T.Timer timer;
         List<MessageData> sentMessages;
+        object parseLock = new object();
         
         bool handshaked = false;
 
@@ -53,6 +54,7 @@ namespace Server.TCP
                 {
                     sentMessages.Remove(message);
                     SendMessageAsync(message.Message);
+                    Thread.Sleep(50);
                 }
             }
         }
@@ -60,17 +62,53 @@ namespace Server.TCP
         protected override void OnConnected()
         {
             Worker.Logger.LogInformation($"[{Id}] Client connected");
-            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
             client = new ClientInfo(Id);
+            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey, DiffieHellman.Delimiter));
             Worker.Clients.Add(client);
             timer.Enabled = true;
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
-            if (size == 166 && buffer.StartsWith((int)offset, DiffieHellman.Handshake))
+            lock (parseLock)
             {
-                Array.Copy(buffer, offset + 8, client.PublicKey, 0, 158);
+                int j = 0;
+                long i = offset;
+                long segStart = offset;
+
+                while (i < size)
+                {
+                    if (buffer[i] == DiffieHellman.Delimiter[j])
+                    {
+                        j++;
+                    }
+                    else
+                    {
+                        j = 0;
+                    }
+                    if (j == DiffieHellman.Delimiter.Length)
+                    {
+                        byte[] messageBuffer = new byte[i - segStart - DiffieHellman.Delimiter.LongLength + 1];
+                        Array.Copy(buffer, segStart, messageBuffer, 0, messageBuffer.Length);
+                        segStart = i + 1;
+                        j = 0;
+                        ProcessMessage(messageBuffer);
+                    }
+                    i++;
+                }
+
+                if (segStart < size)
+                {
+                    Worker.Logger.LogWarning($"Message from client [{Id}] was discarded");
+                }
+            }
+        }
+
+        private void ProcessMessage(byte[] buffer)
+        {
+            if (buffer.LongLength == 166 && buffer.StartsWith(DiffieHellman.Handshake))
+            {
+                Array.Copy(buffer, 8, client.PublicKey, 0, 158);
                 aesKeys = diffie.GenerateKeys(client.PublicKey);
                 handshaked = true;
                 Worker.Logger.LogDebug($"[{Id}] Client handshaked");
@@ -89,20 +127,20 @@ namespace Server.TCP
                 return;
             }
 
-            string message;
+            string message = "";
             VoidProcedure? procedure;
             try
             {
-                message = DecryptMessage(buffer, offset, size);
+                message = DecryptMessage(buffer);
 
                 if (string.IsNullOrWhiteSpace(message))
                     return;
 
                 procedure = JsonConvert.DeserializeObject<VoidProcedure>(message);
             }
-            catch 
+            catch
             {
-                Worker.Logger.LogWarning($"[{Id}] Couldn't parse message");
+                Worker.Logger.LogWarning($"[{Id}] Couldn't parse message: " + message);
                 return;
             }
 
@@ -121,6 +159,9 @@ namespace Server.TCP
                         break;
                     case ProcedureType.ClientDataRequest:
                         ProcessClientDataRequest(message);
+                        break;
+                    case ProcedureType.Ping:
+                        ProcessPing(message);
                         break;
                 }
 
@@ -151,7 +192,7 @@ namespace Server.TCP
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
                 bool sent = SendAsync(diffie.Encrypt(buffer, aesKeys));
-                if (sent)
+                if (message is not IResponse)
                     sentMessages.Add(new(message));
                 return sent;
             }
@@ -170,12 +211,9 @@ namespace Server.TCP
                 return false;
         }
 
-        internal string DecryptMessage(byte[] data, long offset, long size)
+        internal string DecryptMessage(byte[] data)
         {
-            byte[] buffer = new byte[size];
-            Array.Copy(data, offset, buffer, 0, size);
-
-            return Encoding.UTF8.GetString(diffie.Decrypt(buffer, aesKeys));
+            return Encoding.UTF8.GetString(diffie.Decrypt(data, aesKeys));
         }
 
         #region Process requests
@@ -187,8 +225,8 @@ namespace Server.TCP
             {
                 var (res, u) = ServerWorker.DoLogin(request, UserRole.Dispatcher);
                 client.User = u;
-                SendMessageAsync(res);
-                Worker.Logger.LogInformation($"[{Id}] Login response sent");
+                if (SendMessageAsync(res))
+                    Worker.Logger.LogInformation($"[{Id}] Login response sent");
             }
         }
 
@@ -266,6 +304,15 @@ namespace Server.TCP
             if (request is not null)
             {
                 SendMessageAsync(ServerWorker.GetClientData(request));
+            }
+        }
+
+        private void ProcessPing(string data)
+        {
+            Ping? request = JsonConvert.DeserializeObject<Ping>(data);
+            if (request is not null)
+            {
+                SendMessageAsync(new Pong(request.GUID));
             }
         }
 

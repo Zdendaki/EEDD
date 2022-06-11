@@ -57,7 +57,7 @@ namespace EEDD
                             if (res.ResponseState == ResponseState.Success && res.Data is not null)
                             {
                                 App.Data.Client = res.Data;
-                                App.Data.Signallers = res.Data.Stations.SelectMany(x => x.Signallers).DistinctBy(x => x.Id).OrderBy(x => x.Id).ToList();
+                                App.Data.Signallers = res.Data.Stations.SelectMany(x => x.Signallers).DistinctBy(x => x.Id).OrderBy(x => x.Order).GroupBy(x => (x.Name, x.Type)).ToList();
 
                                 Dispatcher.Invoke(() =>
                                 {
@@ -86,6 +86,12 @@ namespace EEDD
                     try
                     {
                         if (!App.Client.ConnectAsync())
+                            throw new Exception();
+
+                        while (App.Client.IsConnecting)
+                            Thread.Sleep(100);
+
+                        if (!App.Client.IsConnected)
                             throw new Exception();
 
                         Dispatcher.Invoke(() =>
