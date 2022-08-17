@@ -46,7 +46,7 @@ namespace EEDD
 
                 Task.Run(() =>
                 {
-                    App.Client.SendMessageAsync(new ClientDataRequest(App.Data.ShiftId));
+                    App.Client.SendMessage(new ClientDataRequest(App.Data.ShiftId));
 
                     App.Client.MessageReceived += (proc) =>
                     {
@@ -69,7 +69,7 @@ namespace EEDD
                             else
                             {
                                 MessageBox.Show(this, "Nepodařilo se stáhnout data stanice. Aplikace bude ukončena.", "Stahování dat se nezdařilo", MessageBoxButton.OK, MessageBoxImage.Error);
-                                App.Client.SendMessageAsync(new EndShiftRequest(App.Data.ShiftId));
+                                App.Client.SendMessage(new EndShiftRequest(App.Data.ShiftId));
                                 closing = true;
                                 Environment.Exit(0);
                             }

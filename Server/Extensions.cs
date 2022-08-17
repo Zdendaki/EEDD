@@ -64,5 +64,12 @@ namespace Server
         {
             return new string(s.ToCharArray().OrderBy(x => Guid.NewGuid()).ToArray());
         }
+
+        public static byte[] Cut(this byte[] array, long offset, long size)
+        {
+            byte[] buffer = new byte[size];
+            Array.Copy(array, offset, buffer, 0, size);
+            return buffer;
+        }
     }
 }

@@ -150,7 +150,7 @@ namespace EEDD
             {
                 Task.Run(() =>
                 {
-                    App.Client.SendMessageAsync(new ClientsListRequest(App.Token, ur.Id));
+                    App.Client.SendMessage(new ClientsListRequest(App.Token, ur.Id));
                 });
             }
         }
@@ -170,7 +170,7 @@ namespace EEDD
 
                 Task.Run(() =>
                 {
-                    App.Client.SendMessageAsync(new LoginRequest(username, password));
+                    App.Client.SendMessage(new LoginRequest(username, password));
                 });
             }
         }
@@ -183,7 +183,7 @@ namespace EEDD
             {
                 Task.Run(() =>
                 {
-                    App.Client.SendMessageAsync(new ClientsListRequest(App.Token, ur.Id));
+                    App.Client.SendMessage(new ClientsListRequest(App.Token, ur.Id));
                 });
             }
         }
@@ -218,7 +218,7 @@ namespace EEDD
             {
                 Task.Run(() =>
                 {
-                    App.Client.SendMessageAsync(new StartShiftRequest(App.Token, client.Id));
+                    App.Client.SendMessage(new StartShiftRequest(App.Token, client.Id));
                 });
             }
         }

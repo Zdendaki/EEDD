@@ -23,6 +23,8 @@ namespace Communication
 
         public byte[] PublicKey { get => diffie.ExportSubjectPublicKeyInfo(); }
 
+        public bool Enabled { get; set; }
+
         public static byte[] Handshake
         {
             get => new byte[] { 0x02, 0x07, 0x07, 0x07, 0x07, 0x05, 0x16, 0x03 };
@@ -38,9 +40,10 @@ namespace Communication
             get => 158;
         }
 
-        public DiffieHellman()
+        public DiffieHellman(bool enabled = true)
         {
             diffie = ECDiffieHellman.Create();
+            Enabled = enabled;
         }
 
         public byte[] GetSharedSecret(byte[] publicKey)
@@ -54,40 +57,50 @@ namespace Communication
 
         public byte[] Encrypt(byte[] data, AesKeys keys)
         {
-            using (Aes aes = Aes.Create())
+            if (Enabled)
             {
-                aes.Key = keys.Key;
-                aes.IV = keys.IV;
-
-                using (var ms = new MemoryStream())
+                using (Aes aes = Aes.Create())
                 {
-                    using (var cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(data, 0, data.Length);
-                    }
+                    aes.Key = keys.Key;
+                    aes.IV = keys.IV;
 
-                    return Utils.Combine(ms.ToArray(), Delimiter);
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                        {
+                            cs.Write(data, 0, data.Length);
+                        }
+
+                        return Utils.Combine(ms.ToArray(), Delimiter);
+                    }
                 }
             }
+            else 
+                return data;
         }
 
         public byte[] Decrypt(byte[] data, AesKeys keys)
         {
-            using (Aes aes = Aes.Create())
+            if (Enabled)
             {
-                aes.Key = keys.Key;
-                aes.IV = keys.IV;
-
-                using (var ms = new MemoryStream())
+                using (Aes aes = Aes.Create())
                 {
-                    using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        cs.Write(data, 0, data.Length);
-                    }
+                    aes.Key = keys.Key;
+                    aes.IV = keys.IV;
 
-                    return ms.ToArray();
+                    using (var ms = new MemoryStream())
+                    {
+                        using (var cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write))
+                        {
+                            cs.Write(data, 0, data.Length);
+                        }
+
+                        return ms.ToArray();
+                    }
                 }
             }
+            else
+                return data;
         }
 
         public AesKeys GenerateKeys(byte[] publicKey)

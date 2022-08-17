@@ -34,5 +34,20 @@
                 return true;
             }
         }
+
+        public static byte[] Cut(this byte[] array, long offset, long size)
+        {
+            byte[] buffer = new byte[size];
+            Array.Copy(array, offset, buffer, 0, size);
+            return buffer;
+        }
+
+        public static bool Compare(this byte[] a1, byte[] a2)
+        {
+            if (a1 is null || a2 is null)
+                return false;
+
+            return ((ReadOnlySpan<byte>)a1).SequenceEqual((ReadOnlySpan<byte>)a2);
+        }
     }
 }

@@ -2,7 +2,6 @@
 using Communication.Procedures.Basic;
 using Communication.Procedures.Clients;
 using Communication.Procedures.Users;
-using TcpClient = NetCoreServer.TcpClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,12 +10,15 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using T = System.Timers;
+using NetCoreServer;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Communication
 {
     public delegate void MessageReceivedEventHandler(Procedure procedure);
 
-    public class EDDClient : TcpClient
+    public class EDDClient : WsClient
     {
         List<MessageData> sentMessages = new();
 
@@ -25,17 +27,19 @@ namespace Communication
         byte[] publicKey;
         bool handshaked;
         T.Timer timer;
-        object parseLock = new object();
+
+        public bool Encryption { get; set; }
 
         public event MessageReceivedEventHandler MessageReceived;
 
-        public EDDClient(string address, int port) : base(address, port) 
+        public EDDClient(string address, int port, bool encryption = true) : base(address, port)
         {
-            diffie = new DiffieHellman();
+            diffie = new DiffieHellman(encryption);
             timer = new(5000);
             handshaked = false;
             publicKey = new byte[158];
             timer.Elapsed += Timer_Elapsed;
+            Encryption = encryption;
         }
 
         private void Timer_Elapsed(object? sender, T.ElapsedEventArgs e)
@@ -43,65 +47,54 @@ namespace Communication
             lock (timer)
             {
                 Ping p = new Ping();
-                SendMessageAsync(p);
+                SendMessage(p);
 
                 if (sentMessages.Any(x => (DateTime.Now - x.Sent).TotalSeconds > 10d))
                 {
                     foreach (MessageData message in sentMessages.Where(x => (DateTime.Now - x.Sent).TotalSeconds > 10d).OrderBy(x => x.Sent))
                     {
                         sentMessages.Remove(message);
-                        SendMessageAsync(message.Message);
+                        SendMessage(message.Message);
                         Thread.Sleep(50);
                     }
                 }
             }
         }
 
-        protected override void OnConnected()
+        public override void OnWsConnecting(HttpRequest request)
         {
-            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey, DiffieHellman.Delimiter));
-            timer.Enabled = true;
+            request.SetBegin("GET", "/");
+            request.SetHeader("Host", "localhost");
+            request.SetHeader("Origin", "http://localhost");
+            request.SetHeader("Upgrade", "websocket");
+            request.SetHeader("Connection", "Upgrade");
+            request.SetHeader("Sec-WebSocket-Key", Convert.ToBase64String(WsNonce));
+            request.SetHeader("Sec-WebSocket-Protocol", "eedd");
+            request.SetHeader("Sec-WebSocket-Version", "13");
+            request.SetBody();
         }
 
-        protected override void OnReceived(byte[] buffer, long offset, long size)
+        public override void OnWsConnected(HttpResponse response)
         {
-            lock (parseLock)
+            timer.Enabled = true;
+
+            if (Encryption)
             {
-                int j = 0;
-                long i = offset;
-                long segStart = offset;
+                SendTextAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
 
-                while (i < size)
+                Task.Run(() =>
                 {
-                    if (buffer[i] == DiffieHellman.Delimiter[j])
-                    {
-                        j++;
-                    }
-                    else
-                    {
-                        j = 0;
-                    }
-                    if (j == DiffieHellman.Delimiter.Length)
-                    {
-                        byte[] messageBuffer = new byte[i - segStart - DiffieHellman.Delimiter.LongLength + 1];
-                        Array.Copy(buffer, segStart, messageBuffer, 0, messageBuffer.Length);
-                        segStart = i + 1;
-                        j = 0;
-                        ProcessMessage(messageBuffer);
-                    }
-                    i++;
-                }
-
-                if (segStart < size)
-                {
-
-                }
+                    Thread.Sleep(500);
+                    
+                });
             }
         }
 
-        private void ProcessMessage(byte[] buffer)
+        public override void OnWsReceived(byte[] buffer, long offset, long size)
         {
-            if (buffer.LongLength == 166 && buffer.StartsWith(DiffieHellman.Handshake))
+            byte[] message = buffer.Cut(offset, size);
+
+            if (Encryption && !handshaked && buffer.LongLength == 166L && buffer.StartsWith(DiffieHellman.Handshake))
             {
                 Array.Copy(buffer, 8, publicKey, 0, 158);
                 aesKeys = diffie.GenerateKeys(publicKey);
@@ -110,9 +103,12 @@ namespace Communication
                 return;
             }
 
-            if (!handshaked)
-                return;
+            if (handshaked || !Encryption)
+                ProcessMessage(message);
+        }
 
+        private void ProcessMessage(byte[] buffer)
+        {
             string message = "";
             VoidProcedure? voidProc;
             try
@@ -130,7 +126,7 @@ namespace Communication
             {
                 if (voidProc.Type == ProcedureType.Ping)
                 {
-                    SendMessageAsync(new Pong(voidProc.GUID));
+                    SendMessage(new Pong(voidProc.GUID));
                 }
                 else
                 {
@@ -159,26 +155,26 @@ namespace Communication
                     {
                         VoidResponse? response = JsonConvert.DeserializeObject<VoidResponse>(message);
                         if (response is not null)
-                            sentMessages.RemoveAll(x => x.Message.GUID == response?.RequestGUID);
+                            sentMessages.RemoveAll(x => Utils.Compare(x.Message.GUID, response?.RequestGUID));
                     }
                 }
             }
         }
 
-        protected override void OnDisconnected()
+        public override void OnWsDisconnected()
         {
             // TODO: Restore connection
             timer.Enabled = false;
         }
 
-        public bool SendMessageAsync(Procedure proc, int tries = 1)
+        public bool SendMessage(Procedure proc, int tries = 1)
         {
-            if (IsConnected && handshaked)
+            if (IsConnected && (handshaked || !Encryption))
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(proc));
 
-                bool sent = SendAsync(diffie.Encrypt(buffer, aesKeys));
-                if (proc is not IResponse)
+                bool sent = SendBinaryAsync(buffer);
+                if (proc is not IResponse && proc is not Ping)
                     sentMessages.Add(new MessageData(proc, tries));
                 return sent;
             }

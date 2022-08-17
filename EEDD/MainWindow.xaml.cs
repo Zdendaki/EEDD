@@ -142,7 +142,7 @@ namespace EEDD
                 e.Cancel = true;
                 Task.Run(() =>
                 {
-                    App.Client.SendMessageAsync(new EndShiftRequest(App.Data.ShiftId));
+                    App.Client.SendMessage(new EndShiftRequest(App.Data.ShiftId));
                 });
             }
         }

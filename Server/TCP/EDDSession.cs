@@ -19,23 +19,22 @@ using T = System.Timers;
 
 namespace Server.TCP
 {
-    internal class EDDSession : TcpSession
-    {
+    internal class EDDSession : WsSession
+    {        
         List<TCPError> Errors { get; set; }
         
         readonly DiffieHellman diffie;
-        readonly TCPServer server;
+        readonly WSServer server;
         ClientInfo client;
         DiffieHellman.AesKeys aesKeys;
         T.Timer timer;
         List<MessageData> sentMessages;
-        object parseLock = new object();
         
         bool handshaked = false;
 
-        public EDDSession(TcpServer server) : base (server)
+        public EDDSession(WsServer server) : base (server)
         {
-            this.server = (TCPServer)server;
+            this.server = (WSServer)server;
             diffie = this.server.Diffie;
             Errors = new();
             timer = new(5000);
@@ -45,75 +44,46 @@ namespace Server.TCP
 
         private void Timer_Elapsed(object? sender, T.ElapsedEventArgs e)
         {
-            Ping p = new Ping();
-            SendMessageAsync(p);
+            SendPingAsync("");
 
             if (sentMessages.Any(x => (DateTime.Now - x.Sent).TotalSeconds > 20d))
             {
                 foreach (MessageData message in sentMessages.Where(x => (DateTime.Now - x.Sent).TotalSeconds > 20d).OrderBy(x => x.Sent))
                 {
                     sentMessages.Remove(message);
-                    SendMessageAsync(message.Message);
+                    SendMessage(message.Message);
                     Thread.Sleep(50);
                 }
             }
         }
 
-        protected override void OnConnected()
+        public override void OnWsConnected(HttpRequest request)
         {
             Worker.Logger.LogInformation($"[{Id}] Client connected");
             client = new ClientInfo(Id);
-            SendAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey, DiffieHellman.Delimiter));
+            if (server.Encryption)
+                SendBinaryAsync(Utils.Combine(DiffieHellman.Handshake, diffie.PublicKey));
             Worker.Clients.Add(client);
             timer.Enabled = true;
         }
 
-        protected override void OnReceived(byte[] buffer, long offset, long size)
+        public override void OnWsPong(byte[] buffer, long offset, long size)
         {
-            lock (parseLock)
-            {
-                int j = 0;
-                long i = offset;
-                long segStart = offset;
-
-                while (i < size)
-                {
-                    if (buffer[i] == DiffieHellman.Delimiter[j])
-                    {
-                        j++;
-                    }
-                    else
-                    {
-                        j = 0;
-                    }
-                    if (j == DiffieHellman.Delimiter.Length)
-                    {
-                        byte[] messageBuffer = new byte[i - segStart - DiffieHellman.Delimiter.LongLength + 1];
-                        Array.Copy(buffer, segStart, messageBuffer, 0, messageBuffer.Length);
-                        segStart = i + 1;
-                        j = 0;
-                        ProcessMessage(messageBuffer);
-                    }
-                    i++;
-                }
-
-                if (segStart < size)
-                {
-                    Worker.Logger.LogWarning($"Message from client [{Id}] was discarded");
-                }
-            }
+            base.OnWsPong(buffer, offset, size);
         }
 
-        private void ProcessMessage(byte[] buffer)
+        public override void OnWsReceived(byte[] buffer, long offset, long size)
         {
-            if (buffer.LongLength == 166 && buffer.StartsWith(DiffieHellman.Handshake))
+            byte[] message = buffer.Cut(offset, size);
+
+            if (server.Encryption && !handshaked && message.LongLength == 166L && message.StartsWith(DiffieHellman.Handshake))
             {
-                Array.Copy(buffer, 8, client.PublicKey, 0, 158);
+                Array.Copy(message, 8, client.PublicKey, 0, 158);
                 aesKeys = diffie.GenerateKeys(client.PublicKey);
                 handshaked = true;
                 Worker.Logger.LogDebug($"[{Id}] Client handshaked");
 
-                if (Worker.Clients.Any(x => x.PublicKey == client.PublicKey && x.GUID != Id)) // TODO: fix byte[] == byte[]
+                if (Worker.Clients.Any(x => Utils.Compare(x.PublicKey, client.PublicKey) && x.GUID != Id))
                 {
 
                 }
@@ -121,17 +91,19 @@ namespace Server.TCP
                 return;
             }
 
-            if (!handshaked)
-            {
+            if (handshaked || !server.Encryption)
+                ProcessMessage(message);
+            else
                 Worker.Logger.LogWarning($"[{Id}] Client requested message without handshake");
-                return;
-            }
+        }
 
+        private void ProcessMessage(byte[] buffer)
+        {
             string message = "";
             VoidProcedure? procedure;
             try
             {
-                message = DecryptMessage(buffer);
+                message = DecryptMessage(buffer).Trim();
 
                 if (string.IsNullOrWhiteSpace(message))
                     return;
@@ -169,15 +141,16 @@ namespace Server.TCP
                 {
                     VoidResponse? response = JsonConvert.DeserializeObject<VoidResponse>(message);
                     if (response is not null)
-                        sentMessages.RemoveAll(x => x.Message.GUID == response?.RequestGUID);
+                        sentMessages.RemoveAll(x => Utils.Compare(x.Message.GUID, response?.RequestGUID));
                 }
             }
         }
 
-        protected override void OnDisconnected()
+        public override void OnWsDisconnected()
         {
             EndShift(); // TODO: možná změnit
             Worker.Logger.LogInformation($"[{Id}] Client disconnected");
+            Worker.Clients.Remove(client);
             timer.Enabled = false;
         }
 
@@ -186,13 +159,14 @@ namespace Server.TCP
             Errors.Add(new(error));
         }
 
-        internal bool SendMessageAsync(Procedure message)
+        internal bool SendMessage(Procedure message)
         {
-            if (handshaked)
+            if (handshaked || !server.Encryption)
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-                bool sent = SendAsync(diffie.Encrypt(buffer, aesKeys));
-                if (message is not IResponse)
+                byte[] output = diffie.Encrypt(buffer, aesKeys);
+                bool sent = SendBinaryAsync(output);
+                if (message is not IResponse && message is not Ping)
                     sentMessages.Add(new(message));
                 return sent;
             }
@@ -202,10 +176,10 @@ namespace Server.TCP
 
         internal bool MulticastMessage(object? message)
         {
-            if (handshaked)
+            if (handshaked || !server.Encryption)
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-                return Server.Multicast(diffie.Encrypt(buffer, aesKeys));
+                return Server.Multicast(buffer);
             }
             else
                 return false;
@@ -216,7 +190,7 @@ namespace Server.TCP
             return Encoding.UTF8.GetString(diffie.Decrypt(data, aesKeys));
         }
 
-        #region Process requests
+#region Process requests
         private void ProcessLogin(string data)
         {
             Worker.Logger.LogInformation($"[{Id}] Login requested");
@@ -225,7 +199,7 @@ namespace Server.TCP
             {
                 var (res, u) = ServerWorker.DoLogin(request, UserRole.Dispatcher);
                 client.User = u;
-                if (SendMessageAsync(res))
+                if (SendMessage(res))
                     Worker.Logger.LogInformation($"[{Id}] Login response sent");
             }
         }
@@ -236,7 +210,7 @@ namespace Server.TCP
 
             if (request is not null)
             {
-                SendMessageAsync(ServerWorker.GetClients(request));
+                SendMessage(ServerWorker.GetClients(request));
             }
         }
 
@@ -251,14 +225,14 @@ namespace Server.TCP
                     (TokenState token, User? user) = database.CheckUser(request.Token, UserRole.Dispatcher);
 
                     if (token == TokenState.Expired)
-                        SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false));
+                        SendMessage(new StartShiftResponse(request.GUID, ResponseState.ExpiredToken, false));
                     else if (token == TokenState.UnsufficentRights)
-                        SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false));
+                        SendMessage(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false));
                     else if (token == TokenState.Ok)
                     {
                         if (user is null)
                         {
-                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false));
+                            SendMessage(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false));
                             return;
                         }
 
@@ -268,7 +242,7 @@ namespace Server.TCP
 
                         if (client is null)
                         {
-                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false));
+                            SendMessage(new StartShiftResponse(request.GUID, ResponseState.UnsufficentRights, false));
                             return;
                         }
 
@@ -284,15 +258,15 @@ namespace Server.TCP
                             };
                             var sh = database.Shifts.Add(shift);
                             database.SaveChanges();
-                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id));
+                            SendMessage(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id));
                         }
                         else
                         {
-                            SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.Success, false));
+                            SendMessage(new StartShiftResponse(request.GUID, ResponseState.Success, false));
                         }
                     }
                     else
-                        SendMessageAsync(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false));
+                        SendMessage(new StartShiftResponse(request.GUID, ResponseState.InvalidToken, false));
                 }
             }
         }
@@ -303,7 +277,7 @@ namespace Server.TCP
 
             if (request is not null)
             {
-                SendMessageAsync(ServerWorker.GetClientData(request));
+                SendMessage(ServerWorker.GetClientData(request));
             }
         }
 
@@ -312,15 +286,15 @@ namespace Server.TCP
             Ping? request = JsonConvert.DeserializeObject<Ping>(data);
             if (request is not null)
             {
-                SendMessageAsync(new Pong(request.GUID));
+                SendMessage(new Pong(request.GUID));
             }
         }
 
-        #endregion
+#endregion
 
         private void EndShift()
         {
-            if (client.Shift is not null)
+            if (client?.Shift is not null)
             {
                 using (Context context = new Context())
                 {

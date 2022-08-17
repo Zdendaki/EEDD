@@ -10,7 +10,7 @@ namespace Server
 
         internal static List<ClientInfo> Clients { get; } = new();
 
-        TCPServer server;
+        WSServer server;
         bool criticalError = false;
 
         public Worker(ILogger<Worker> logger)
@@ -26,7 +26,7 @@ namespace Server
             }
             catch (Exception e)
             {
-                Logger.LogCritical("Couldn't start TCP service. Exception: " + e.Message);
+                Logger.LogCritical("Couldn't start WS service. Exception: " + e.Message);
                 criticalError = true;
                 return base.StartAsync(cancellationToken);
             }
@@ -40,7 +40,7 @@ namespace Server
             }
             catch (Exception e)
             {
-                Logger.LogCritical("Couldn't connect to database. Stopping TCP service. Exception: " + e.Message);
+                Logger.LogCritical("Couldn't connect to database. Stopping WS service. Exception: " + e.Message);
                 server.Stop();
                 criticalError = true;
             }
@@ -60,14 +60,14 @@ namespace Server
             {
                 if (!server.IsStarted && !criticalError)
                 {
-                    Logger.LogWarning("TCP service isn't listening, trying to start again.");
+                    Logger.LogWarning("WS service isn't listening, trying to start again.");
                     try
                     {
                         server.Start();
                     }
                     catch
                     {
-                        Logger.LogError("Couldn't start TCP service. Performing hard restart of TCP service.");
+                        Logger.LogError("Couldn't start WS service. Performing hard restart of WS service.");
                         try
                         {
                             try
@@ -81,13 +81,13 @@ namespace Server
                         catch
                         {
                             criticalError = true;
-                            Logger.LogCritical("Couldn't start TCP service after hard reset.");
+                            Logger.LogCritical("Couldn't start WS service after hard reset.");
                         }
                     }
                 }
                 else
                 {
-                    Logger.LogInformation("TCP service is OK");
+                    Logger.LogInformation("WS service is OK");
                 }
 
                 await Task.Delay(60000, stoppingToken);
@@ -102,11 +102,11 @@ namespace Server
 
         private void InitServer()
         {
-            Logger.LogInformation("Starting TCP service");
+            Logger.LogInformation("Starting WS service");
             int port = 9180;
-            server = new TCPServer(IPAddress.Any, port);
+            server = new WSServer(IPAddress.Any, port);
             server.Start();
-            Logger.LogInformation("TCP service started on port " + port);
+            Logger.LogInformation("WS service started on port " + port);
         }
     }
 }
