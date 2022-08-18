@@ -1,260 +1,277 @@
-[17.08.2022 17:59:08:735]	info: 17.08.2022 17:59:08.735 CoreEventId.ContextInitialized[10403] (Microsoft.EntityFrameworkCore.Infrastructure) 
+[17.08.2022 20:21:55:224]	info: 17.08.2022 20:21:55.224 CoreEventId.ContextInitialized[10403] (Microsoft.EntityFrameworkCore.Infrastructure) 
       Entity Framework Core 6.0.8 initialized 'Context' using provider 'Microsoft.EntityFrameworkCore.SqlServer:6.0.8' with options: using lazy loading proxies 
-[17.08.2022 17:59:08:736]	dbug: 17.08.2022 17:59:08.736 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+[17.08.2022 20:21:55:225]	dbug: 17.08.2022 20:21:55.225 CoreEventId.QueryCompilationStarting[10111] (Microsoft.EntityFrameworkCore.Query) 
+      Compiling query expression: 
+      'DbSet<Shift>()
+          .First(x => x.Id == __client_Shift_Id_0)'
+[17.08.2022 20:21:55:226]	dbug: 17.08.2022 20:21:55.226 CoreEventId.QueryExecutionPlanned[10107] (Microsoft.EntityFrameworkCore.Query) 
+      Generated query execution expression: 
+      'queryContext => new SingleQueryingEnumerable<Shift>(
+          (RelationalQueryContext)queryContext, 
+          RelationalCommandCache.SelectExpression(
+              Projection Mapping:
+                  EmptyProjectionMember -> Dictionary<IProperty, int> { [Property: Shift.Id (int) Required PK AfterSave:Throw ValueGenerated.OnAdd, 0], [Property: Shift.ClientId (no field, int) Shadow Required FK Index, 1], [Property: Shift.EndTime (DateTime?), 2], [Property: Shift.StartTime (DateTime?), 3], [Property: Shift.UserId (no field, int) Shadow Required FK Index, 4] }
+              SELECT TOP(1) s.Id, s.ClientId, s.EndTime, s.StartTime, s.UserId
+              FROM Shifts AS s
+              WHERE s.Id == @__client_Shift_Id_0), 
+          Func<QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator, Shift>, 
+          ServerData.Database.Context, 
+          False, 
+          False, 
+          True
+      )
+          .Single()'
+[17.08.2022 20:21:55:226]	dbug: 17.08.2022 20:21:55.226 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
       Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:59:08:736]	dbug: 17.08.2022 17:59:08.736 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+[17.08.2022 20:21:55:226]	dbug: 17.08.2022 20:21:55.226 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
       Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:59:08:736]	dbug: 17.08.2022 17:59:08.736 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+[17.08.2022 20:21:55:226]	dbug: 17.08.2022 20:21:55.226 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
       Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:736]	dbug: 17.08.2022 17:59:08.736 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+[17.08.2022 20:21:55:226]	dbug: 17.08.2022 20:21:55.226 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
       Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:736]	dbug: 17.08.2022 17:59:08.736 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__token_0='?' (Size = 64)], CommandType='Text', CommandTimeout='30']
-      SELECT TOP(1) [u].[Id], [u].[IsBanned], [u].[Name], [u].[Password], [u].[Role], [u].[Token], [u].[TokenIssued], [u].[Username]
-      FROM [Users] AS [u]
-      WHERE [u].[Token] = @__token_0
-[17.08.2022 17:59:08:758]	info: 17.08.2022 17:59:08.758 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (23ms) [Parameters=[@__token_0='?' (Size = 64)], CommandType='Text', CommandTimeout='30']
-      SELECT TOP(1) [u].[Id], [u].[IsBanned], [u].[Name], [u].[Password], [u].[Role], [u].[Token], [u].[TokenIssued], [u].[Username]
-      FROM [Users] AS [u]
-      WHERE [u].[Token] = @__token_0
-[17.08.2022 17:59:08:758]	dbug: 17.08.2022 17:59:08.758 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'User' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:758]	dbug: 17.08.2022 17:59:08.758 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
+[17.08.2022 20:21:55:227]	dbug: 17.08.2022 20:21:55.227 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[@__client_Shift_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[Id] = @__client_Shift_Id_0
+[17.08.2022 20:21:55:245]	info: 17.08.2022 20:21:55.245 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (18ms) [Parameters=[@__client_Shift_Id_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[Id] = @__client_Shift_Id_0
+[17.08.2022 20:21:55:245]	dbug: 17.08.2022 20:21:55.245 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:245]	dbug: 17.08.2022 20:21:55.245 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
       A data reader was disposed.
-[17.08.2022 17:59:08:758]	dbug: 17.08.2022 17:59:08.758 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+[17.08.2022 20:21:55:245]	dbug: 17.08.2022 20:21:55.245 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
       Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:758]	dbug: 17.08.2022 17:59:08.758 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+[17.08.2022 20:21:55:245]	dbug: 17.08.2022 20:21:55.245 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
       Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:759]	dbug: 17.08.2022 17:59:08.759 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 CoreEventId.SaveChangesStarting[10004] (Microsoft.EntityFrameworkCore.Update) 
+      SaveChanges starting for 'Context'.
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 CoreEventId.DetectChangesStarting[10800] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      DetectChanges starting for 'Context'.
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 CoreEventId.PropertyChangeDetected[10802] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      The unchanged property 'Shift.EndTime' was detected as changed and will be marked as modified. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 CoreEventId.StateChanged[10807] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      An entity of type 'Shift' tracked by 'Context' changed state from 'Unchanged' to 'Modified'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 CoreEventId.DetectChangesCompleted[10801] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      DetectChanges completed for 'Context'.
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:246]	dbug: 17.08.2022 20:21:55.246 RelationalEventId.TransactionStarting[20209] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Beginning transaction with isolation level 'Unspecified'.
+[17.08.2022 20:21:55:264]	dbug: 17.08.2022 20:21:55.264 RelationalEventId.TransactionStarted[20200] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Began transaction with isolation level 'ReadCommitted'.
+[17.08.2022 20:21:55:264]	dbug: 17.08.2022 20:21:55.264 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
       Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:59:08:759]	dbug: 17.08.2022 17:59:08.759 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+[17.08.2022 20:21:55:264]	dbug: 17.08.2022 20:21:55.264 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
       Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:59:08:759]	dbug: 17.08.2022 17:59:08.759 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:759]	dbug: 17.08.2022 17:59:08.759 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:759]	dbug: 17.08.2022 17:59:08.759 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__8__locals1_request_RouteId_0='?' (DbType = Int32), @__entity_equality_8__locals2_user_1_Id='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT TOP(2) [r].[Id], [r].[Name]
-      FROM [Routes] AS [r]
-      WHERE ([r].[Id] = @__8__locals1_request_RouteId_0) AND EXISTS (
-          SELECT 1
-          FROM [RouteUser] AS [r0]
-          INNER JOIN [Users] AS [u] ON [r0].[UsersId] = [u].[Id]
-          WHERE ([r].[Id] = [r0].[RoutesId]) AND ([u].[Id] = @__entity_equality_8__locals2_user_1_Id))
-[17.08.2022 17:59:08:782]	info: 17.08.2022 17:59:08.782 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (23ms) [Parameters=[@__8__locals1_request_RouteId_0='?' (DbType = Int32), @__entity_equality_8__locals2_user_1_Id='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT TOP(2) [r].[Id], [r].[Name]
-      FROM [Routes] AS [r]
-      WHERE ([r].[Id] = @__8__locals1_request_RouteId_0) AND EXISTS (
-          SELECT 1
-          FROM [RouteUser] AS [r0]
-          INNER JOIN [Users] AS [u] ON [r0].[UsersId] = [u].[Id]
-          WHERE ([r].[Id] = [r0].[RoutesId]) AND ([u].[Id] = @__entity_equality_8__locals2_user_1_Id))
-[17.08.2022 17:59:08:782]	dbug: 17.08.2022 17:59:08.782 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Route' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:782]	dbug: 17.08.2022 17:59:08.782 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
+[17.08.2022 20:21:55:264]	dbug: 17.08.2022 20:21:55.264 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SET NOCOUNT ON;
+      UPDATE [Shifts] SET [EndTime] = @p0
+      WHERE [Id] = @p1;
+      SELECT @@ROWCOUNT;
+[17.08.2022 20:21:55:282]	info: 17.08.2022 20:21:55.282 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (18ms) [Parameters=[@p1='?' (DbType = Int32), @p0='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SET NOCOUNT ON;
+      UPDATE [Shifts] SET [EndTime] = @p0
+      WHERE [Id] = @p1;
+      SELECT @@ROWCOUNT;
+[17.08.2022 20:21:55:282]	dbug: 17.08.2022 20:21:55.282 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
       A data reader was disposed.
-[17.08.2022 17:59:08:782]	dbug: 17.08.2022 17:59:08.782 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:782]	dbug: 17.08.2022 17:59:08.782 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:782]	dbug: 17.08.2022 17:59:08.782 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      The navigation 'RouteProxy.Clients' is being lazy-loaded.
-[17.08.2022 17:59:08:783]	dbug: 17.08.2022 17:59:08.782 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:59:08:783]	dbug: 17.08.2022 17:59:08.783 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:59:08:783]	dbug: 17.08.2022 17:59:08.783 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:783]	dbug: 17.08.2022 17:59:08.783 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:783]	dbug: 17.08.2022 17:59:08.783 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [c].[Id], [c].[Name], [c].[RouteId]
-      FROM [Clients] AS [c]
-      WHERE [c].[RouteId] = @__p_0
-[17.08.2022 17:59:08:810]	info: 17.08.2022 17:59:08.810 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (27ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [c].[Id], [c].[Name], [c].[RouteId]
-      FROM [Clients] AS [c]
-      WHERE [c].[RouteId] = @__p_0
-[17.08.2022 17:59:08:810]	dbug: 17.08.2022 17:59:08.810 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Client' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:810]	dbug: 17.08.2022 17:59:08.810 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Client' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:810]	dbug: 17.08.2022 17:59:08.810 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Client' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:810]	dbug: 17.08.2022 17:59:08.810 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
-      A data reader was disposed.
-[17.08.2022 17:59:08:810]	dbug: 17.08.2022 17:59:08.810 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:810]	dbug: 17.08.2022 17:59:08.810 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:810]	dbug: 17.08.2022 17:59:08.810 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
-[17.08.2022 17:59:08:811]	dbug: 17.08.2022 17:59:08.811 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:59:08:811]	dbug: 17.08.2022 17:59:08.811 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:59:08:811]	dbug: 17.08.2022 17:59:08.811 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:811]	dbug: 17.08.2022 17:59:08.811 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:811]	dbug: 17.08.2022 17:59:08.811 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:59:08:836]	info: 17.08.2022 17:59:08.836 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (26ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:59:08:836]	dbug: 17.08.2022 17:59:08.836 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
-      A data reader was disposed.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:837]	dbug: 17.08.2022 17:59:08.837 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:59:08:863]	info: 17.08.2022 17:59:08.863 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (26ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:59:08:863]	dbug: 17.08.2022 17:59:08.863 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:863]	dbug: 17.08.2022 17:59:08.863 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:863]	dbug: 17.08.2022 17:59:08.863 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
-      A data reader was disposed.
-[17.08.2022 17:59:08:863]	dbug: 17.08.2022 17:59:08.863 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:863]	dbug: 17.08.2022 17:59:08.863 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:863]	dbug: 17.08.2022 17:59:08.863 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
-[17.08.2022 17:59:08:864]	dbug: 17.08.2022 17:59:08.864 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:59:08:864]	dbug: 17.08.2022 17:59:08.864 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:59:08:864]	dbug: 17.08.2022 17:59:08.864 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:864]	dbug: 17.08.2022 17:59:08.864 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:864]	dbug: 17.08.2022 17:59:08.864 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:59:08:890]	info: 17.08.2022 17:59:08.890 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (26ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:59:08:890]	dbug: 17.08.2022 17:59:08.890 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:59:08:890]	dbug: 17.08.2022 17:59:08.890 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
-      A data reader was disposed.
-[17.08.2022 17:59:08:890]	dbug: 17.08.2022 17:59:08.890 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:890]	dbug: 17.08.2022 17:59:08.890 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:59:08:890]	dbug: 17.08.2022 17:59:08.890 CoreEventId.ContextDisposed[10407] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      'Context' disposed.
-.2022 17:58:58.667 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:668]	dbug: 17.08.2022 17:58:58.668 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
-[17.08.2022 17:58:58:669]	dbug: 17.08.2022 17:58:58.669 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:58:58:669]	dbug: 17.08.2022 17:58:58.669 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:58:58:669]	dbug: 17.08.2022 17:58:58.669 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:669]	dbug: 17.08.2022 17:58:58.669 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:669]	dbug: 17.08.2022 17:58:58.669 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:58:58:692]	info: 17.08.2022 17:58:58.692 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (23ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:58:58:692]	dbug: 17.08.2022 17:58:58.692 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:58:58:692]	dbug: 17.08.2022 17:58:58.692 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:58:58:692]	dbug: 17.08.2022 17:58:58.692 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
-      A data reader was disposed.
-[17.08.2022 17:58:58:692]	dbug: 17.08.2022 17:58:58.692 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:692]	dbug: 17.08.2022 17:58:58.692 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:692]	dbug: 17.08.2022 17:58:58.692 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
-[17.08.2022 17:58:58:693]	dbug: 17.08.2022 17:58:58.693 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Creating DbCommand for 'ExecuteReader'.
-[17.08.2022 17:58:58:693]	dbug: 17.08.2022 17:58:58.693 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Created DbCommand for 'ExecuteReader' (0ms).
-[17.08.2022 17:58:58:693]	dbug: 17.08.2022 17:58:58.693 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:693]	dbug: 17.08.2022 17:58:58.693 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:693]	dbug: 17.08.2022 17:58:58.693 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:58:58:718]	info: 17.08.2022 17:58:58.718 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
-      Executed DbCommand (25ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
-      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
-      FROM [Shifts] AS [s]
-      WHERE [s].[ClientId] = @__p_0
-[17.08.2022 17:58:58:718]	dbug: 17.08.2022 17:58:58.718 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 17:58:58:718]	dbug: 17.08.2022 17:58:58.718 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
-      A data reader was disposed.
-[17.08.2022 17:58:58:718]	dbug: 17.08.2022 17:58:58.718 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:718]	dbug: 17.08.2022 17:58:58.718 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
-      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 17:58:58:718]	dbug: 17.08.2022 17:58:58.718 CoreEventId.ContextDisposed[10407] (Microsoft.EntityFrameworkCore.Infrastructure) 
-      'Context' disposed.
-.2022 13:47:49:269]	dbug: 17.08.2022 13:47:49.269 RelationalEventId.TransactionCommitted[20202] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+[17.08.2022 20:21:55:282]	dbug: 17.08.2022 20:21:55.282 RelationalEventId.TransactionCommitting[20210] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Committing transaction.
+[17.08.2022 20:21:55:302]	dbug: 17.08.2022 20:21:55.302 RelationalEventId.TransactionCommitted[20202] (Microsoft.EntityFrameworkCore.Database.Transaction) 
       Committed transaction.
-[17.08.2022 13:47:49:269]	dbug: 17.08.2022 13:47:49.269 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+[17.08.2022 20:21:55:302]	dbug: 17.08.2022 20:21:55.302 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
       Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 13:47:49:269]	dbug: 17.08.2022 13:47:49.269 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+[17.08.2022 20:21:55:302]	dbug: 17.08.2022 20:21:55.302 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
       Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
-[17.08.2022 13:47:49:269]	dbug: 17.08.2022 13:47:49.269 RelationalEventId.TransactionDisposed[20204] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+[17.08.2022 20:21:55:302]	dbug: 17.08.2022 20:21:55.302 RelationalEventId.TransactionDisposed[20204] (Microsoft.EntityFrameworkCore.Database.Transaction) 
       Disposing transaction.
-[17.08.2022 13:47:49:271]	dbug: 17.08.2022 13:47:49.271 CoreEventId.StateChanged[10807] (Microsoft.EntityFrameworkCore.ChangeTracking) 
-      An entity of type 'Shift' tracked by 'Context' changed state from 'Added' to 'Unchanged'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
-[17.08.2022 13:47:49:271]	dbug: 17.08.2022 13:47:49.271 CoreEventId.SaveChangesCompleted[10005] (Microsoft.EntityFrameworkCore.Update) 
+[17.08.2022 20:21:55:302]	dbug: 17.08.2022 20:21:55.302 CoreEventId.StateChanged[10807] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      An entity of type 'Shift' tracked by 'Context' changed state from 'Modified' to 'Unchanged'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:302]	dbug: 17.08.2022 20:21:55.302 CoreEventId.SaveChangesCompleted[10005] (Microsoft.EntityFrameworkCore.Update) 
       SaveChanges completed for 'Context' with 1 entities written to the database.
-[17.08.2022 13:47:49:274]	dbug: 17.08.2022 13:47:49.274 CoreEventId.ContextDisposed[10407] (Microsoft.EntityFrameworkCore.Infrastructure) 
+[17.08.2022 20:21:55:302]	dbug: 17.08.2022 20:21:55.302 CoreEventId.ContextDisposed[10407] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      'Context' disposed.
+10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
+[17.08.2022 20:21:55:163]	dbug: 17.08.2022 20:21:55.163 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Creating DbCommand for 'ExecuteReader'.
+[17.08.2022 20:21:55:163]	dbug: 17.08.2022 20:21:55.163 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Created DbCommand for 'ExecuteReader' (0ms).
+[17.08.2022 20:21:55:163]	dbug: 17.08.2022 20:21:55.163 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:163]	dbug: 17.08.2022 20:21:55.163 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:163]	dbug: 17.08.2022 20:21:55.163 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[ClientId] = @__p_0
+[17.08.2022 20:21:55:181]	info: 17.08.2022 20:21:55.181 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (18ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[ClientId] = @__p_0
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
+      A data reader was disposed.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:181]	dbug: 17.08.2022 20:21:55.181 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
+[17.08.2022 20:21:55:182]	dbug: 17.08.2022 20:21:55.182 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Creating DbCommand for 'ExecuteReader'.
+[17.08.2022 20:21:55:182]	dbug: 17.08.2022 20:21:55.182 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Created DbCommand for 'ExecuteReader' (0ms).
+[17.08.2022 20:21:55:182]	dbug: 17.08.2022 20:21:55.182 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:182]	dbug: 17.08.2022 20:21:55.182 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:182]	dbug: 17.08.2022 20:21:55.182 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[ClientId] = @__p_0
+[17.08.2022 20:21:55:201]	info: 17.08.2022 20:21:55.201 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (19ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[ClientId] = @__p_0
+[17.08.2022 20:21:55:201]	dbug: 17.08.2022 20:21:55.201 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:201]	dbug: 17.08.2022 20:21:55.201 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:201]	dbug: 17.08.2022 20:21:55.201 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
+      A data reader was disposed.
+[17.08.2022 20:21:55:201]	dbug: 17.08.2022 20:21:55.201 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:201]	dbug: 17.08.2022 20:21:55.201 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:201]	dbug: 17.08.2022 20:21:55.201 CoreEventId.NavigationLazyLoading[10406] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      The navigation 'ClientProxy.Shifts' is being lazy-loaded.
+[17.08.2022 20:21:55:202]	dbug: 17.08.2022 20:21:55.202 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Creating DbCommand for 'ExecuteReader'.
+[17.08.2022 20:21:55:202]	dbug: 17.08.2022 20:21:55.202 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Created DbCommand for 'ExecuteReader' (0ms).
+[17.08.2022 20:21:55:202]	dbug: 17.08.2022 20:21:55.202 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:202]	dbug: 17.08.2022 20:21:55.202 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:202]	dbug: 17.08.2022 20:21:55.202 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[ClientId] = @__p_0
+[17.08.2022 20:21:55:221]	info: 17.08.2022 20:21:55.221 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (19ms) [Parameters=[@__p_0='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[ClientId], [s].[EndTime], [s].[StartTime], [s].[UserId]
+      FROM [Shifts] AS [s]
+      WHERE [s].[ClientId] = @__p_0
+[17.08.2022 20:21:55:221]	dbug: 17.08.2022 20:21:55.221 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:55:221]	dbug: 17.08.2022 20:21:55.221 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
+      A data reader was disposed.
+[17.08.2022 20:21:55:221]	dbug: 17.08.2022 20:21:55.221 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:221]	dbug: 17.08.2022 20:21:55.221 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:55:221]	dbug: 17.08.2022 20:21:55.221 CoreEventId.ContextDisposed[10407] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      'Context' disposed.
+10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:50:933]	dbug: 17.08.2022 20:21:50.933 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:50:933]	dbug: 17.08.2022 20:21:50.933 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:50:933]	dbug: 17.08.2022 20:21:50.933 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:50:933]	dbug: 17.08.2022 20:21:50.933 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:50:933]	dbug: 17.08.2022 20:21:50.933 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
+      A data reader was disposed.
+[17.08.2022 20:21:50:933]	dbug: 17.08.2022 20:21:50.933 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:50:933]	dbug: 17.08.2022 20:21:50.933 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:50:952]	dbug: 17.08.2022 20:21:50.952 CoreEventId.ValueGenerated[10808] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      'Context' generated a temporary value for the property 'Id.Shift'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:50:958]	dbug: 17.08.2022 20:21:50.958 CoreEventId.StartedTracking[10806] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      Context 'Context' started tracking 'Shift' entity. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:50:959]	dbug: 17.08.2022 20:21:50.959 CoreEventId.SaveChangesStarting[10004] (Microsoft.EntityFrameworkCore.Update) 
+      SaveChanges starting for 'Context'.
+[17.08.2022 20:21:50:959]	dbug: 17.08.2022 20:21:50.959 CoreEventId.DetectChangesStarting[10800] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      DetectChanges starting for 'Context'.
+[17.08.2022 20:21:50:968]	dbug: 17.08.2022 20:21:50.968 CoreEventId.DetectChangesCompleted[10801] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      DetectChanges completed for 'Context'.
+[17.08.2022 20:21:50:969]	dbug: 17.08.2022 20:21:50.969 RelationalEventId.ConnectionOpening[20000] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opening connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:50:969]	dbug: 17.08.2022 20:21:50.969 RelationalEventId.ConnectionOpened[20001] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Opened connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:50:969]	dbug: 17.08.2022 20:21:50.969 RelationalEventId.TransactionStarting[20209] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Beginning transaction with isolation level 'Unspecified'.
+[17.08.2022 20:21:50:986]	dbug: 17.08.2022 20:21:50.986 RelationalEventId.TransactionStarted[20200] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Began transaction with isolation level 'ReadCommitted'.
+[17.08.2022 20:21:50:996]	dbug: 17.08.2022 20:21:50.996 RelationalEventId.CommandCreating[20103] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Creating DbCommand for 'ExecuteReader'.
+[17.08.2022 20:21:50:996]	dbug: 17.08.2022 20:21:50.996 RelationalEventId.CommandCreated[20104] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Created DbCommand for 'ExecuteReader' (0ms).
+[17.08.2022 20:21:50:996]	dbug: 17.08.2022 20:21:50.996 RelationalEventId.CommandExecuting[20100] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executing DbCommand [Parameters=[@p0='?' (DbType = Int32), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SET NOCOUNT ON;
+      INSERT INTO [Shifts] ([ClientId], [EndTime], [StartTime], [UserId])
+      VALUES (@p0, @p1, @p2, @p3);
+      SELECT [Id]
+      FROM [Shifts]
+      WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+[17.08.2022 20:21:51:015]	info: 17.08.2022 20:21:51.015 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (19ms) [Parameters=[@p0='?' (DbType = Int32), @p1='?' (DbType = DateTime2), @p2='?' (DbType = DateTime2), @p3='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      SET NOCOUNT ON;
+      INSERT INTO [Shifts] ([ClientId], [EndTime], [StartTime], [UserId])
+      VALUES (@p0, @p1, @p2, @p3);
+      SELECT [Id]
+      FROM [Shifts]
+      WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+[17.08.2022 20:21:51:027]	dbug: 17.08.2022 20:21:51.027 CoreEventId.ForeignKeyChangeDetected[10803] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      The foreign key property 'Shift.Id' was detected as changed. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see property values.
+[17.08.2022 20:21:51:031]	dbug: 17.08.2022 20:21:51.031 RelationalEventId.DataReaderDisposing[20300] (Microsoft.EntityFrameworkCore.Database.Command) 
+      A data reader was disposed.
+[17.08.2022 20:21:51:031]	dbug: 17.08.2022 20:21:51.031 RelationalEventId.TransactionCommitting[20210] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Committing transaction.
+[17.08.2022 20:21:51:050]	dbug: 17.08.2022 20:21:51.050 RelationalEventId.TransactionCommitted[20202] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Committed transaction.
+[17.08.2022 20:21:51:050]	dbug: 17.08.2022 20:21:51.050 RelationalEventId.ConnectionClosing[20002] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closing connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:51:050]	dbug: 17.08.2022 20:21:51.050 RelationalEventId.ConnectionClosed[20003] (Microsoft.EntityFrameworkCore.Database.Connection) 
+      Closed connection to database 'EEDD' on server 'vps.zdendaki.net'.
+[17.08.2022 20:21:51:050]	dbug: 17.08.2022 20:21:51.050 RelationalEventId.TransactionDisposed[20204] (Microsoft.EntityFrameworkCore.Database.Transaction) 
+      Disposing transaction.
+[17.08.2022 20:21:51:052]	dbug: 17.08.2022 20:21:51.052 CoreEventId.StateChanged[10807] (Microsoft.EntityFrameworkCore.ChangeTracking) 
+      An entity of type 'Shift' tracked by 'Context' changed state from 'Added' to 'Unchanged'. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see key values.
+[17.08.2022 20:21:51:052]	dbug: 17.08.2022 20:21:51.052 CoreEventId.SaveChangesCompleted[10005] (Microsoft.EntityFrameworkCore.Update) 
+      SaveChanges completed for 'Context' with 1 entities written to the database.
+[17.08.2022 20:21:51:056]	dbug: 17.08.2022 20:21:51.056 CoreEventId.ContextDisposed[10407] (Microsoft.EntityFrameworkCore.Infrastructure) 
       'Context' disposed.

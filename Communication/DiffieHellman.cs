@@ -71,7 +71,7 @@ namespace Communication
                             cs.Write(data, 0, data.Length);
                         }
 
-                        return Utils.Combine(ms.ToArray(), Delimiter);
+                        return ms.ToArray();
                     }
                 }
             }

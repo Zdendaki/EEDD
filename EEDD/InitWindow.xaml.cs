@@ -24,12 +24,14 @@ namespace EEDD
 
         bool downloading;
         bool closing = false;
+        bool downloaded = false;
 
         public InitWindow(bool dl)
         {
             InitializeComponent();
 
             downloading = dl;
+
         }
 
         public InitWindow() : this(false) { }
@@ -46,18 +48,31 @@ namespace EEDD
 
                 Task.Run(() =>
                 {
-                    App.Client.SendMessage(new ClientDataRequest(App.Data.ShiftId));
+                    App.Client.SendMessage(new ClientDataRequest(App.Token!, App.Data.ShiftId));
 
                     App.Client.MessageReceived += (proc) =>
                     {
+                        Task.Run(() =>
+                        {
+                            Thread.Sleep(60000);
+                            if (!downloaded)
+                            {
+                                MessageBox.Show(this, "Nepodařilo se stáhnout data ve stanoveném čase. Aplikace bude ukončena.", "Stahování dat se nezdařilo.", MessageBoxButton.OK, MessageBoxImage.Error);
+                                Environment.Exit(0);
+                            }
+                        });
+
+
                         if (proc is ClientDataResponse)
                         {
                             ClientDataResponse res = (ClientDataResponse)proc;
 
-                            if (res.ResponseState == ResponseState.Success && res.Data is not null)
+                            if (res.ResponseState == ResponseState.Success && res.Data is not null && !downloaded)
                             {
                                 App.Data.Client = res.Data;
                                 App.Data.Signallers = res.Data.Stations.SelectMany(x => x.Signallers).DistinctBy(x => x.Id).OrderBy(x => x.Order).GroupBy(x => (x.Name, x.Type)).ToList();
+
+                                downloaded = true;
 
                                 Dispatcher.Invoke(() =>
                                 {

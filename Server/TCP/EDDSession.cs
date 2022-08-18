@@ -112,7 +112,7 @@ namespace Server.TCP
             }
             catch
             {
-                Worker.Logger.LogWarning($"[{Id}] Couldn't parse message: " + message);
+                Worker.Logger.LogWarning($"[{Id}] Couldn't parse message: " + Encoding.UTF8.GetString(buffer));
                 return;
             }
 
@@ -148,7 +148,11 @@ namespace Server.TCP
 
         public override void OnWsDisconnected()
         {
+#if DEBUG
             EndShift(); // TODO: možná změnit
+#else
+            
+#endif
             Worker.Logger.LogInformation($"[{Id}] Client disconnected");
             Worker.Clients.Remove(client);
             timer.Enabled = false;
@@ -179,7 +183,8 @@ namespace Server.TCP
             if (handshaked || !server.Encryption)
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-                return Server.Multicast(buffer);
+                byte[] output = diffie.Encrypt(buffer, aesKeys);
+                return Server.Multicast(output);
             }
             else
                 return false;
@@ -216,6 +221,7 @@ namespace Server.TCP
 
         private void ProcessStartShiftRequest(string data)
         {
+            Worker.Logger.LogInformation($"[{Id}] Start shift requested");
             using (Context database = new Context())
             {
                 StartShiftRequest? request = JsonConvert.DeserializeObject<StartShiftRequest>(data);
@@ -258,7 +264,9 @@ namespace Server.TCP
                             };
                             var sh = database.Shifts.Add(shift);
                             database.SaveChanges();
-                            SendMessage(new StartShiftResponse(request.GUID, ResponseState.Success, true, sh.Entity.Id));
+                            this.client.Shift = shift;
+                            if (SendMessage(new StartShiftResponse(request.GUID, ResponseState.Success, true, shift.Id)))
+                                Worker.Logger.LogInformation($"[{Id}] Shift {shift.Id} started.");
                         }
                         else
                         {
@@ -273,11 +281,13 @@ namespace Server.TCP
 
         private void ProcessClientDataRequest(string data)
         {
+            Worker.Logger.LogInformation($"[{Id}] Client data requested");
             ClientDataRequest? request = JsonConvert.DeserializeObject<ClientDataRequest>(data);
 
             if (request is not null)
             {
-                SendMessage(ServerWorker.GetClientData(request));
+                if (SendMessage(ServerWorker.GetClientData(request)))
+                    Worker.Logger.LogInformation($"[{Id}] Client data sent");
             }
         }
 
@@ -294,6 +304,7 @@ namespace Server.TCP
 
         private void EndShift()
         {
+            
             if (client?.Shift is not null)
             {
                 using (Context context = new Context())
@@ -302,6 +313,7 @@ namespace Server.TCP
                     shift.EndTime = DateTime.Now;
                     context.SaveChanges();
                     client.Shift = null;
+                    Worker.Logger.LogInformation($"[{Id}] Shift {shift.Id} ended.");
                 }
             }
         }

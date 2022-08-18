@@ -163,6 +163,8 @@ namespace EEDD
             }
             else
             {
+                timer.Enabled = false;
+
                 string password = BitConverter.ToString(SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Password.Password.Trim()))).ToLower().Replace("-", null);
                 string username = Username.Text.Trim();
 

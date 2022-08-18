@@ -46,9 +46,6 @@ namespace Communication
         {
             lock (timer)
             {
-                Ping p = new Ping();
-                SendMessage(p);
-
                 if (sentMessages.Any(x => (DateTime.Now - x.Sent).TotalSeconds > 10d))
                 {
                     foreach (MessageData message in sentMessages.Where(x => (DateTime.Now - x.Sent).TotalSeconds > 10d).OrderBy(x => x.Sent))
@@ -172,8 +169,8 @@ namespace Communication
             if (IsConnected && (handshaked || !Encryption))
             {
                 byte[] buffer = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(proc));
-
-                bool sent = SendBinaryAsync(buffer);
+                byte[] output = diffie.Encrypt(buffer, aesKeys);
+                bool sent = SendBinaryAsync(output);
                 if (proc is not IResponse && proc is not Ping)
                     sentMessages.Add(new MessageData(proc, tries));
                 return sent;

@@ -4,8 +4,9 @@
     {
         public int ShiftId { get; set; }
 
-        public ClientDataRequest(int shiftId)
+        public ClientDataRequest(byte[] token, int shiftId) : base(ProcedureType.ClientDataRequest)
         {
+            Token = token;
             ShiftId = shiftId;
         }
     }
