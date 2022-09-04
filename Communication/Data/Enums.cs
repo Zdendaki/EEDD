@@ -89,13 +89,9 @@
         /// </summary>
         Both,
         /// <summary>
-        /// Krátký modrý
+        /// Textový řádek
         /// </summary>
-        Blue,
-        /// <summary>
-        /// Krátký červený
-        /// </summary>
-        Red
+        Comment
     }
 
     /// <summary>

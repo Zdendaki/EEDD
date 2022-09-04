@@ -14,7 +14,7 @@ namespace EEDD
 
         public ClientData Client { get; set; }
 
-        public List<IGrouping<(string name, SignallerType type), StationData.Signaller>> Signallers { get; set; }
+        public List<IGrouping<(string name, SignallerType type, string comment), StationData.Signaller>> Signallers { get; set; }
         
         public RuntimeData()
         {

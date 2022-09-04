@@ -27,7 +27,7 @@ namespace Server.Builders
         public ClientData BuildClientData()
         {
             var stationData = GetStations();
-            return new ClientData(client.Id, client.Name, GetRows(stationData), GetStations(), GetTrains(), GetUser());
+            return new ClientData(client.Id, client.Name, new()/*GetRows(stationData)*/, GetStations(), GetTrains(), GetUser());
         }
 
         private List<RowData> GetRows(List<StationData> stationData)
@@ -35,7 +35,7 @@ namespace Server.Builders
             List<RowData> data = new();
             foreach (var row in client.Stations.SelectMany(x => x.Archive).Where(x => !x.Cancelled && !x.RowComplete && (DateTime.Now - x.LastUpdate).TotalHours < 8d).OrderBy(x => x.Id))
             {
-                if (row.RowType == RowType.Red || row.RowType == RowType.Blue)
+                if (row.RowType == RowType.Comment)
                     data.Add(GetMessageRow(row));
                 else if (row.RowType == RowType.Arrival)
                     data.Add(GetArrivalRow(row, stationData.Single(x => x.Id == row.Station.Id)));
@@ -51,7 +51,7 @@ namespace Server.Builders
 
         private MessageRow GetMessageRow(Row row)
         {
-            return new MessageRow(row.Id, row.RowType, row.ResponsibleUser.Id != user.Id, row.RowChar, row.Caption!, row.Message!.GetValue(), RowDataString.GetValue(row.NoteA));
+            return new MessageRow(row.Id, row.RowType, RowColor.Red, row.ResponsibleUser.Id != user.Id, row.RowChar, row.Caption!, row.Message!.GetValue(), RowDataString.GetValue(row.NoteA)); //TODO: Opravit
         }
 
         private SingleTrainRow GetArrivalRow(Row row, StationData station)

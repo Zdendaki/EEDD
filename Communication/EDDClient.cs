@@ -11,8 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using T = System.Timers;
 using NetCoreServer;
-using System.Security.Authentication;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Communication
 {

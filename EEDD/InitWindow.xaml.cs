@@ -1,6 +1,7 @@
 ﻿using Communication.Data;
 using Communication.Procedures.Clients;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -70,7 +71,7 @@ namespace EEDD
                             if (res.ResponseState == ResponseState.Success && res.Data is not null && !downloaded)
                             {
                                 App.Data.Client = res.Data;
-                                App.Data.Signallers = res.Data.Stations.SelectMany(x => x.Signallers).DistinctBy(x => x.Id).OrderBy(x => x.Order).GroupBy(x => (x.Name, x.Type)).ToList();
+                                App.Data.Signallers = res.Data.Stations.SelectMany(x => x.Signallers).DistinctBy(x => x.Id).OrderBy(x => x.Order).GroupBy(x => (x.Name, x.Type, x.Comment)).ToList();
 
                                 downloaded = true;
 

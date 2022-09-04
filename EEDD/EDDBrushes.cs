@@ -4,11 +4,15 @@ namespace EEDD
 {
     static class EDDBrushes
     {
+        public static Brush Transparent { get => new SolidColorBrush(Colors.Transparent); }
+
+        public static Brush Black { get => new SolidColorBrush(Colors.Black); }
+
         public static Brush Red { get => new SolidColorBrush(Color.FromRgb(255, 0, 0)); }
 
         public static Brush Gray { get => new SolidColorBrush(Color.FromRgb(120, 120, 120)); }
 
-        public static Brush Turqoise { get => new SolidColorBrush(Color.FromRgb(63, 237, 222)); }
+        public static Brush Turqoise { get => new SolidColorBrush(Color.FromRgb(64, 224, 208)); }
 
         public static Brush LightBlue { get => new SolidColorBrush(Color.FromRgb(63, 72, 204)); }
 

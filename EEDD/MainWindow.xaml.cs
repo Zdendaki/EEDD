@@ -1,6 +1,7 @@
 ﻿using Communication.Data;
 using Communication.Procedures;
 using Communication.Procedures.Clients;
+using EEDD.Form;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,8 +25,8 @@ namespace EEDD
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static EDDTextBox? focused = null;
-        public static EDDTextBox? FocusedTextBox
+        private static EDDControl? focused = null;
+        public static EDDControl? FocusedControl
         {
             get => focused;
             set
@@ -43,14 +44,13 @@ namespace EEDD
         {
             InitializeComponent();
 
-            client = App.Data.Client;
+            //client = App.Data.Client;
 
             // Init window
-            Title = $"DOPRAVNÍ DENÍK - [{client.Name} - {client.User.Name}]";
+            //Title = $"DOPRAVNÍ DENÍK - [{client.Name} - {client.User.Name}]";
             TableScale.ScaleX = TableScale.ScaleY = 1d;
-            InitHeader();
+            //InitHeader();
             InitRows();
-
 
             App.Client.MessageReceived += MessageReceived;
         }
@@ -111,7 +111,23 @@ namespace EEDD
 
         private void InitRows()
         {
+            Rows.Children.Add(new RowComment());
+            Rows.Children.Add(new RowTrainDouble());
+            Rows.Children.Add(new RowTrainDouble());
+            Rows.Children.Add(new RowTrainDouble());
+        }
 
+        private void InitScale()
+        {
+            PresentationSource source = PresentationSource.FromVisual(this);
+
+            if (source is not null)
+            {
+                double scaleX = 1d + (source.CompositionTarget.TransformToDevice.M11 - 1d) / 2d;
+                double scaleY = 1d + (source.CompositionTarget.TransformToDevice.M22 - 1d) / 2d;
+
+                TableScale.ScaleX = TableScale.ScaleY = Math.Max(scaleX, scaleY);
+            }
         }
 
         private void LabelZoomIn_MouseDown(object sender, MouseButtonEventArgs e)
@@ -131,20 +147,23 @@ namespace EEDD
             if (canClose)
                 return;
             
-            var result = MessageBox.Show(this, "Opravdu chcete ukončit dopravní deník?", "Ukončení směny", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show(this, "Přejete si ukončit směnu?", "Ukončení směny", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
-            if (result == MessageBoxResult.No)
+            e.Cancel = true;
+
+            if (result == MessageBoxResult.Yes)
             {
-                e.Cancel = true;
-            }
-            else
-            {
-                e.Cancel = true;
+                e.Cancel = false;
                 Task.Run(() =>
                 {
                     App.Client.SendMessage(new EndShiftRequest(App.Data.ShiftId));
                 });
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            InitScale();
         }
     }
 }

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EEDD"
-             mc:Ignorable="d" d:DesignWidth="800">
+             mc:Ignorable="d">
     <Grid>
         <StackPanel Background="LightGray" Orientation="Horizontal" HorizontalAlignment="Left">
             <StackPanel.Resources>
@@ -128,6 +128,9 @@
             <Label Width="15" Content="J" ToolTip="Souhlas s jízdou" />
             <Label Width="15" Content="!" ToolTip="Mimořádnosti" />
             <Label Width="15" Content="K" ToolTip="Komunikace" />
+            <Label Width="15" Content="O" ToolTip="Opravy řádku" />
+            <Label Width="15" Content="Z" ToolTip="Zrušení řádku" />
+            <Label Width="15" Content="U" ToolTip="Plánované úkony" />
             <Label Width="20" Content="V" ToolTip="Odeslání informace 080" />
             <Label Width="80" Content="cesta" />
         </StackPanel>

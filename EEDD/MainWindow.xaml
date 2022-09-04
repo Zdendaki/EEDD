@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EEDD"
         mc:Ignorable="d"
-        Title="Elektronický dopravní deník" Height="600" Width="800" MinWidth="800" MinHeight="400" Closing="Window_Closing">
+        Title="Elektronický dopravní deník" Height="600" Width="800" MinWidth="800" MinHeight="400" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -93,7 +93,7 @@
             <Label Content="(–)" Padding="5" MouseDown="LabelZoomOut_MouseDown" FontWeight="Regular" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left">
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Left" FocusVisualStyle="{x:Null}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

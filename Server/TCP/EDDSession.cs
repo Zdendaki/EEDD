@@ -149,7 +149,7 @@ namespace Server.TCP
         public override void OnWsDisconnected()
         {
 #if DEBUG
-            EndShift(); // TODO: možná změnit
+            EndShift(); // TODO: změnit
 #else
             
 #endif

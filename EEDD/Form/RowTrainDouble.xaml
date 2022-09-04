@@ -1,0 +1,106 @@
+﻿<f:Row x:Class="EEDD.Form.RowTrainDouble"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:EEDD"
+             xmlns:f="clr-namespace:EEDD.Form"
+             Loaded="UserControl_Loaded"
+             mc:Ignorable="d">
+    <Border BorderBrush="Black" BorderThickness="0.5" d:Background="{x:Static l:EDDBrushes.BackgroundGray1}">
+        <Grid HorizontalAlignment="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="45" />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="37" />
+                <ColumnDefinition Width="37" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="15" x:Name="Signaller1" />
+                <ColumnDefinition Width="15" x:Name="Signaller2" />
+                <ColumnDefinition Width="0"  x:Name="Signaller3" />
+                <ColumnDefinition Width="0"  x:Name="Signaller4" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="35" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <!--Řádek příjezd-->
+            <l:EDDLabel   Text="P" Grid.Row="0" Grid.Column="0" Align="Center" />
+            <l:EDDLabel   Text="49405" x:Name="aNumber" Grid.Row="0" Grid.Column="1" Align="Right" InnerBorder="{x:Static l:EDDBrushes.Brown}" />
+            <l:EDDLabel   Text="Nex" x:Name="aType" Grid.Row="0" Grid.Column="2" Align="Left" MaxLength="4" />
+            <l:EDDLabel   Text="Ko" x:Name="aDirection" Grid.Row="0" Grid.Column="3" Align="Left" MaxLength="2" />
+            <l:EDDLabel   Text="1" x:Name="aRoute" Grid.Row="0" Grid.Column="4" Align="Left" />
+            <l:EDDTextBox Text="" x:Name="aAnnounced" Grid.Row="0" Grid.Column="5" Align="Left" Type="Time" />
+            <l:EDDTextBox Text="" x:Name="aAccepted" Grid.Row="0" Grid.Column="6" Align="Left" Type="Time" />
+            <l:EDDLabel   Text="" Grid.Row="0" Grid.Column="7" Align="Center" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="aPMD" Grid.Row="0" Grid.Column="8" Align="Left" Type="Time" />
+            <l:EDDTextBox Text="" x:Name="aActualDep" Grid.Row="0" Grid.Column="9" Align="Left" Type="Time" />
+            <l:EDDTextBox Text="1" x:Name="aTrack" Grid.Row="0" Grid.Column="10" Align="Left" Type="String" />
+            <l:EDDLabel   Text="" Grid.Row="0" Grid.Column="11" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" Grid.Row="0" Grid.Column="12" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" Grid.Row="0" Grid.Column="13" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" Grid.Row="0" Grid.Column="14" Align="Center" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="arrival" Grid.Row="0" Grid.Column="15" Align="Left" Type="Time" />
+            <l:EDDLabel   Text="" x:Name="aDelay" Grid.Row="0" Grid.Column="16" Align="Left" />
+            <l:EDDTextBox Text="" x:Name="aDeparted" Grid.Row="0" Grid.Column="17" Align="Left" Type="Time" />
+            <l:EDDLabel   Text="" x:Name="aNote" Grid.Row="0" Grid.Column="18" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="aApproval" Grid.Row="0" Grid.Column="19" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="aExceptions" Grid.Row="0" Grid.Column="20" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="aContact" Grid.Row="0" Grid.Column="21" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="aEdit" Grid.Row="0" Grid.Column="22" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="aCancel" Grid.Row="0" Grid.Column="23" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="2" x:Name="aOperations" Grid.Row="0" Grid.Column="24" Align="Center" MaxLength="1" Caption="Manipulace s vozy&#x0a;Konec platnosti rozboru" />
+            <l:EDDLabel   Text="" x:Name="aSent" Grid.Row="0" Grid.Column="25" Align="Center" MaxLength="2" />
+            <l:EDDTextBox Text="" x:Name="aPath" Grid.Row="0" Grid.Column="26" Align="Left" Type="String" MaxLength="30" />
+
+            <!--Řádek odjezd-->
+            <l:EDDLabel   Text="O" Grid.Row="1" Grid.Column="0" Align="Center" />
+            <l:EDDLabel   Text="49405" x:Name="dNumber" Grid.Row="1" Grid.Column="1" Align="Right" InnerBorder="{x:Static l:EDDBrushes.Blue}" />
+            <l:EDDLabel   Text="Nex" x:Name="dType" Grid.Row="1" Grid.Column="2" Align="Left" MaxLength="4" />
+            <l:EDDLabel   Text="St" x:Name="dDirection" Grid.Row="1" Grid.Column="3" Align="Left" MaxLength="2" />
+            <l:EDDLabel   Text="1" x:Name="dRoute" Grid.Row="1" Grid.Column="4" Align="Left" />
+            <l:EDDTextBox Text="" x:Name="dAnnounced" Grid.Row="1" Grid.Column="5" Align="Left" Type="Time" />
+            <l:EDDTextBox Text="" x:Name="dAccepted" Grid.Row="1" Grid.Column="6" Align="Left" Type="Time" />
+            <l:EDDLabel   Text="" Grid.Row="1" Grid.Column="7" Align="Center" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="dPMD" Grid.Row="1" Grid.Column="8" Align="Left" Type="Time" />
+            <l:EDDTextBox Text="" x:Name="dActualDep" Grid.Row="1" Grid.Column="9" Align="Left" Type="Time" />
+            <l:EDDTextBox Text="1" x:Name="dTrack" Grid.Row="1" Grid.Column="10" Align="Left" Type="String" />
+            <l:EDDLabel   Text="" Grid.Row="1" Grid.Column="11" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" Grid.Row="1" Grid.Column="12" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" Grid.Row="1" Grid.Column="13" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" Grid.Row="1" Grid.Column="14" Align="Center" MaxLength="1" />
+            <l:EDDTextBox Text="" x:Name="departure" Grid.Row="1" Grid.Column="15" Align="Left" Type="Time" />
+            <l:EDDLabel   Text="" x:Name="dDelay" Grid.Row="1" Grid.Column="16" Align="Left" />
+            <l:EDDTextBox Text="" x:Name="dDeparted" Grid.Row="1" Grid.Column="17" Align="Left" Type="Time" />
+            <l:EDDLabel   Text="" x:Name="dNote" Grid.Row="1" Grid.Column="18" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="dApproval" Grid.Row="1" Grid.Column="19" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="dExceptions" Grid.Row="1" Grid.Column="20" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="dContact" Grid.Row="1" Grid.Column="21" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="dEdit" Grid.Row="1" Grid.Column="22" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="dCancel" Grid.Row="1" Grid.Column="23" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="dOperations" Grid.Row="1" Grid.Column="24" Align="Center" MaxLength="1" />
+            <l:EDDLabel   Text="" x:Name="dSent" Grid.Row="1" Grid.Column="25" Align="Center" MaxLength="2" />
+            <l:EDDTextBox Text="" x:Name="dPath" Grid.Row="1" Grid.Column="26" Align="Left" Type="String" MaxLength="30" />
+        </Grid>
+    </Border>
+</f:Row>

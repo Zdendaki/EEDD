@@ -27,12 +27,12 @@ namespace EEDD
             }
         }
 
-        public static string Limit(this string str, int length)
+        public static string Limit(this string value, int length)
         {
-            if (str is null || length < 1)
+            if (value is null || length < 1)
                 return string.Empty;
 
-            return str.Substring(0, Math.Min(str.Length, length));
+            return value.Substring(0, Math.Min(value.Length, length));
         }
 
         public static string Truncate(this string value, int length)

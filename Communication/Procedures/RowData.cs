@@ -39,13 +39,13 @@ namespace Communication.Procedures
 
         public RowColor Color { get; set; }
 
-        public MessageRow(int id, RowType rowType, bool archived, char? rowChar, string caption, SingleRowValue<string> message, SingleRowValue<string?> note) : base(id, rowType, archived)
+        public MessageRow(int id, RowType rowType, RowColor color, bool archived, char? rowChar, string caption, SingleRowValue<string> message, SingleRowValue<string?> note) : base(id, rowType, archived)
         {
             RowChar = rowChar;
             Caption = caption;
             Message = message;
             Note = note;
-            Color = rowType == RowType.Blue ? RowColor.Blue : RowColor.Red;
+            Color = color;
         }
     }
 
@@ -78,6 +78,10 @@ namespace Communication.Procedures
         public SingleRowValue<SignallerValue?> Sig3 { get; set; }
 
         public SingleRowValue<SignallerValue?> Sig4 { get; set; }
+
+        public SingleRowValue<SignallerValue?> Sig5 { get; set; }
+
+        public SingleRowValue<SignallerValue?> Sig6 { get; set; }
 
         public SingleRowValue<DateTime?> Time { get; set; }
 
@@ -141,6 +145,10 @@ namespace Communication.Procedures
         public DoubleRowValue<SignallerValue?> Sig3 { get; set; }
 
         public DoubleRowValue<SignallerValue?> Sig4 { get; set; }
+
+        public DoubleRowValue<SignallerValue?> Sig5 { get; set; }
+
+        public DoubleRowValue<SignallerValue?> Sig6 { get; set; }
 
         public DoubleRowValue<DateTime?> Time { get; set; }
 

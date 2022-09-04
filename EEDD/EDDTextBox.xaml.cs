@@ -6,124 +6,47 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace EEDD
 {
     /// <summary>
     /// Interakční logika pro EDDTextBox.xaml
     /// </summary>
-    public partial class EDDTextBox : UserControl, INotifyPropertyChanged
+    public partial class EDDTextBox : EDDControl, INotifyPropertyChanged
     {
-        string text = "12:49";
-        int maxLength = 6;
-        HorizontalAlignment align = HorizontalAlignment.Center;
-        EditState editMode = EditState.Locked;
-        Brush? innerBorder = null;
-        FieldType fieldType = FieldType.Static;
         bool focus = false;
+        EditMode editMode;
         
-        public string Text
+        public new string Text
         {
-            get => text;
-            set
-            {
-                bool flag = text != value;
-                text = value.Limit(MaxLength);
-                if (flag)
-                    OnPropertyChanged(nameof(Text));
-            }
+            get => base.Text.Limit(MaxLength);
+            set => base.Text = value;
         }
 
-        public int MaxLength
-        {
-            get => maxLength;
-            set
-            {
-                int len = Math.Min(GetMaxLength(fieldType), value);
-                bool flag = maxLength != len;
-                maxLength = len;
-                if (flag)
-                    OnPropertyChanged(nameof(MaxLength));
-            }
-        }
-        
-        public HorizontalAlignment Align
-        {
-            get => align;
-            set
-            {
-                TextBox.HorizontalContentAlignment = value;
-                switch (value)
-                {
-                    case HorizontalAlignment.Left:
-                        TextLabel.Style = (Style)FindResource("LabelLeft");
-                        break;
-                    case HorizontalAlignment.Center:
-                        TextLabel.Style = (Style)FindResource("LabelCenter");
-                        break;
-                    case HorizontalAlignment.Right:
-                        TextLabel.Style = (Style)FindResource("LabelRight");
-                        break;
-                }
-            }
-        }
-
-        public EditState EditMode
-        {
-            get => editMode;
-            set 
-            {
-                editMode = value;
-                TextBox.Visibility = editMode == EditState.CanEdit ? Visibility.Visible : Visibility.Collapsed;
-                TextLabel.Foreground = editMode == EditState.Locked ? EDDBrushes.Gray : Brushes.Black;
-                Cursor = editMode == EditState.CanEdit ? Cursors.IBeam : Cursors.Arrow;
-            }
-        }
-
-        public Brush? InnerBorder
-        {
-            get => innerBorder;
-            set
-            {
-                innerBorder = value;
-                InBorder.Visibility = value is null ? Visibility.Collapsed : Visibility.Visible;
-                if (value != null)
-                    InBorder.BorderBrush = value;
-            }
-        }
-
-        public FieldType Type
-        {
-            get => fieldType;
-            set
-            {
-                fieldType = value;
-                MaxLength = Math.Min(maxLength, GetMaxLength(value));
-                Background = value == FieldType.Note ? Brushes.White : Brushes.Transparent;
-            }
-        }
-
-        public bool HasFocus
+        public override bool HasFocus
         {
             get => focus;
             set
             {
                 focus = value;
-                FocusBorder.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                focusBorder.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
-        public Row? Row { get; set; }
+        public EditMode EditMode
+        {
+            get => editMode;
+            set
+            {
+                bool flag = editMode != value;
+                editMode = value;
+                if (flag)
+                    textBox.Visibility = value == EditMode.CanEdit ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public FieldType Type { get; init; }
 
         public EDDTextBox()
         {
@@ -133,18 +56,12 @@ namespace EEDD
 
         public void Focus(bool force)
         {
-            if (force && EditMode != EditState.Locked)
-                EditMode = EditState.CanEdit;
-            if (TextBox.Visibility == Visibility.Visible)
-                TextBox.Focus();
-            MainWindow.FocusedTextBox = this;
+            if (force && EditMode != EditMode.Locked)
+                EditMode = EditMode.CanEdit;
+            if (textBox.Visibility == Visibility.Visible)
+                textBox.Focus();
+            MainWindow.FocusedControl = this;
             HasFocus = true;
-        }
-
-        protected void OnPropertyChanged(string name)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
 
         private void UserControl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -161,17 +78,17 @@ namespace EEDD
         {
             if (e.Key == Key.Enter)
             {
-                if (Type == FieldType.AnnounceTime)
+                if (Type == FieldType.Time && Name == "dAnnounced") // TODO: temporary
                 {
                     if (!ParseTime())
                         return;
 
-                    EditMode = EditState.CanModify;
-                    RequestArrow.Visibility = Visibility.Visible;
+                    EditMode = EditMode.CanModify;
+                    requestArrow.Visibility = Visibility.Visible;
                     Task.Run(() =>
                     {
                         Thread.Sleep(4000);
-                        Dispatcher.Invoke(() => { RequestArrow.Visibility = Visibility.Collapsed; AcceptRectangle.Visibility = Visibility.Visible; });
+                        Dispatcher.Invoke(() => { requestArrow.Visibility = Visibility.Collapsed; acceptRectangle.Visibility = Visibility.Visible; });
                     });
                 }
                 else if (Type == FieldType.Time)
@@ -179,15 +96,11 @@ namespace EEDD
                     if (!ParseTime())
                         return;
 
-                    EditMode = EditState.CanModify;
-                }
-                else if (Type == FieldType.Note)
-                {
-
+                    EditMode = EditMode.CanModify;
                 }
                 else
                 {
-                    EditMode = EditState.CanModify;
+                    EditMode = EditMode.CanModify;
                 }
 
                 Row?.Next(this);
@@ -198,13 +111,13 @@ namespace EEDD
             }
             else
             {
-                
+
             }
         }
 
         private bool ParseTime()
         {
-            string text = TextBox.Text;
+            string text = textBox.Text;
 
             if (text.Length == 4 && !text.Contains(':'))
                 text = text.Insert(2, ":");
@@ -234,56 +147,18 @@ namespace EEDD
 
         private void TextBox_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (TextBox.Text.Length > 0)
+            if (textBox.Text.Length > 0)
             {
-                TextBox.SelectAll();
+                textBox.SelectAll();
             }
         }
 
         private void TextBox_LostMouseCapture(object sender, MouseEventArgs e)
         {
-            if (TextBox.Text.Length > 0)
+            if (textBox.Text.Length > 0)
             {
-                TextBox.SelectAll();
+                textBox.SelectAll();
             }
         }
-
-        private int GetMaxLength(FieldType type)
-        {
-            switch (type)
-            {
-                case FieldType.TrainNumber:
-                    return 6;
-                case FieldType.AnnounceTime:
-                case FieldType.Time:
-                case FieldType.Number:
-                    return 5;
-                case FieldType.SignallerTime:
-                case FieldType.Note:
-                    return 1;
-                default:
-                    return 50;
-            }
-        }
-    }
-
-    public enum EditState
-    {
-        CanEdit,
-        CanModify,
-        Locked
-    }
-
-    public enum FieldType
-    {
-        Static,
-        TrainNumber,
-        Number,
-        Time,
-        AnnounceTime,
-        String,
-        SignallerTime,
-        Note,
-
     }
 }
