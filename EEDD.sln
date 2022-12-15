@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Server\Server.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication", "Communication\Communication.csproj", "{8EB57479-1672-4164-ABE1-40643B0C988D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manager", "Manager\Manager.csproj", "{AEB76599-1174-4F2A-A8F5-AAB954CE9BE7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ISOR", "ISOR\ISOR.csproj", "{55B96618-3A10-4C4B-8E97-1C072E2C75E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +40,10 @@ Global
 		{8EB57479-1672-4164-ABE1-40643B0C988D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EB57479-1672-4164-ABE1-40643B0C988D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EB57479-1672-4164-ABE1-40643B0C988D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AEB76599-1174-4F2A-A8F5-AAB954CE9BE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEB76599-1174-4F2A-A8F5-AAB954CE9BE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AEB76599-1174-4F2A-A8F5-AAB954CE9BE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEB76599-1174-4F2A-A8F5-AAB954CE9BE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55B96618-3A10-4C4B-8E97-1C072E2C75E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55B96618-3A10-4C4B-8E97-1C072E2C75E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55B96618-3A10-4C4B-8E97-1C072E2C75E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55B96618-3A10-4C4B-8E97-1C072E2C75E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

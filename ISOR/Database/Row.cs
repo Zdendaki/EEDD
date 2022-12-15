@@ -1,7 +1,7 @@
 ﻿using Communication.Data;
 using Communication.Procedures;
 
-namespace ServerData.Database
+namespace ISOR.Database
 {
     [Table("Rows")]
     public class Row

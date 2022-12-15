@@ -30,6 +30,7 @@ namespace Server.Builders
             return new ClientData(client.Id, client.Name, new()/*GetRows(stationData)*/, GetStations(), GetTrains(), GetUser());
         }
 
+        /*
         private List<RowData> GetRows(List<StationData> stationData)
         {
             List<RowData> data = new();
@@ -166,6 +167,7 @@ namespace Server.Builders
             }
             return data;
         }
+        */
 
         #region Station
         private List<StationData> GetStations()

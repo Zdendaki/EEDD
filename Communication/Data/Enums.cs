@@ -25,6 +25,23 @@
         Error
     }
 
+    public enum RowDataType : byte
+    {
+        String,
+        Short,
+        Int,
+        Bool,
+        DateTime,
+        Track,
+        Acception,
+        Signaller
+    }
+
+    public enum RowDataName
+    {
+
+    }
+
     /// <summary>
     /// Route track default direction
     /// </summary>
