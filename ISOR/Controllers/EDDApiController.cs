@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ISOR.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -35,11 +36,11 @@ namespace ISOR.Controllers
         public ActionResult<string> GetToken(string username, string password)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
             var claims = new Claim[]
             {
-                new(ClaimTypes.NameIdentifier, username),
-                new(ClaimTypes.Role, password)
+                new(JwtClaims.Name, username),
+                new(JwtClaims.Roles, password)
             };
             var token = new JwtSecurityToken(
                 config["Jwt:Issuer"],

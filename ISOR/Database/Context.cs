@@ -41,14 +41,16 @@ namespace ISOR.Database
 
         private Queue<LogEvent> events;
         private T.Timer timer;
+        private bool externalConfig;
 
         public Context()
         {
-
+            externalConfig = false;
         }
 
         public Context(DbContextOptions<Context> options) : base(options)
         {
+            externalConfig = true;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -61,6 +63,7 @@ namespace ISOR.Database
                 timer.Elapsed += FlushLog;
                 optionsBuilder.LogTo(LogToFile);
             }
+            optionsBuilder.UseSqlServer("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\\DebugDb.mdf;Integrated Security=True;MultipleActiveResultSets=True");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

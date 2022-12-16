@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace ISOR.Authentication
 {
-    public class TokenValidatior : ISecurityTokenValidator
+    public class TokenManager : ISecurityTokenValidator
     {
         public bool CanValidateToken => true;
 
