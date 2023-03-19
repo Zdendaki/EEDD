@@ -25,4 +25,13 @@
     <ProjectReference Include="..\Communication\Communication.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DebugDb.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="DebugDb_log.ldf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

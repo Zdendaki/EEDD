@@ -14,15 +14,16 @@ namespace ISOR.Database
         public string Username { get; set; }
 
         [Required]
-        [MaxLength(64)]
-        public string Password { get; set; }
+        [MaxLength(32)]
+        public byte[] Password { get; set; }
+
+        [Required]
+        [MaxLength(16)]
+        public byte[] Salt { get; set; }
 
         [Required]
         [MaxLength(64)]
         public string Name { get; set; }
-
-        [MaxLength(64)]
-        public string? Token { get; set; }
 
         [Precision(0)]
         public DateTime? TokenIssued { get; set; }

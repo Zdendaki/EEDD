@@ -28,42 +28,25 @@ namespace ISOR.Database
         public DateTime LastUpdate { get; set; }
         
         [Required]
-        public bool CancelledA { get; set; } = false;
-
-        [Required]
-        public bool CancelledD { get; set; } = false;
+        public bool Cancelled { get; set; } = false;
 
         public char? RowChar { get; set; }
 
-        public TrainType? TypeA { get; set; }
-
-        public TrainType? TypeD { get; set; }
+        public TrainType? Type { get; set; }
 
         [MaxLength(5)]
-        public string? RouteA { get; set; }
-        
-        [MaxLength(5)]
-        public string? RouteD { get; set; }
+        public string? Route { get; set; }
 
         public virtual List<RowItem> RowItems { get; set; } = new();
 
-        public virtual List<RowDataDelay> DelaysA { get; set; } = new();
+        public virtual List<RowDataDelay> Delays { get; set; } = new();
 
-        public virtual List<RowDataDelay> DelaysD { get; set; } = new();
-
-        public bool? ApprovalA { get; set; }
-
-        public bool? ApprovalD { get; set; }
+        public bool? Approval { get; set; }
 
         [MaxLength(50)]
-        public string? ExceptionsA { get; set; }
+        public string? Exceptions { get; set; }
 
-        [MaxLength(50)]
-        public string? ExceptionsD { get; set; }
-
-        public short? SentMessagesA { get; set; }
-
-        public short? SentMessagesD { get; set; }
+        public short? SentMessages { get; set; }
     }
 
     [Table("RowItems")]

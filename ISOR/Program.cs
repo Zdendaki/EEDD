@@ -1,3 +1,4 @@
+using ISOR.Authentication;
 using ISOR.Database;
 using ISOR.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,11 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<Context>(o => o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration["VPS-SQL:EDD"]));
+builder.Services.AddDbContext<Context>(o => o.UseLazyLoadingProxies().UseSqlServer(builder.Configuration["Debug-SQL"]));
 //builder.Services.AddResponseCompression(o => o.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" }));
 builder.Services.AddAuthorization(o =>
 {
-    o.AddPolicy("OnlyAdmin", policy => policy.RequireClaim(ClaimTypes.Role, "admin"));
+    o.AddPolicy("OnlyAdmin", policy => policy.RequireClaim(JwtClaims.Roles, "admin"));
 });
 builder.Services.AddAuthentication(o =>
 {
