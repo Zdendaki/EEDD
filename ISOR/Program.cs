@@ -63,7 +63,7 @@ if (builder.Environment.IsDevelopment())
     builder.Services.AddSwaggerGen();
     IdentityModelEventSource.ShowPII = true;
 }
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(o => o.EnableDetailedErrors = true);
 
 var app = builder.Build();
 
