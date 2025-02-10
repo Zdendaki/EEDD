@@ -1,11 +1,6 @@
-﻿using Communication.Data;
-using Communication.Procedures.Clients;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -17,11 +12,11 @@ namespace EEDD
     /// </summary>
     public partial class InitWindow : Window
     {
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [LibraryImport("user32.dll", SetLastError = true)]
+        private static partial int GetWindowLong(IntPtr hWnd, int nIndex);
 
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        [LibraryImport("user32.dll")]
+        private static partial int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         bool downloading;
         bool closing = false;
@@ -49,7 +44,7 @@ namespace EEDD
 
                 Task.Run(() =>
                 {
-                    App.Client.SendMessage(new ClientDataRequest(App.Token!, App.Data.ShiftId));
+                    /*App.Client.SendMessage(new ClientDataRequest(App.Token!, App.Data.ShiftId));
 
                     App.Client.MessageReceived += (proc) =>
                     {
@@ -90,7 +85,7 @@ namespace EEDD
                                 Environment.Exit(0);
                             }
                         }
-                    };
+                    };*/
                 });
             }
             else
@@ -101,19 +96,18 @@ namespace EEDD
                 {
                     try
                     {
-                        if (!App.Client.ConnectAsync())
+                        /*if (!App.Client.ConnectAsync())
                             throw new Exception();
 
                         while (App.Client.IsConnecting)
                             Thread.Sleep(100);
 
                         if (!App.Client.IsConnected)
-                            throw new Exception();
+                            throw new Exception();*/
 
                         Dispatcher.Invoke(() =>
                         {
                             closing = true;
-                            new LoginWindow().Show();
                             Close();
                         });
                     }

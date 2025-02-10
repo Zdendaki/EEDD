@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EEDD"
+        xmlns:c="clr-namespace:EEDD.Controls"
         mc:Ignorable="d"
         Title="Elektronický dopravní deník" Height="600" Width="800" MinWidth="800" MinHeight="400" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
@@ -103,7 +104,7 @@
                     <ScaleTransform x:Name="TableScale" ScaleX="1" ScaleY="1" />
                 </Grid.LayoutTransform>
 
-                <local:Header x:Name="RowHeader" Grid.Row="0" />
+                <c:Header x:Name="RowHeader" Grid.Row="0" />
 
                 <StackPanel x:Name="Rows" Grid.Row="1">
                 </StackPanel>

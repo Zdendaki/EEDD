@@ -18,11 +18,16 @@ namespace ISOR.Controllers
 
         public IActionResult Index()
         {
-            
             return View();
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [Route("Login")]
+        public IActionResult Login()
         {
             return View();
         }

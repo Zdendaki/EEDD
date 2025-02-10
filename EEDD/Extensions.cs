@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -19,8 +16,8 @@ namespace EEDD
                 if (child is null)
                     continue;
 
-                if (child is T)
-                    yield return (T)child;
+                if (child is T tChild)
+                    yield return tChild;
 
                 foreach (T childOfChild in FindVisualChildren<T>(child))
                     yield return childOfChild;

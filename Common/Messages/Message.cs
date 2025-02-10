@@ -1,0 +1,24 @@
+﻿using MessagePack;
+
+namespace Common.Messages
+{
+    [MessagePackObject]
+    [Union(0, typeof(ResponseMessage))]
+    [Union(1, typeof(DataRequestMessage))]
+    [Union(2, typeof(Login.LoginMessage))]
+    [Union(3, typeof(Data.RoutesMessage))]
+    [Union(4, typeof(Data.TrainsMessage))]
+    [Union(5, typeof(Train.TrainEventMessage))]
+    [Union(6, typeof(Train.PodjRequest))]
+    [Union(7, typeof(Train.PodjResponse))]
+    public abstract class Message
+    {
+        [Key(0)]
+        public Guid ID { get; init; }
+
+        protected Message()
+        {
+            ID = Guid.NewGuid();
+        }
+    }
+}

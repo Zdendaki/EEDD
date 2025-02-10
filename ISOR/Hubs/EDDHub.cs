@@ -10,10 +10,9 @@ namespace ISOR.Hubs
         Context database;
         ConfigurationManager config;
 
-        public EDDHub(Context context/*, ConfigurationManager config*/)
+        public EDDHub(Context context)
         {
             database = context;
-            //this.config = config;
         }
 
         public async Task<LoginResponse> Login(string username, string password)
