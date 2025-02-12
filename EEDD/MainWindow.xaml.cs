@@ -1,4 +1,5 @@
-﻿using EEDD.Controls;
+﻿using Common.Data;
+using EEDD.Controls;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -11,17 +12,7 @@ namespace EEDD
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static EDDControl? focused = null;
-        public static EDDControl? FocusedControl
-        {
-            get => focused;
-            set
-            {
-                if (focused is not null)
-                    focused.HasFocus = false;
-                focused = value;
-            }
-        }
+        
 
         bool canClose = false;
 
@@ -29,11 +20,10 @@ namespace EEDD
         {
             InitializeComponent();
 
-            //client = App.Data.Client;
-
             // Init window
             //Title = $"DOPRAVNÍ DENÍK - [{client.Name} - {client.User.Name}]";
             TableScale.ScaleX = TableScale.ScaleY = 1d;
+
             //InitHeader();
             InitRows();
         }
@@ -41,9 +31,11 @@ namespace EEDD
         private void InitRows()
         {
             Rows.Children.Add(new RowComment());
-            Rows.Children.Add(new RowTrainDouble());
-            Rows.Children.Add(new RowTrainDouble());
-            Rows.Children.Add(new RowTrainDouble());
+            Rows.Children.Add(new RowTrain(StationColor.Gray, true));
+            Rows.Children.Add(new RowTrain(StationColor.Gray, false));
+            Rows.Children.Add(new RowTrain(StationColor.Yellow, true));
+            Rows.Children.Add(new RowTrain(StationColor.Yellow, false));
+            Rows.Children.Add(new RowTrain(StationColor.Green, false));
         }
 
         private void InitScale()
@@ -52,8 +44,8 @@ namespace EEDD
 
             if (source is not null)
             {
-                double scaleX = 1d + (source.CompositionTarget.TransformToDevice.M11 - 1d) / 2d;
-                double scaleY = 1d + (source.CompositionTarget.TransformToDevice.M22 - 1d) / 2d;
+                double scaleX = source.CompositionTarget.TransformToDevice.M11;
+                double scaleY = source.CompositionTarget.TransformToDevice.M22;
 
                 TableScale.ScaleX = TableScale.ScaleY = Math.Max(scaleX, scaleY);
             }

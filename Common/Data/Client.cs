@@ -17,6 +17,14 @@ namespace Common.Data
 
         [Key(4), XmlIgnore]
         public User? User { get; set; }
+
+        public override string ToString()
+        {
+            if (User is null)
+                return Name;
+            else
+                return $"{Name} ({User.Name})";
+        }
     }
 
     [MessagePackObject, XmlRoot]

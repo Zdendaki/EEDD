@@ -1,18 +1,17 @@
 ﻿using MessagePack;
-using System.Xml.Serialization;
 
 namespace Common.Data
 {
-    [MessagePackObject, XmlRoot]
+    [MessagePackObject]
     public class Station
     {
-        [Key(0), XmlAttribute]
+        [Key(0)]
         public required uint ID { get; init; }
 
-        [Key(1), XmlAttribute]
+        [Key(1)]
         public required string Name { get; init; }
 
-        [Key(2), XmlAttribute]
+        [Key(2)]
         public required string Abbr { get; init; }
 
         [Key(3)]
@@ -22,32 +21,32 @@ namespace Common.Data
         public List<Signaller> Signallers { get; init; }
     }
 
-    [MessagePackObject, XmlRoot]
+    [MessagePackObject]
     public class Track
     {
-        [Key(0), XmlAttribute]
+        [Key(0)]
         public required uint ID { get; init; }
 
-        [Key(1), XmlAttribute]
+        [Key(1)]
         public string Name { get; init; }
 
-        [Key(2), XmlAttribute]
+        [Key(2)]
         public bool Platform { get; init; }
     }
 
-    [MessagePackObject, XmlRoot]
+    [MessagePackObject]
     public class Signaller
     {
-        [Key(0), XmlAttribute]
+        [Key(0)]
         public required uint ID { get; init; }
 
-        [Key(1), XmlAttribute]
+        [Key(1)]
         public required string Name { get; init; }
 
-        [Key(2), XmlAttribute]
+        [Key(2)]
         public required SignallerType Type { get; init; }
 
-        [Key(3), XmlAttribute]
+        [Key(3)]
         public string? Comment { get; init; }
     }
 }

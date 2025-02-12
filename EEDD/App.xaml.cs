@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Common.Data;
+using EEDD.Controls;
+using EEDD.Endpoint;
+using System.ComponentModel;
 using System.Windows;
 
 namespace EEDD
@@ -8,23 +11,34 @@ namespace EEDD
     /// </summary>
     public partial class App : Application
     {
-        internal static byte[]? Token { get; set; }
+        private static EDDTextBox? selectedTextBox;
+        internal static EDDTextBox? SelectedTextBox
+        {
+            get => selectedTextBox;
+            set
+            {
+                if (selectedTextBox is not null)
+                    selectedTextBox.HasFocus = false;
+                selectedTextBox = value;
+                if (selectedTextBox is not null)
+                    selectedTextBox.HasFocus = true;
+            }
+        }
 
-        internal static DateTime? TokenGenerated { get; set; }
+        internal static BindingList<RouteBase> Routes { get; } = [];
 
-        internal static string? UserName { get; set; }
+        internal static EddClient Client { get; set; } = null!;
 
-        internal static RuntimeData Data { get; set; }
+        internal static Route Route { get; set; } = null!;
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            Data = new RuntimeData();
-
             base.OnStartup(e);
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
+            Client?.DisconnectAndStop();
             base.OnExit(e);
         }
     }

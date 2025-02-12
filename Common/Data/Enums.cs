@@ -125,6 +125,7 @@
         PJ
     }
 
+    [Flags]
     public enum ConnectionFlags : ushort
     {
         None = 0,
@@ -154,15 +155,7 @@
         /// <summary>
         /// Odjezd
         /// </summary>
-        Departure,
-        /// <summary>
-        /// Příjezd/odjezd
-        /// </summary>
-        Both,
-        /// <summary>
-        /// Textový řádek
-        /// </summary>
-        Comment
+        Departure
     }
 
     /// <summary>
@@ -350,5 +343,29 @@
         /// Obrat soupravy, hnacího vozidla, personálu
         /// </summary>
         O9
+    }
+
+    public enum EditMode
+    {
+        CanEdit,
+        CanModify,
+        Locked
+    }
+
+    public enum FieldType
+    {
+        Static,
+        Number,
+        String,
+        Time
+    }
+
+    public enum AnnounceState
+    {
+        None,
+        Announced,
+        Accepted,
+        Refused,
+        Phone
     }
 }

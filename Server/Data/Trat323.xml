@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Route ID="55323D63-A6CA-4049-A86A-01D55B42CD5B" Name="Trať 323" Password="323">
+	<Stations>
+		<Station ID="333344" Name="Frenštát pod Radhoštěm" Abbr="Fr">
+			<Tracks>
+				<Track ID="1" Name="1" Platform="true" />
+				<Track ID="2" Name="2" Platform="true" />
+				<Track ID="3" Name="3" Platform="true" />
+				<Track ID="4" Name="4" Platform="false" />
+				<Track ID="5" Name="5" Platform="true" />
+				<Track ID="6" Name="7" Platform="true" />
+			</Tracks>
+			<Signallers>
+				<Signaller ID="1" Name="PO" Type="1" Comment="" />
+				<Signaller ID="2" Name="S1" Type="2" Comment="Stavědlo 1" />
+				<Signaller ID="3" Name="dK" Type="3" Comment="" />
+				<Signaller ID="4" Name="S2" Type="2" Comment="Stavědlo 2" />
+				<Signaller ID="5" Name="dV" Type="3" Comment="" />
+			</Signallers>
+		</Station>
+		<Station ID="349845" Name="Veřovice" Abbr="Ve">
+			<Tracks>
+				<Track ID="11" Name="1" Platform="true" />
+				<Track ID="12" Name="2" Platform="true" />
+				<Track ID="13" Name="3" Platform="true" />
+				<Track ID="14" Name="4" Platform="false" />
+				<Track ID="15" Name="101" Platform="true" />
+				<Track ID="16" Name="103" Platform="false" />
+			</Tracks>
+			<Signallers>
+				<Signaller ID="11" Name="PO" Type="1" Comment="" />
+				<Signaller ID="12" Name="dF" Type="3" Comment="" />
+				<Signaller ID="13" Name="St" Type="2" Comment="" />
+				<Signaller ID="14" Name="dH" Type="3" Comment="" />
+				<Signaller ID="15" Name="dS" Type="3" Comment="" />
+			</Signallers>
+		</Station>
+	</Stations>
+	<StationConnections>
+		<StationConnection ID="1" Station1="333344" Station2="349845" TravelTime="10">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+	</StationConnections>
+	<Clients>
+		<Client ID="1" Name="Dopravní deník Frenštát pod Radhoštěm">
+			<Stations>
+				<Station ID="1" StationID="333344" Color="Gray" />
+			</Stations>
+		</Client>
+		<Client ID="1" Name="Dopravní deník Veřovice">
+			<Stations>
+				<Station ID="1" StationID="349845" Color="Gray" />
+			</Stations>
+		</Client>
+	</Clients>
+	<Trains>
+	</Trains>
+</Route>

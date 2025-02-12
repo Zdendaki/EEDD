@@ -20,10 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Controls\EDDLabel.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-    </Page>
-    <Page Update="Controls\RowTrainSingle.xaml">
+    <Page Update="Controls\RowTrain.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
     <Page Update="InitWindow.xaml">
@@ -33,10 +30,6 @@
     <Page Update="Controls\RowComment.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Windows\" />
   </ItemGroup>
 
 </Project>

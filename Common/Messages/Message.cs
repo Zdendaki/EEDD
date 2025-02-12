@@ -7,10 +7,11 @@ namespace Common.Messages
     [Union(1, typeof(DataRequestMessage))]
     [Union(2, typeof(Login.LoginMessage))]
     [Union(3, typeof(Data.RoutesMessage))]
-    [Union(4, typeof(Data.TrainsMessage))]
-    [Union(5, typeof(Train.TrainEventMessage))]
-    [Union(6, typeof(Train.PodjRequest))]
-    [Union(7, typeof(Train.PodjResponse))]
+    [Union(4, typeof(Data.RouteDataMessage))]
+    [Union(5, typeof(Data.TrainsMessage))]
+    [Union(6, typeof(Train.TrainEventMessage))]
+    [Union(7, typeof(Train.PodjRequest))]
+    [Union(8, typeof(Train.PodjResponse))]
     public abstract class Message
     {
         [Key(0)]

@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Common.Messages
 {
@@ -6,18 +7,45 @@ namespace Common.Messages
     public class ResponseMessage : Message
     {
         [Key(1)]
-        public Guid RequestID { get; init; }
+        public required Guid RequestID { get; init; }
 
         [Key(2)]
-        public ResponseStatus Status { get; init; }
+        public required ResponseStatus Status { get; init; }
 
         [Key(3)]
         public string? Message { get; init; }
+
+        [SetsRequiredMembers]
+        public ResponseMessage(Guid requestID, ResponseStatus status, string? message = null)
+        {
+            RequestID = requestID;
+            Status = status;
+            Message = message;
+        }
+
+        public ResponseMessage() { }
+
+        public static ResponseMessage GetAcceptedMessage(Guid requestID)
+        {
+            return new(requestID, ResponseStatus.Accepted);
+        }
+
+        public static ResponseMessage GetUnauthorizedMessage(Guid requestID)
+        {
+            return new(requestID, ResponseStatus.Unauthorized);
+        }
+
+        public static ResponseMessage GetBadCredentialsMessage(Guid requestID)
+        {
+            return new(requestID, ResponseStatus.BadCredentials);
+        }
     }
 
-    public enum ResponseStatus : ushort
+    public enum ResponseStatus : byte
     {
         Accepted,
-        Refused
+        Refused,
+        Unauthorized,
+        BadCredentials
     }
 }

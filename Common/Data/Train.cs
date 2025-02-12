@@ -1,67 +1,72 @@
 ﻿using MessagePack;
-using System.Xml.Serialization;
 
 #pragma warning disable MsgPack017
 
 namespace Common.Data
 {
-    [MessagePackObject, XmlRoot]
+    [MessagePackObject]
     public class Train
     {
-        [Key(0), XmlAttribute]
+        [Key(0)]
         public required uint ID { get; init; }
 
-        [Key(1), XmlAttribute]
+        [Key(1)]
         public required int Number { get; init; }
 
-        [Key(2), XmlAttribute]
-        public required DateTime Date { get; init; }
+        [Key(2)]
+        public DateTime Date { get; init; }
 
         [Key(3)]
         public List<TrainStop> Stops { get; init; }
 
-        [Key(4), XmlIgnore]
+        [Key(4)]
         public List<TrainEvent> Events { get; init; } = [];
 
-        [Key(5), XmlIgnore]
+        [Key(5)]
         public List<TrainComposition> Compositions { get; init; } = [];
 
-        [Key(6), XmlIgnore]
+        [Key(6)]
         public List<TrainReady> Readys { get; init; } = [];
     }
 
-    [MessagePackObject, XmlRoot]
+    [MessagePackObject]
     public class TrainStop
     {
-        [Key(0), XmlAttribute]
+        [Key(0)]
+        public required uint ID { get; init; }
+
+        [Key(1)]
         public required TrainType TypeArrival { get; init; }
 
-        [Key(1), XmlAttribute]
+        [Key(2)]
         public required TrainType TypeDeparture { get; init; }
 
-        [Key(2), XmlAttribute]
+        [Key(3)]
         public DateTime? Arrival { get; init; }
 
-        [Key(3), XmlAttribute]
+        [Key(4)]
         public DateTime? Departure { get; init; }
 
-        [Key(4), XmlAttribute]
-        public required string TrackArrival { get; init; }
+        [Key(5)]
+        public string? TrackArrival { get; init; }
 
-        [Key(5), XmlAttribute]
-        public required string TrackDeparture { get; init; }
+        [Key(6)]
+        public string? TrackDeparture { get; init; }
 
-        [Key(6), XmlAttribute]
+        [Key(7)]
         public string? RouteTrackArrival { get; init; }
 
-        [Key(7), XmlAttribute]
+        [Key(8)]
         public required bool StartBetweenStations { get; init; }
 
-        [Key(8), XmlAttribute]
+        [Key(9)]
         public string? RouteTrackDeparture { get; init; }
 
-        [Key(9), XmlAttribute]
+        [Key(10)]
         public required bool EndBetweenStations { get; init; }
+
+        [Key(11)]
+        public List<string> Actions { get; init; }
     }
 
     [MessagePackObject]
@@ -87,22 +92,25 @@ namespace Common.Data
     public class TrainComposition
     {
         [Key(0)]
-        public required Guid Station { get; init; }
+        public required Guid ID { get; init; }
 
         [Key(1)]
-        public required ushort MaxSpeed { get; init; }
+        public required Guid Station { get; init; }
 
         [Key(2)]
-        public required ushort Length { get; init; }
+        public required ushort MaxSpeed { get; init; }
 
         [Key(3)]
-        public required ushort Axles { get; init; }
+        public required ushort Length { get; init; }
 
         [Key(4)]
-        public ushort? Weight { get; init; }
+        public required ushort Axles { get; init; }
 
         [Key(5)]
-        public List<Vehicle> Vehicles { get; init; }
+        public ushort? Weight { get; init; }
+
+        [Key(6)]
+        public List<Vehicle> Vehicles { get; init; } = [];
     }
 
     [MessagePackObject]
@@ -125,12 +133,15 @@ namespace Common.Data
     public class TrainReady
     {
         [Key(0)]
-        public required Guid Station { get; init; }
+        public required Guid ID { get; init; }
 
         [Key(1)]
-        public required string Contact { get; init; }
+        public required Guid Station { get; init; }
 
         [Key(2)]
+        public required string Contact { get; init; }
+
+        [Key(3)]
         public required DateTime Time { get; init; }
     }
 }

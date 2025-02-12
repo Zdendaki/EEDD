@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:c="clr-namespace:EEDD.Controls"
              xmlns:l="clr-namespace:EEDD"
-             Loaded="UserControl_Loaded"
              mc:Ignorable="d">
     <Border BorderBrush="Black" BorderThickness="0.5" d:Background="{x:Static l:EDDBrushes.BackgroundGray1}">
         <Grid HorizontalAlignment="Left">
@@ -20,6 +19,8 @@
                 <ColumnDefinition Width="15" x:Name="Signaller2" />
                 <ColumnDefinition Width="0" x:Name="Signaller3" />
                 <ColumnDefinition Width="0" x:Name="Signaller4" />
+                <ColumnDefinition Width="0" x:Name="Signaller5" />
+                <ColumnDefinition Width="0" x:Name="Signaller6" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="15" />
                 <ColumnDefinition Width="15" />
@@ -32,18 +33,19 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             
-            <c:EDDLabel Text="" x:Name="letter" Grid.Row="0" Grid.Column="0" Align="Center" />
-            <c:EDDLabel Text="" x:Name="header" Grid.Row="0" Grid.Column="1" MaxLength="50" Align="Left" />
-            <c:EDDLabel Text="" x:Name="comment" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="5" Align="Left" />
-            <c:EDDLabel Text="" x:Name="note" Grid.Row="0" Grid.Column="7" Align="Center" MaxLength="1" BackColor="White" />
-            <c:EDDLabel Text="" x:Name="approval" Grid.Row="0" Grid.Column="8" Align="Center" MaxLength="1" />
-            <c:EDDLabel Text="" x:Name="exceptions" Grid.Row="0" Grid.Column="9" Align="Center" MaxLength="1" />
-            <c:EDDLabel Text="" x:Name="contact" Grid.Row="0" Grid.Column="10" Align="Center" MaxLength="1" />
-            <c:EDDLabel Text="" x:Name="edit" Grid.Row="0" Grid.Column="11" Align="Center" MaxLength="1" />
-            <c:EDDLabel Text="" x:Name="cancel" Grid.Row="0" Grid.Column="12" Align="Center" MaxLength="1" />
-            <c:EDDLabel Text="" x:Name="operations" Grid.Row="0" Grid.Column="13" Align="Center" MaxLength="1" />
-            <c:EDDLabel Text="" x:Name="sent" Grid.Row="0" Grid.Column="14" Align="Center" MaxLength="2" />
-            <c:EDDLabel Text="" x:Name="path" Grid.Row="0" Grid.Column="15" Align="Left" MaxLength="30" />
+            <c:EDDTextBox Text="" x:Name="letter" Grid.Row="0" Grid.Column="0" EditMode="Locked" />
+            <c:EDDTextBox Text="" x:Name="header" Grid.Row="0" Grid.Column="1" MaxLength="50" EditMode="Locked" />
+            <c:EDDTextBox Text="" x:Name="comment" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="7" EditMode="Locked" />
+
+            <c:EDDTextBox Text="" x:Name="note" Grid.Row="0" Grid.Column="9" MaxLength="1" EditMode="CanModify" TextAlignment="Center" Background="White" />
+            <c:EDDTextBox Text="" x:Name="approval" Grid.Row="0" Grid.Column="10" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="exceptions" Grid.Row="0" Grid.Column="11" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="contact" Grid.Row="0" Grid.Column="12" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="edit" Grid.Row="0" Grid.Column="13" MaxLength="1" EditMode="CanModify" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="cancel" Grid.Row="0" Grid.Column="14" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="operations" Grid.Row="0" Grid.Column="15" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="sent" Grid.Row="0" Grid.Column="16" MaxLength="2" EditMode="Locked" TextAlignment="Right" />
+            <c:EDDTextBox Text="" x:Name="path" Grid.Row="0" Grid.Column="17" Type="String" MaxLength="30" EditMode="Locked" />
         </Grid>
     </Border>
 </c:Row>

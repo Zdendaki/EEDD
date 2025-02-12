@@ -1,160 +1,210 @@
-﻿using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Common.Data;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace EEDD.Controls
 {
     /// <summary>
     /// Interakční logika pro EDDTextBox.xaml
     /// </summary>
-    public partial class EDDTextBox : EDDControl, INotifyPropertyChanged
+    public partial class EDDTextBox : UserControl
     {
-        bool focus = false;
-        EditMode editMode;
+        public static readonly DependencyProperty InnerBorderProperty = DependencyProperty.Register(nameof(InnerBorder), typeof(SolidColorBrush), typeof(EDDTextBox), new PropertyMetadata(Brushes.Transparent));
+        public static readonly DependencyProperty InnerBorder2Property = DependencyProperty.Register(nameof(InnerBorder2), typeof(SolidColorBrush), typeof(EDDTextBox), new PropertyMetadata(Brushes.Transparent));
+        public static readonly DependencyProperty AcceptionProperty = DependencyProperty.Register(nameof(Acception), typeof(SolidColorBrush), typeof(EDDTextBox), new PropertyMetadata(Brushes.Transparent));
+        public static readonly DependencyProperty RequestProperty = DependencyProperty.Register(nameof(Request), typeof(SolidColorBrush), typeof(EDDTextBox), new PropertyMetadata(Brushes.Transparent));
+        public static readonly DependencyProperty MaxLengthProperty = DependencyProperty.Register(nameof(MaxLength), typeof(int), typeof(EDDTextBox), new PropertyMetadata(0));
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(EDDTextBox), new PropertyMetadata(string.Empty));
+        public static readonly DependencyProperty EditModeProperty = DependencyProperty.Register(nameof(EditMode), typeof(EditMode), typeof(EDDTextBox), new PropertyMetadata(EditMode.CanEdit, PropertyChanged));
+        public static readonly DependencyProperty TextAlignmentProperty = DependencyProperty.Register(nameof(TextAlignment), typeof(TextAlignment), typeof(EDDTextBox), new PropertyMetadata(TextAlignment.Left));
 
-        public new string Text
+        Brush _foreground;
+
+        public int MaxLength
         {
-            get => base.Text.Limit(MaxLength);
-            set => base.Text = value;
+            get => (int)GetValue(MaxLengthProperty);
+            set => SetValue(MaxLengthProperty, value);
         }
 
-        public override bool HasFocus
+        public string Text
         {
-            get => focus;
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
+        string caption;
+        public string Caption
+        {
+            get => caption;
             set
             {
-                focus = value;
-                focusBorder.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                caption = value;
+                SetTooltip(value);
             }
+        }
+
+        public SolidColorBrush InnerBorder
+        {
+            get => (SolidColorBrush)GetValue(InnerBorderProperty);
+            set => SetValue(InnerBorderProperty, value);
+        }
+
+        public SolidColorBrush InnerBorder2
+        {
+            get => (SolidColorBrush)GetValue(InnerBorder2Property);
+            set => SetValue(InnerBorder2Property, value);
+        }
+
+        public SolidColorBrush Acception
+        {
+            get => (SolidColorBrush)GetValue(AcceptionProperty);
+            set => SetValue(AcceptionProperty, value);
+        }
+
+        public SolidColorBrush Request
+        {
+            get => (SolidColorBrush)GetValue(RequestProperty);
+            set => SetValue(RequestProperty, value);
         }
 
         public EditMode EditMode
         {
-            get => editMode;
+            get => (EditMode)GetValue(EditModeProperty);
             set
             {
-                bool flag = editMode != value;
-                editMode = value;
-                if (flag)
-                    textBox.Visibility = value == EditMode.CanEdit ? Visibility.Visible : Visibility.Collapsed;
+                SetValue(EditModeProperty, value);
+                OnEditModeChanged();
             }
+        }
+
+        public TextAlignment TextAlignment
+        {
+            get => (TextAlignment)GetValue(TextAlignmentProperty);
+            set => SetValue(TextAlignmentProperty, value);
         }
 
         public FieldType Type { get; init; }
 
+        bool hasFocus = false;
+        public bool HasFocus
+        {
+            get => hasFocus;
+            set => SetFocusBorder(value);
+        }
+
         public EDDTextBox()
         {
             InitializeComponent();
-            DataContext = this;
+            Panel.SetZIndex(this, 0);
+
+            textBox.IsReadOnlyCaretVisible = false;
+            textBox.LostFocus += TextBox_LostFocus;
+
+            _foreground = Foreground;
         }
 
-        public void Focus(bool force)
+        private void SetTooltip(string content)
         {
-            if (force && EditMode != EditMode.Locked)
-                EditMode = EditMode.CanEdit;
-            if (textBox.Visibility == Visibility.Visible)
-                textBox.Focus();
-            MainWindow.FocusedControl = this;
-            HasFocus = true;
-        }
-
-        private void UserControl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Focus(false);
-        }
-
-        private void UserControl_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void TextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
+            if (string.IsNullOrWhiteSpace(content))
             {
-                if (Type == FieldType.Time && Name == "dAnnounced") // TODO: temporary
-                {
-                    if (!ParseTime())
-                        return;
-
-                    EditMode = EditMode.CanModify;
-                    requestArrow.Visibility = Visibility.Visible;
-                    Task.Run(() =>
-                    {
-                        Thread.Sleep(4000);
-                        Dispatcher.Invoke(() => { requestArrow.Visibility = Visibility.Collapsed; acceptRectangle.Visibility = Visibility.Visible; });
-                    });
-                }
-                else if (Type == FieldType.Time)
-                {
-                    if (!ParseTime())
-                        return;
-
-                    EditMode = EditMode.CanModify;
-                }
-                else
-                {
-                    EditMode = EditMode.CanModify;
-                }
-
-                Row?.Next(this);
+                ToolTip = null;
+                return;
             }
-            else if (e.Key == Key.Tab)
+
+            if (ToolTip is ToolTip tt)
             {
-                Row?.Next(this, true);
+                tt.Content = content;
+                return;
             }
+
+            ToolTip = new ToolTip()
+            {
+                Content = content
+            };
+        }
+
+        protected virtual void OnEditModeChanged()
+        {
+            switch (EditMode)
+            {
+                case EditMode.CanEdit:
+                    textBox.IsReadOnly = false;
+                    textBox.IsHitTestVisible = true;
+                    textBox.Background = Brushes.White;
+                    Foreground = SetForeground(null);
+                    break;
+                case EditMode.CanModify:
+                    textBox.IsReadOnly = true;
+                    textBox.IsHitTestVisible = false;
+                    textBox.Background = Brushes.Transparent;
+                    Foreground = SetForeground(null);
+                    break;
+                case EditMode.Locked:
+                    textBox.IsReadOnly = true;
+                    textBox.IsHitTestVisible = false;
+                    textBox.Background = Brushes.Transparent;
+                    Foreground = SetForeground(EDDBrushes.Gray);
+                    break;
+            }
+        }
+
+        protected override void OnMouseEnter(MouseEventArgs e)
+        {
+            base.OnMouseEnter(e);
+
+            Panel.SetZIndex(this, int.MaxValue);
+        }
+
+        protected override void OnMouseLeave(MouseEventArgs e)
+        {
+            base.OnMouseLeave(e);
+
+            if (!textBox.IsFocused)
+                Panel.SetZIndex(this, 0);
+        }
+
+        private void TextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Panel.SetZIndex(this, 0);
+        }
+
+        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnPreviewMouseDown(e);
+
+            App.SelectedTextBox = this;
+        }
+
+        private static void PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is not EDDTextBox textBox)
+                return;
+
+            switch (e.Property.Name)
+            {
+                case nameof(EditMode):
+                    textBox.OnEditModeChanged();
+                    break;
+            }
+        }
+
+        private void SetFocusBorder(bool hasFocus)
+        {
+            if (EditMode == EditMode.CanEdit && hasFocus)
+                focusBorder.Visibility = Visibility.Collapsed;
             else
-            {
-
-            }
+                focusBorder.Visibility = hasFocus ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private bool ParseTime()
+
+        private Brush SetForeground(Brush? brush)
         {
-            string text = textBox.Text;
-
-            if (text.Length == 4 && !text.Contains(':'))
-                text = text.Insert(2, ":");
-
-            string output = "";
-            int i = 0;
-
-            foreach (string txt in text.Split(':'))
-            {
-                if (!int.TryParse(txt, out int x) || (i == 0 && x > 24) || (i == 1 && x > 59) || x < 0)
-                    return false;
-
-                output += txt.PadLeft(2, '0');
-
-                if (i == 0)
-                    output += ':';
-
-                i++;
-            }
-
-            if (output.Length != 5)
-                return false;
-
-            Text = output;
-            return true;
-        }
-
-        private void TextBox_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (textBox.Text.Length > 0)
-            {
-                textBox.SelectAll();
-            }
-        }
-
-        private void TextBox_LostMouseCapture(object sender, MouseEventArgs e)
-        {
-            if (textBox.Text.Length > 0)
-            {
-                textBox.SelectAll();
-            }
+            if (brush is null)
+                return _foreground;
+            else
+                return brush;
         }
     }
 }

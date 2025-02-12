@@ -86,10 +86,10 @@
                     <Setter Property="FontWeight" Value="DemiBold" />
                 </Style>
             </StackPanel.Resources>
-            <Label Content="Bezp. štítek" />
-            <Label Content="Komunikace" />
-            <Label Content="Pohyb vlaku" />
-            <Label Content="Zprávy" />
+            <Label Content="Bezp. štítek" FontWeight="Bold" />
+            <Label Content="Komunikace" FontWeight="Bold" Background="Red" Foreground="White" />
+            <Label Content="Pohyb vlaku" FontWeight="Bold" />
+            <Label Content="Zprávy" FontWeight="Bold" Foreground="Red" />
             <Label Content="(+)" Padding="5" Margin="100,0,0,0" MouseDown="LabelZoomIn_MouseDown" FontWeight="Regular" />
             <Label Content="(–)" Padding="5" MouseDown="LabelZoomOut_MouseDown" FontWeight="Regular" />
         </StackPanel>
@@ -106,8 +106,7 @@
 
                 <c:Header x:Name="RowHeader" Grid.Row="0" />
 
-                <StackPanel x:Name="Rows" Grid.Row="1">
-                </StackPanel>
+                <c:RowsList x:Name="Rows" Grid.Row="1" />
             </Grid>
         </ScrollViewer>
 

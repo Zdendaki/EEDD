@@ -1,91 +1,39 @@
 ﻿using Common.Data;
-using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Input;
 
 namespace EEDD.Controls
 {
-    public abstract class Row : UserControl, INotifyPropertyChanged
+    public abstract class Row : UserControl
     {
-        Brush backColor;
-        bool odd = false;
-        StationColor color = StationColor.Gray;
-        RowType rowType = RowType.Both;
-
-        protected Brush BackColor { get => backColor; }
-
-        public bool Odd
+        public Row()
         {
-            get => odd;
-            set
-            {
-                bool flag = odd != value;
-                odd = value;
-                if (flag)
-                    UpdateColor();
-            }
+            Panel.SetZIndex(this, 0);
         }
 
-        public StationColor Color
+        protected override void OnMouseEnter(MouseEventArgs e)
         {
-            get => color;
-            init
-            {
-                color = value;
-                UpdateColor();
-            }
+            base.OnMouseEnter(e);
+
+            Panel.SetZIndex(this, int.MaxValue);
         }
 
-        public RowType RowType
+        protected override void OnMouseLeave(MouseEventArgs e)
         {
-            get => rowType;
-            init
-            {
-                rowType = value;
-                UpdateColor();
-            }
+            base.OnMouseLeave(e);
+
+            Panel.SetZIndex(this, 0);
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public Row(StationColor color, RowType rowType)
+        /// <summary>
+        /// Set background color of row
+        /// </summary>
+        /// <param name="odd">Row is odd</param>
+        /// <returns><see langword="true"/> if next row is chained</returns>
+        public virtual bool SetBackground(bool odd)
         {
-            Color = color;
-            RowType = rowType;
+            Background = RowHelper.GetBackground(StationColor.Gray, odd);
+            return false;
         }
-
-        private void UpdateColor()
-        {
-            if (rowType == RowType.Comment)
-                color = StationColor.Gray;
-
-            if (color == StationColor.Green)
-            {
-                if (odd)
-                    backColor = EDDBrushes.BackgroundGreen1;
-                else
-                    backColor = EDDBrushes.BackgroundGreen2;
-            }
-            else if (color == StationColor.Yellow)
-            {
-                if (odd)
-                    backColor = EDDBrushes.BackgroundYellow1;
-                else
-                    backColor = EDDBrushes.BackgroundYellow2;
-            }
-            else
-            {
-                if (odd)
-                    backColor = EDDBrushes.BackgroundGray1;
-                else
-                    backColor = EDDBrushes.BackgroundGray2;
-            }
-
-            OnPropertyChanged(nameof(BackColor));
-        }
-
-        public abstract void Next(EDDTextBox prev, bool tab = false);
-
-        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
