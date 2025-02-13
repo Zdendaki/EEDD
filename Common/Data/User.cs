@@ -10,5 +10,13 @@ namespace Common.Data
 
         [Key(1)]
         public string Name { get; init; }
+
+        public User() { }
+
+        public User(uint id, string name)
+        {
+            ID = id;
+            Name = name;
+        }
     }
 }

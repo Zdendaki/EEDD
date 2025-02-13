@@ -39,6 +39,11 @@ namespace Common.Messages
         {
             return new(requestID, ResponseStatus.BadCredentials);
         }
+
+        public static ResponseMessage GetRefusedMessage(Guid requestID, string? message = null)
+        {
+            return new(requestID, ResponseStatus.Refused, message);
+        }
     }
 
     public enum ResponseStatus : byte

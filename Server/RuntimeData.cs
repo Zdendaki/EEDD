@@ -18,6 +18,9 @@ namespace Server
             Routes = [];
         }
 
+
+
+        #region Loading
         public void LoadData()
         {
             try
@@ -304,5 +307,6 @@ namespace Server
                 Actions = actions
             };
         }
+        #endregion
     }
 }

@@ -15,8 +15,9 @@ namespace Server.Endpoints
         private readonly RuntimeData _data;
         private byte _errorCounter = 0;
 
-        internal Guid? Route;
-        internal string? Username;
+        internal Route? Route { get; private set; }
+
+        internal string? Username { get; private set; }
 
         public EddSession(EddServer server, ILogger<EddSession> logger, RuntimeData data) : base(server)
         {
@@ -88,6 +89,9 @@ namespace Server.Endpoints
                 case PodjResponse podjResponse:
                     PodjResponse(podjResponse);
                     break;
+                case ClaimClientMessage claimClient:
+                    ClaimStation(claimClient);
+                    break;
             }
         }
 
@@ -106,7 +110,7 @@ namespace Server.Endpoints
                     return;
                 }
 
-                RouteDataMessage routeData = new(_data.Routes.Single(x => x.ID == Route.Value));
+                RouteDataMessage routeData = new(_data.Routes.Single(x => x.ID == Route.ID));
                 SendMessage(routeData);
             }
         }
@@ -122,7 +126,7 @@ namespace Server.Endpoints
 
             if (SendMessage(ResponseMessage.GetAcceptedMessage(login.ID)))
             {
-                Route = login.RouteID;
+                Route = route;
                 Username = login.Username;
 
                 _logger.LogInformation($"Client {Id} Logged in as user {Username} to route {route.Name}.");
@@ -137,6 +141,29 @@ namespace Server.Endpoints
         private void PodjResponse(PodjResponse response)
         {
 
+        }
+
+        private void ClaimStation(ClaimClientMessage claimClient)
+        {
+            if (Route is null || Username is null)
+            {
+                SendMessage(ResponseMessage.GetUnauthorizedMessage(claimClient.ID));
+                return;
+            }
+
+            if (Route.Clients.FirstOrDefault(x => x.ID == claimClient.ClientID) is not Client client)
+            {
+                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, "Klient nenalezen."));
+                return;
+            }
+
+            if (client.User is not null)
+            {
+                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, "Klient je již obsazen."));
+                return;
+            }
+
+            client.User = new(0, Username);
         }
     }
 }
