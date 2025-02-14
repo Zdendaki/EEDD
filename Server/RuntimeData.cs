@@ -110,20 +110,13 @@ namespace Server
             string name = node.GetStringAttribute("Name");
             string abbr = node.GetStringAttribute("Abbr");
             List<Track> tracks = [];
-            List<Signaller> signallers = [];
 
             foreach (XmlNode child in node.ChildNodes)
             {
-                switch (child.Name)
+                if (child.Name == "Tracks")
                 {
-                    case "Tracks":
-                        foreach (XmlNode track in child.ChildNodes)
-                            tracks.Add(LoadStationTrack(track));
-                        break;
-                    case "Signallers":
-                        foreach (XmlNode signaller in child.ChildNodes)
-                            signallers.Add(LoadSignaller(signaller));
-                        break;
+                    foreach (XmlNode track in child.ChildNodes)
+                        tracks.Add(LoadStationTrack(track));
                 }
             }
 
@@ -132,8 +125,7 @@ namespace Server
                 ID = id,
                 Name = name,
                 Abbr = abbr,
-                Tracks = tracks,
-                Signallers = signallers
+                Tracks = tracks
             };
         }
 
@@ -148,22 +140,6 @@ namespace Server
                 ID = id,
                 Name = name,
                 Platform = platform
-            };
-        }
-
-        private Signaller LoadSignaller(XmlNode node)
-        {
-            uint id = node.GetUInt32Attribute("ID");
-            string name = node.GetStringAttribute("Name");
-            SignallerType type = (SignallerType)node.GetByteAttribute("Type");
-            string? comment = node.GetStringAttribute("Comment");
-
-            return new()
-            {
-                ID = id,
-                Name = name,
-                Type = type,
-                Comment = comment
             };
         }
 
@@ -213,6 +189,7 @@ namespace Server
             uint id = node.GetUInt32Attribute("ID");
             string name = node.GetStringAttribute("Name");
             List<ClientStation> stations = [];
+            List<Signaller> signallers = [];
 
             foreach (XmlNode child in node.ChildNodes)
             {
@@ -221,13 +198,35 @@ namespace Server
                     foreach (XmlNode station in child.ChildNodes)
                         stations.Add(LoadClientStation(station));
                 }
+                else if (child.Name == "Signallers")
+                {
+                    foreach (XmlNode signaller in child.ChildNodes)
+                        signallers.Add(LoadSignaller(signaller));
+                }
             }
 
             return new()
             {
                 ID = id,
                 Name = name,
-                Stations = stations
+                Stations = stations,
+                Signallers = signallers
+            };
+        }
+
+        private Signaller LoadSignaller(XmlNode node)
+        {
+            uint id = node.GetUInt32Attribute("ID");
+            string name = node.GetStringAttribute("Name");
+            SignallerType type = (SignallerType)node.GetByteAttribute("Type");
+            string? comment = node.GetStringAttribute("Comment");
+
+            return new()
+            {
+                ID = id,
+                Name = name,
+                Type = type,
+                Comment = comment
             };
         }
 

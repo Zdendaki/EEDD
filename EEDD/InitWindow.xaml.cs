@@ -20,7 +20,6 @@ namespace EEDD
 
         bool downloading;
         bool closing = false;
-        bool downloaded = false;
 
         public InitWindow(bool dl)
         {

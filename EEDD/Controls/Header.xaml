@@ -82,36 +82,34 @@
                     </TextBlock>
                 </Label.Content>
             </Label>
-            <Label Width="15">
+            <Label x:Name="Sig1L" Width="15">
                 <Label.Content>
-                    <TextBlock LineHeight="14" x:Name="Sig1">
-                        <Run Text="S" /><LineBreak />
-                        <Run Text="1" />
-                    </TextBlock>
+                    <TextBlock LineHeight="14" x:Name="Sig1" />
                 </Label.Content>
             </Label>
-            <Label Width="15">
+            <Label x:Name="Sig2L" Width="15">
                 <Label.Content>
-                    <TextBlock LineHeight="14" x:Name="Sig2">
-                        <Run Text="S" /><LineBreak />
-                        <Run Text="2" />
-                    </TextBlock>
+                    <TextBlock LineHeight="14" x:Name="Sig2" />
                 </Label.Content>
             </Label>
-            <Label Width="0">
+            <Label x:Name="Sig3L" Width="15">
                 <Label.Content>
-                    <TextBlock LineHeight="14" x:Name="Sig3">
-                        <Run Text="S" /><LineBreak />
-                        <Run Text="3" />
-                    </TextBlock>
+                    <TextBlock LineHeight="14" x:Name="Sig3" />
                 </Label.Content>
             </Label>
-            <Label Width="0">
+            <Label x:Name="Sig4L" Width="15">
                 <Label.Content>
-                    <TextBlock LineHeight="14" x:Name="Sig4">
-                        <Run Text="S" /><LineBreak />
-                        <Run Text="4" />
-                    </TextBlock>
+                    <TextBlock LineHeight="14" x:Name="Sig4" />
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig5L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig5" />
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig6L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig6" />
                 </Label.Content>
             </Label>
             <Label Width="35">

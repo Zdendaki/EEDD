@@ -5,9 +5,6 @@
 			<Tracks>
 				<Track ID="" Name="" Platform="" />
 			</Tracks>
-			<Signallers>
-				<Signaller ID="" Name="" Type="" Comment="" />
-			</Signallers>
 		</Station>
 	</Stations>
 	<StationConnections>
@@ -22,6 +19,9 @@
 			<Stations>
 				<Station ID="" StationID="" Color="" />
 			</Stations>
+			<Signallers>
+				<Signaller ID="" Name="" Type="" Comment="" />
+			</Signallers>
 		</Client>
 	</Clients>
 	<Trains>

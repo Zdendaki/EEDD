@@ -165,7 +165,7 @@ namespace Server.Endpoints
 
             client.User = User;
             Id.ToByteArray();
-            _logger.LogInformation($"[{Id}] claimed client {client.ID}.");
+            _logger.LogInformation($"[{Id}] Claimed client {client.ID}.");
             SendMessage(ResponseMessage.GetAcceptedMessage(claimClient.ID));
         }
     }

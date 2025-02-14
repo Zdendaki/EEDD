@@ -20,11 +20,13 @@ namespace EEDD
 
             // Init window
             Title = $"DOPRAVNÍ DENÍK - [{App.ClientData.Name} - {App.ClientData.User!.Name}]";
-            TableScale.ScaleX = TableScale.ScaleY = 1d;
+            InitScale();
 
-            //InitHeader();
+            InitHeader();
             InitRows();
         }
+
+        private void InitHeader() => RowHeader.Init();
 
         private void InitRows()
         {

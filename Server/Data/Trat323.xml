@@ -10,13 +10,6 @@
 				<Track ID="5" Name="5" Platform="true" />
 				<Track ID="6" Name="7" Platform="true" />
 			</Tracks>
-			<Signallers>
-				<Signaller ID="1" Name="PO" Type="1" Comment="" />
-				<Signaller ID="2" Name="S1" Type="2" Comment="Stavědlo 1" />
-				<Signaller ID="3" Name="dK" Type="3" Comment="" />
-				<Signaller ID="4" Name="S2" Type="2" Comment="Stavědlo 2" />
-				<Signaller ID="5" Name="dV" Type="3" Comment="" />
-			</Signallers>
 		</Station>
 		<Station ID="349845" Name="Veřovice" Abbr="Ve">
 			<Tracks>
@@ -27,13 +20,6 @@
 				<Track ID="15" Name="101" Platform="true" />
 				<Track ID="16" Name="103" Platform="false" />
 			</Tracks>
-			<Signallers>
-				<Signaller ID="11" Name="PO" Type="1" Comment="" />
-				<Signaller ID="12" Name="dF" Type="3" Comment="" />
-				<Signaller ID="13" Name="St" Type="2" Comment="" />
-				<Signaller ID="14" Name="dH" Type="3" Comment="" />
-				<Signaller ID="15" Name="dS" Type="3" Comment="" />
-			</Signallers>
 		</Station>
 	</Stations>
 	<StationConnections>
@@ -48,11 +34,25 @@
 			<Stations>
 				<Station ID="1" StationID="333344" Color="Gray" />
 			</Stations>
+			<Signallers>
+				<Signaller ID="1" Name="PO" Type="1" Comment="" />
+				<Signaller ID="2" Name="S1" Type="2" Comment="Stavědlo 1" />
+				<Signaller ID="3" Name="dK" Type="3" Comment="" />
+				<Signaller ID="4" Name="S2" Type="2" Comment="Stavědlo 2" />
+				<Signaller ID="5" Name="dV" Type="3" Comment="" />
+			</Signallers>
 		</Client>
 		<Client ID="1" Name="Dopravní deník Veřovice">
 			<Stations>
 				<Station ID="1" StationID="349845" Color="Gray" />
 			</Stations>
+			<Signallers>
+				<Signaller ID="11" Name="PO" Type="1" Comment="" />
+				<Signaller ID="12" Name="dF" Type="3" Comment="" />
+				<Signaller ID="13" Name="St" Type="2" Comment="" />
+				<Signaller ID="14" Name="dH" Type="3" Comment="" />
+				<Signaller ID="15" Name="dS" Type="3" Comment="" />
+			</Signallers>
 		</Client>
 	</Clients>
 	<Trains>
