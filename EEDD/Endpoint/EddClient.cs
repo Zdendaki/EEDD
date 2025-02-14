@@ -1,5 +1,4 @@
 ﻿using Common;
-using Common.Data;
 using Common.Messages;
 using Common.Messages.Data;
 using MessagePack;
@@ -9,22 +8,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Windows;
+using System.Threading.Tasks;
 using SocketError = System.Net.Sockets.SocketError;
+using ThreadTimer = System.Threading.Timer;
 using Timer = System.Timers.Timer;
 
 namespace EEDD.Endpoint
 {
-    public delegate void MessageReceivedEventHandler(Message message);
+    internal delegate void MessageReceivedEventHandler(MessageReceivedEventArgs e);
 
     internal class EddClient : TcpClient
     {
         byte _errorCounter = 0;
         bool _stop = false;
-        List<MessageCache> _sentMessages = [];
-        Timer _timer;
+
+        readonly object _sendMessagesLock = new();
+        readonly List<MessageCache> _sentMessages = [];
+        readonly Timer _timer;
 
         public event MessageReceivedEventHandler? MessageReceived;
+        protected event MessageReceivedEventHandler? MessageReceivedInternal;
 
         public EddClient(IPAddress address, ushort port) : base(address, port)
         {
@@ -85,8 +88,54 @@ namespace EEDD.Endpoint
 
         public bool SendQueuedMessage(Message message, ResponseCallback? callback)
         {
-            _sentMessages.Add(new(message, callback));
+            lock (_sentMessages)
+            {
+                _sentMessages.Add(new(message, callback));
+            }
+
             return SendMessage(message);
+        }
+
+        public Task<ResponseMessage?> SendRequest(Message message, TimeSpan wait)
+        {
+            bool gotResponse = false;
+            TaskCompletionSource<ResponseMessage?> tcs = new();
+            ThreadTimer timer = new(_ => timeout(), null, (long)wait.TotalMilliseconds, Timeout.Infinite);
+
+            void received(MessageReceivedEventArgs e)
+            {
+                if (e.Message is not ResponseMessage response)
+                    return;
+
+                if (response.RequestID == message.ID)
+                {
+                    gotResponse = true;
+                    MessageReceivedInternal -= received;
+                    e.Handled = true;
+                    tcs.SetResult(response);
+                }
+            }
+
+            void timeout()
+            {
+                if (gotResponse)
+                    return;
+
+                MessageReceivedInternal -= received;
+                tcs.SetResult(null);
+            }
+
+            if (SendMessage(message))
+            {
+                MessageReceivedInternal += received;
+            }
+            else
+            {
+                tcs.SetResult(null);
+                timer.Change(Timeout.Infinite, Timeout.Infinite);
+            }
+
+            return tcs.Task;
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
@@ -112,15 +161,21 @@ namespace EEDD.Endpoint
                 return;
             }
 
-            OnMessageReceived(message);
+            MessageReceivedEventArgs e = new(message);
+            OnMessageReceivedInternal(e);
+
+            if (e.Handled)
+                return;
+
+            OnMessageReceived(e);
+
+            if (e.Handled)
+                return;
 
             switch (message)
             {
                 case ResponseMessage response:
                     ParseResponse(response);
-                    break;
-                case RoutesMessage routes:
-                    UpdateRoutes(routes.Routes);
                     break;
                 case RouteDataMessage routeData:
                     SetRouteData(routeData);
@@ -128,32 +183,30 @@ namespace EEDD.Endpoint
             }
         }
 
-        protected virtual void OnMessageReceived(Message message)
+        protected virtual void OnMessageReceived(MessageReceivedEventArgs e)
         {
-            MessageReceived?.Invoke(message);
+            MessageReceived?.Invoke(e);
         }
 
-        private void UpdateRoutes(IEnumerable<RouteBase> routes)
+        protected virtual void OnMessageReceivedInternal(MessageReceivedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                App.Routes.Clear();
-                foreach (RouteBase route in routes)
-                    App.Routes.Add(route);
-            });
+            MessageReceivedInternal?.Invoke(e);
         }
 
         private void SetRouteData(RouteDataMessage routeData)
         {
-
+            App.Route = routeData.Route;
         }
 
         private void ParseResponse(ResponseMessage response)
         {
-            if (_sentMessages.FirstOrDefault(x => x.Message.ID == response.RequestID) is MessageCache cache)
+            lock (_sentMessages)
             {
-                cache.Callback?.Invoke(response);
-                _sentMessages.Remove(cache);
+                if (_sentMessages.FirstOrDefault(x => x.Message.ID == response.RequestID) is MessageCache cache)
+                {
+                    cache.Callback?.Invoke(response);
+                    _sentMessages.Remove(cache);
+                }
             }
         }
     }

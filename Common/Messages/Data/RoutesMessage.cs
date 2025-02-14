@@ -8,7 +8,9 @@ namespace Common.Messages.Data
     public class RoutesMessage : Message
     {
         [Key(1)]
-        public List<RouteBase> Routes { get; init; }
+        public required List<RouteBase> Routes { get; init; }
+
+        public RoutesMessage() : base() { }
 
         [SetsRequiredMembers]
         public RoutesMessage(List<RouteBase> routes) : base()
@@ -21,7 +23,5 @@ namespace Common.Messages.Data
         {
             Routes = routes.Select(route => route.GetBase()).ToList();
         }
-
-        public RoutesMessage() : base() { }
     }
 }

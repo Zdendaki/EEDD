@@ -12,8 +12,6 @@ namespace EEDD
     /// </summary>
     public partial class MainWindow : Window
     {
-        
-
         bool canClose = false;
 
         public MainWindow()
@@ -21,7 +19,7 @@ namespace EEDD
             InitializeComponent();
 
             // Init window
-            //Title = $"DOPRAVNÍ DENÍK - [{client.Name} - {client.User.Name}]";
+            Title = $"DOPRAVNÍ DENÍK - [{App.ClientData.Name} - {App.ClientData.User!.Name}]";
             TableScale.ScaleX = TableScale.ScaleY = 1d;
 
             //InitHeader();

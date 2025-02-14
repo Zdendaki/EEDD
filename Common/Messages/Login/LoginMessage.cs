@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using Common.Data;
+using MessagePack;
 
 namespace Common.Messages.Login
 {
@@ -6,12 +7,20 @@ namespace Common.Messages.Login
     public class LoginMessage : Message
     {
         [Key(1)]
-        public Guid RouteID { get; init; }
+        public required Guid RouteID { get; init; }
 
         [Key(2)]
-        public string Username { get; init; }
+        public required uint DeviceID { get; init; }
 
         [Key(3)]
-        public string Password { get; init; }
+        public required string Username { get; init; }
+
+        [Key(4)]
+        public required string Password { get; init; }
+
+        public User GetUser()
+        {
+            return new(DeviceID, Username);
+        }
     }
 }

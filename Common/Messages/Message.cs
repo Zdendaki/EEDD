@@ -12,7 +12,7 @@ namespace Common.Messages
     [Union(6, typeof(Train.TrainEventMessage))]
     [Union(7, typeof(Train.PodjRequest))]
     [Union(8, typeof(Train.PodjResponse))]
-    [Union(9, typeof(Login.ClaimClientMessage)]
+    [Union(9, typeof(Login.ClaimClientMessage))]
     public abstract class Message
     {
         [Key(0)]

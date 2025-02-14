@@ -4,8 +4,9 @@ using Common.Messages.Data;
 using Common.Messages.Login;
 using EEDD.Endpoint;
 using System;
+using System.Linq;
 using System.Net;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -16,13 +17,11 @@ namespace EEDD.Windows
     /// </summary>
     public partial class ConnectWindow : Window
     {
-        bool _selectingTab = false;
+        volatile bool _selectingTab = false;
 
         public ConnectWindow()
         {
             InitializeComponent();
-
-            RouteSelect.ItemsSource = App.Routes;
 
             UpdateTab();
         }
@@ -47,14 +46,23 @@ namespace EEDD.Windows
             Next.Content = Tabs.SelectedIndex < Tabs.Items.Count - 1 ? "Další" : "Dokončit";
         }
 
-        private void Next_Click(object sender, RoutedEventArgs e)
+        private async void Next_Click(object sender, RoutedEventArgs e)
         {
-            if (!ProcessPage())
+            if (!await ProcessPage())
                 return;
 
             _selectingTab = true;
-            if (Tabs.SelectedIndex < Tabs.Items.Count - 1)
-                Tabs.SelectedIndex++;
+            Dispatcher.Invoke(() =>
+            {
+                if (Tabs.SelectedIndex < Tabs.Items.Count - 1)
+                    Tabs.SelectedIndex++;
+                else
+                {
+                    MainWindow mw = new();
+                    mw.Show();
+                    Close();
+                }
+            });
             _selectingTab = false;
         }
 
@@ -66,9 +74,9 @@ namespace EEDD.Windows
             _selectingTab = false;
         }
 
-        private void Client_MessageReceived(Message message)
+        private void Client_MessageReceived(MessageReceivedEventArgs e)
         {
-            if (message is RouteDataMessage routeData)
+            if (e.Message is RouteDataMessage routeData)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -76,42 +84,58 @@ namespace EEDD.Windows
                     StationSelect.Items.Refresh();
                 });
             }
+            else if (e.Message is RoutesMessage routes)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    RouteSelect.ItemsSource = routes.Routes;
+                    RouteSelect.Items.Refresh();
+                });
+
+                e.Handled = true;
+            }
         }
 
-        private bool ProcessPage()
+        private async Task<bool> ProcessPage()
         {
             bool output;
-            IsEnabled = false;
-            switch (Tabs.SelectedIndex)
+            Dispatcher.Invoke(() => IsEnabled = false);
+            int tab = Dispatcher.Invoke(() => Tabs.SelectedIndex);
+
+            switch (tab)
             {
                 case 0:
-                    output = ProcessServerConnect();
+                    output = await ProcessServerConnect();
                     break;
                 case 1:
-                    output = ProcessLogin();
+                    output = await ProcessLogin();
+                    break;
+                case 2:
+                    output = await ProcessClaim();
                     break;
                 default:
                     output = false;
                     break;
             }
-            IsEnabled = true;
+
+            Dispatcher.Invoke(() => IsEnabled = true);
             return output;
         }
 
-        private bool ProcessServerConnect()
+        private async Task<bool> ProcessServerConnect()
         {
             if (App.Client?.IsConnected == true)
                 App.Client.DisconnectAndStop();
 
             if (!IPAddress.TryParse(ServerAddress.Text, out IPAddress? address))
             {
-                MessageBox.Show(this, "Adresa serveru není platná.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxInvoke("Adresa serveru není platná.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (!ushort.TryParse(ServerPort.Text, out ushort port))
             {
-                MessageBox.Show(this, "Port není platný.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxInvoke("Port není platný.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -119,83 +143,136 @@ namespace EEDD.Windows
             bool connected = App.Client.ConnectAsync();
             App.Client.MessageReceived += Client_MessageReceived;
 
-            if (!connected)
+            int i = 0;
+            while (!App.Client.IsConnected && App.Client.IsConnecting && connected && i < 1000)
             {
-                MessageBox.Show(this, "Nepodařilo se připojit k serveru.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                await Task.Delay(100);
+                i++;
+            }
+
+            if (!App.Client.IsConnected || !connected)
+            {
+                MessageBoxInvoke("Nepodařilo se připojit k serveru.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
-            App.Client.SendMessage(new DataRequestMessage(DataType.RoutesList));
-
-            return true;
+            return App.Client.SendMessage(new DataRequestMessage(DataType.RoutesList));
         }
 
-        private bool ProcessLogin()
+        private async Task<bool> ProcessLogin()
         {
-            bool loggedIn = false;
-            bool responded = false;
-            bool badCredentials = false;
-
-            void callback(ResponseMessage response)
-            {
-                if (response.Status == ResponseStatus.BadCredentials)
-                    badCredentials = true;
-
-                if (response.Status == ResponseStatus.Accepted)
-                    loggedIn = true;
-
-                responded = true;
-            }
+            void fail() => MessageBoxInvoke("Přihlášení se nezdařilo.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
 
             if (RouteSelect.SelectedItem is not RouteBase route)
             {
-                MessageBox.Show(this, "Vyberte trať.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxInvoke("Vyberte trať.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
             if (string.IsNullOrEmpty(Username.Text))
             {
-                MessageBox.Show(this, "Zadejte uživatelské jméno.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxInvoke("Zadejte uživatelské jméno.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
-            App.Client.SendQueuedMessage(new LoginMessage
+            LoginMessage login = new()
             {
                 RouteID = route.ID,
+                DeviceID = App.DeviceId,
                 Username = Username.Text,
                 Password = Password.Password
-            }, callback);
+            };
 
-            int i = 0;
-            while (!responded && i < 100)
-            {
-                Thread.Sleep(100);
-                i++;
-            }
+            ResponseMessage? response = await App.Client.SendRequest(login, TimeSpan.FromSeconds(10));
 
-            if (badCredentials)
+            if (response is null)
             {
-                MessageBox.Show(this, "Nesprávné uživatelské jméno nebo heslo.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                fail();
                 return false;
             }
 
-            if (!responded)
+            if (response.Status == ResponseStatus.BadCredentials)
             {
-                MessageBox.Show(this, "Přihlášení se nezdařilo.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBoxInvoke("Nesprávné uživatelské jméno nebo heslo.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
-            if (loggedIn)
+            if (response.Status != ResponseStatus.Accepted)
             {
-                App.Client.SendMessage(new DataRequestMessage(DataType.Route));
+                fail();
+                return false;
             }
 
-            return loggedIn;
+            return App.Client.SendMessage(new DataRequestMessage(DataType.Route));
+        }
+
+        private async Task<bool> ProcessClaim()
+        {
+            void fail() => MessageBoxInvoke("Výběr stanice se neprovedl.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            if (StationSelect.SelectedItem is not Client station)
+            {
+                MessageBoxInvoke("Vyberte stanici.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            ClaimClientMessage claim = new()
+            {
+                ClientID = station.ID
+            };
+
+            ResponseMessage? response = await App.Client.SendRequest(claim, TimeSpan.FromSeconds(10));
+
+            if (response is null)
+            {
+                fail();
+                return false;
+            }
+
+            if (response.Status == ResponseStatus.Refused)
+            {
+                switch (response.Message)
+                {
+                    case RefusedMessageHelper.NOTFOUND:
+                        MessageBoxInvoke("Stanice nebyla nalezena.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+                    case RefusedMessageHelper.OCCUPIED:
+                        MessageBoxInvoke("Stanice je již obsazena.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
+                        break;
+                    default:
+                        fail();
+                        break;
+                }
+            }
+
+            if (response.Status != ResponseStatus.Accepted)
+            {
+                fail();
+                return false;
+            }
+
+            App.ClientData = station;
+            App.ClientData.User = new(App.DeviceId, Username.Text);
+
+            return App.Client.SendMessage(new DataRequestMessage(DataType.Trains));
         }
 
         private void RefreshStations_Click(object sender, RoutedEventArgs e)
         {
             App.Client.SendMessage(new DataRequestMessage(DataType.Route));
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            if (App.Client is not null)
+                App.Client.MessageReceived -= Client_MessageReceived;
+
+            base.OnClosed(e);
+        }
+
+        private MessageBoxResult MessageBoxInvoke(string text, string caption, MessageBoxButton button, MessageBoxImage image)
+        {
+            return Dispatcher.Invoke(() => MessageBox.Show(this, text, caption, button, image));
         }
     }
 }

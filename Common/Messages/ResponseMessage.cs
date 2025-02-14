@@ -15,6 +15,8 @@ namespace Common.Messages
         [Key(3)]
         public string? Message { get; init; }
 
+        public ResponseMessage() { }
+
         [SetsRequiredMembers]
         public ResponseMessage(Guid requestID, ResponseStatus status, string? message = null)
         {
@@ -22,8 +24,6 @@ namespace Common.Messages
             Status = status;
             Message = message;
         }
-
-        public ResponseMessage() { }
 
         public static ResponseMessage GetAcceptedMessage(Guid requestID)
         {

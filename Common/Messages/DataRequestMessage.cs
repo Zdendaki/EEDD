@@ -7,7 +7,7 @@ namespace Common.Messages
     public class DataRequestMessage : Message
     {
         [Key(1)]
-        public DataType DataType { get; init; }
+        public required DataType DataType { get; init; }
 
         public DataRequestMessage() : base() { }
 

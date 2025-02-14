@@ -17,7 +17,7 @@ namespace Server.Endpoints
 
         internal Route? Route { get; private set; }
 
-        internal string? Username { get; private set; }
+        internal User? User { get; private set; }
 
         public EddSession(EddServer server, ILogger<EddSession> logger, RuntimeData data) : base(server)
         {
@@ -27,12 +27,12 @@ namespace Server.Endpoints
 
         protected override void OnConnected()
         {
-            _logger.LogInformation($"Client {Id} connected.");
+            _logger.LogInformation($"[{Id}] Connected.");
         }
 
         protected override void OnDisconnected()
         {
-            _logger.LogInformation($"Client {Id} disconnected.");
+            _logger.LogInformation($"[{Id}] Disconnected.");
         }
 
         public bool SendMessage(Message message)
@@ -44,14 +44,14 @@ namespace Server.Endpoints
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to send message to client {Id}.");
+                _logger.LogError(ex, $"[{Id}] Failed to send message.");
                 return false;
             }
         }
 
         protected override void OnReceived(byte[] buffer, long offset, long size)
         {
-            _logger.LogDebug($"Client {Id} received {size} bytes of data.");
+            _logger.LogDebug($"[{Id}] Received {size} bytes of data.");
             ReceiveBuffer(buffer.AsMemory((int)offset, (int)size));
         }
 
@@ -119,7 +119,7 @@ namespace Server.Endpoints
         {
             if (_data.Routes.FirstOrDefault(x => x.ID == login.RouteID) is not Route route || route.Password != login.Password)
             {
-                _logger.LogInformation($"Client {Id} login unsuccessful.");
+                _logger.LogInformation($"[{Id}] Login unsuccessful.");
                 SendMessage(ResponseMessage.GetBadCredentialsMessage(login.ID));
                 return;
             }
@@ -127,9 +127,9 @@ namespace Server.Endpoints
             if (SendMessage(ResponseMessage.GetAcceptedMessage(login.ID)))
             {
                 Route = route;
-                Username = login.Username;
+                User = login.GetUser();
 
-                _logger.LogInformation($"Client {Id} Logged in as user {Username} to route {route.Name}.");
+                _logger.LogInformation($"[{Id}] Logged in as user {User.Name} ({User.ID:X}) to route {route.Name}.");
             }
         }
 
@@ -145,7 +145,7 @@ namespace Server.Endpoints
 
         private void ClaimStation(ClaimClientMessage claimClient)
         {
-            if (Route is null || Username is null)
+            if (Route is null || User is null)
             {
                 SendMessage(ResponseMessage.GetUnauthorizedMessage(claimClient.ID));
                 return;
@@ -153,17 +153,20 @@ namespace Server.Endpoints
 
             if (Route.Clients.FirstOrDefault(x => x.ID == claimClient.ClientID) is not Client client)
             {
-                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, "Klient nenalezen."));
+                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, RefusedMessageHelper.NOTFOUND));
                 return;
             }
 
             if (client.User is not null)
             {
-                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, "Klient je již obsazen."));
+                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, RefusedMessageHelper.OCCUPIED));
                 return;
             }
 
-            client.User = new(0, Username);
+            client.User = User;
+            Id.ToByteArray();
+            _logger.LogInformation($"[{Id}] claimed client {client.ID}.");
+            SendMessage(ResponseMessage.GetAcceptedMessage(claimClient.ID));
         }
     }
 }

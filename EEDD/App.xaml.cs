@@ -1,7 +1,6 @@
 ﻿using Common.Data;
 using EEDD.Controls;
 using EEDD.Endpoint;
-using System.ComponentModel;
 using System.Windows;
 
 namespace EEDD
@@ -11,6 +10,8 @@ namespace EEDD
     /// </summary>
     public partial class App : Application
     {
+        internal static readonly uint DeviceId = DeviceIdHelper.GetDeviceId();
+
         private static EDDTextBox? selectedTextBox;
         internal static EDDTextBox? SelectedTextBox
         {
@@ -25,9 +26,9 @@ namespace EEDD
             }
         }
 
-        internal static BindingList<RouteBase> Routes { get; } = [];
-
         internal static EddClient Client { get; set; } = null!;
+
+        internal static Client ClientData { get; set; } = null!;
 
         internal static Route Route { get; set; } = null!;
 

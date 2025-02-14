@@ -6,6 +6,6 @@ namespace Common.Messages.Data
     public class TrainsMessage : Message
     {
         [Key(1)]
-        public List<Common.Data.Train> Trains { get; init; }
+        public required List<Common.Data.Train> Trains { get; init; }
     }
 }

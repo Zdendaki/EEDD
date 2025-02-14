@@ -7,7 +7,7 @@ namespace Common.Messages.Login
     public class ClaimClientMessage : Message
     {
         [Key(1)]
-        public uint ClientID { get; init; }
+        public required uint ClientID { get; init; }
 
         public ClaimClientMessage() { }
 
