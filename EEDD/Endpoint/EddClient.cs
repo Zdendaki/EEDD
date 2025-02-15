@@ -16,17 +16,20 @@ using Timer = System.Timers.Timer;
 namespace EEDD.Endpoint
 {
     internal delegate void MessageReceivedEventHandler(MessageReceivedEventArgs e);
+    internal delegate void ConnectionChangedEventHandler(bool connected);
 
     internal class EddClient : TcpClient
     {
         byte _errorCounter = 0;
         bool _stop = false;
 
-        readonly object _sendMessagesLock = new();
+        readonly object _sentMessagesLock = new();
         readonly List<MessageCache> _sentMessages = [];
         readonly Timer _timer;
 
         public event MessageReceivedEventHandler? MessageReceived;
+        public event ConnectionChangedEventHandler? ConnectionChanged;
+
         protected event MessageReceivedEventHandler? MessageReceivedInternal;
 
         public EddClient(IPAddress address, ushort port) : base(address, port)
@@ -56,11 +59,13 @@ namespace EEDD.Endpoint
 
         protected override void OnConnected()
         {
-
+            OnConnectionChanged(true);
         }
 
         protected override void OnDisconnected()
         {
+            OnConnectionChanged(false);
+
             while (!_stop && !Connect())
             {
                 Thread.Sleep(10000);
@@ -183,21 +188,6 @@ namespace EEDD.Endpoint
             }
         }
 
-        protected virtual void OnMessageReceived(MessageReceivedEventArgs e)
-        {
-            MessageReceived?.Invoke(e);
-        }
-
-        protected virtual void OnMessageReceivedInternal(MessageReceivedEventArgs e)
-        {
-            MessageReceivedInternal?.Invoke(e);
-        }
-
-        private void SetRouteData(RouteDataMessage routeData)
-        {
-            App.Route = routeData.Route;
-        }
-
         private void ParseResponse(ResponseMessage response)
         {
             lock (_sentMessages)
@@ -209,5 +199,27 @@ namespace EEDD.Endpoint
                 }
             }
         }
+
+        #region Event firing
+        protected virtual void OnMessageReceived(MessageReceivedEventArgs e)
+        {
+            MessageReceived?.Invoke(e);
+        }
+
+        protected virtual void OnMessageReceivedInternal(MessageReceivedEventArgs e)
+        {
+            MessageReceivedInternal?.Invoke(e);
+        }
+
+        protected virtual void OnConnectionChanged(bool connected)
+        {
+            ConnectionChanged?.Invoke(connected);
+        }
+
+        private void SetRouteData(RouteDataMessage routeData)
+        {
+            App.Route = routeData.Route;
+        }
+        #endregion
     }
 }

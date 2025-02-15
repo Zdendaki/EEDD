@@ -34,6 +34,13 @@ namespace EEDD
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            if (Settings.Default.UpgradeRequired)
+            {
+                Settings.Default.Upgrade();
+                Settings.Default.UpgradeRequired = false;
+                Settings.Default.Save();
+            }
+
             base.OnStartup(e);
         }
 

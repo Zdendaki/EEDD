@@ -7,7 +7,7 @@
              xmlns:l="clr-namespace:EEDD"
              mc:Ignorable="d"
              x:Name="EddTextBox" Background="Transparent"
-             FontFamily="CustomSantSerif" Height="21" d:DesignWidth="36" Margin="-0.5" SnapsToDevicePixels="True">
+             FontFamily="CustomSantSerif" Height="21" d:DesignWidth="36" Margin="-0.5">
     <UserControl.Resources>
     </UserControl.Resources>
     <Grid>

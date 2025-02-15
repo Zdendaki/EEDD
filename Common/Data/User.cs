@@ -6,17 +6,49 @@ namespace Common.Data
     public class User
     {
         [Key(0)]
-        public uint ID { get; init; }
+        public Guid ID { get; init; }
 
         [Key(1)]
+        public uint DeviceID { get; init; }
+
+        [Key(2)]
         public string Name { get; init; }
 
         public User() { }
 
-        public User(uint id, string name)
+        public User(uint deviceId, string name)
         {
-            ID = id;
+            ID = Guid.NewGuid();
+            DeviceID = deviceId;
             Name = name;
+        }
+
+        public static bool operator ==(User? a, User? b)
+        {
+            if (a is null && b is null)
+                return true;
+            if (a is null || b is null)
+                return false;
+
+            return a.ID == b.ID;
+        }
+
+        public static bool operator !=(User? a, User? b)
+        {
+            return !(a == b);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is User user)
+                return ID == user.ID;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ID.GetHashCode();
         }
     }
 }

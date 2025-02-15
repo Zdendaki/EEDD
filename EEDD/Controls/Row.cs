@@ -9,6 +9,8 @@ namespace EEDD.Controls
         public Row()
         {
             Panel.SetZIndex(this, 0);
+
+            Loaded += (_, _) => Init();
         }
 
         protected override void OnMouseEnter(MouseEventArgs e)
@@ -35,5 +37,7 @@ namespace EEDD.Controls
             Background = RowHelper.GetBackground(StationColor.Gray, odd);
             return false;
         }
+
+        protected abstract void Init();
     }
 }

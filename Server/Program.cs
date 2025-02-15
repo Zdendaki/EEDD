@@ -3,6 +3,13 @@ using Server.Endpoints;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
+builder.Logging.AddSimpleConsole(o =>
+{
+    o.SingleLine = true;
+    o.TimestampFormat = "HH:mm:ss ";
+    o.IncludeScopes = false;
+});
+
 if (OperatingSystem.IsWindows())
 {
     builder.Services.AddWindowsService(o => o.ServiceName = $"EDD Server");

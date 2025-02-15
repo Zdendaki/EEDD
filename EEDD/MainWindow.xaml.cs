@@ -1,9 +1,11 @@
 ﻿using Common.Data;
 using EEDD.Controls;
+using EEDD.Windows;
 using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace EEDD
 {
@@ -16,26 +18,31 @@ namespace EEDD
 
         public MainWindow()
         {
+            SnapsToDevicePixels = true;
+
             InitializeComponent();
 
             // Init window
             Title = $"DOPRAVNÍ DENÍK - [{App.ClientData.Name} - {App.ClientData.User!.Name}]";
-            InitScale();
+            NightView.IsChecked = Settings.Default.NightView;
+            NightView_Click(this, null!);
 
+            InitStatusbar();
+            InitScale();
             InitHeader();
             InitRows();
         }
 
-        private void InitHeader() => RowHeader.Init();
-
-        private void InitRows()
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Rows.Children.Add(new RowComment());
-            Rows.Children.Add(new RowTrain(StationColor.Gray, true));
-            Rows.Children.Add(new RowTrain(StationColor.Gray, false));
-            Rows.Children.Add(new RowTrain(StationColor.Yellow, true));
-            Rows.Children.Add(new RowTrain(StationColor.Yellow, false));
-            Rows.Children.Add(new RowTrain(StationColor.Green, false));
+            InitScale();
+        }
+
+        private void InitStatusbar()
+        {
+            App.Client.ConnectionChanged += SetCommunication;
+
+            SetCommunication(App.Client.IsConnected);
         }
 
         private void InitScale()
@@ -51,6 +58,18 @@ namespace EEDD
             }
         }
 
+        private void InitHeader() => RowHeader.Init();
+
+        private void InitRows()
+        {
+            Rows.Children.Add(new RowComment());
+            Rows.Children.Add(new RowTrain(StationColor.Gray, true));
+            Rows.Children.Add(new RowTrain(StationColor.Gray, false));
+            Rows.Children.Add(new RowTrain(StationColor.Yellow, true));
+            Rows.Children.Add(new RowTrain(StationColor.Yellow, false));
+            Rows.Children.Add(new RowTrain(StationColor.Green, false));
+        }
+
         private void LabelZoomIn_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TableScale.ScaleX *= 1.1d;
@@ -63,24 +82,60 @@ namespace EEDD
             TableScale.ScaleY /= 1.1d;
         }
 
+        private void SetCommunication(bool connected)
+        {
+            Communication.Dispatcher.Invoke(() =>
+            {
+                if (connected)
+                {
+                    Communication.Foreground = Brushes.Black;
+                    Communication.Background = Brushes.Transparent;
+                }
+                else
+                {
+                    Communication.Foreground = Brushes.White;
+                    Communication.Background = Brushes.Red;
+                }
+            });
+        }
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (canClose)
                 return;
 
-            var result = MessageBox.Show(this, "Přejete si ukončit směnu?", "Ukončení směny", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
             e.Cancel = true;
 
+            var result = MessageBox.Show(this, "Přejete si ukončit směnu?", "Ukončení směny", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
             {
                 e.Cancel = false;
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            InitScale();
+            bool ctrl = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+
+            if (e.Key == Key.Insert || (ctrl && e.Key == Key.N))
+            {
+                InsertLine(this, e);
+
+                e.Handled = true;
+            }
+        }
+
+        private void InsertLine(object sender, RoutedEventArgs e)
+        {
+            InsertRowWindow irw = new(this);
+            irw.ShowDialog();
+        }
+
+        private void NightView_Click(object sender, RoutedEventArgs e)
+        {
+            Background = NightView.IsChecked ? Brushes.DimGray : (Brush)Brushes.White;
+            Settings.Default.NightView = NightView.IsChecked;
+            Settings.Default.Save();
         }
     }
 }

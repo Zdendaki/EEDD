@@ -13,6 +13,7 @@ namespace Common.Messages
     [Union(7, typeof(Train.PodjRequest))]
     [Union(8, typeof(Train.PodjResponse))]
     [Union(9, typeof(Login.ClaimClientMessage))]
+    [Union(10, typeof(Login.ReconnectMessage))]
     public abstract class Message
     {
         [Key(0)]

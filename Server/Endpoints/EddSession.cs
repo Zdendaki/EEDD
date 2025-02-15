@@ -33,6 +33,19 @@ namespace Server.Endpoints
         protected override void OnDisconnected()
         {
             _logger.LogInformation($"[{Id}] Disconnected.");
+
+            if (Route is not null && User is not null)
+            {
+                foreach (var client in Route.Clients)
+                {
+                    if (client.User == User)
+                    {
+                        _logger.LogInformation($"[{Id}] Released user {User.Name} (ID {User.DeviceID:X}) from client {client.ID}: {client.Name}.");
+                        client.User = null;
+                        break;
+                    }
+                }
+            }
         }
 
         public bool SendMessage(Message message)
@@ -129,7 +142,7 @@ namespace Server.Endpoints
                 Route = route;
                 User = login.GetUser();
 
-                _logger.LogInformation($"[{Id}] Logged in as user {User.Name} ({User.ID:X}) to route {route.Name}.");
+                _logger.LogInformation($"[{Id}] Logged in as user {User.Name} ({User.DeviceID:X}) to route {route.Name}.");
             }
         }
 
@@ -164,8 +177,8 @@ namespace Server.Endpoints
             }
 
             client.User = User;
-            Id.ToByteArray();
-            _logger.LogInformation($"[{Id}] Claimed client {client.ID}.");
+
+            _logger.LogInformation($"[{Id}] Claimed client {client.ID}: {client.Name}.");
             SendMessage(ResponseMessage.GetAcceptedMessage(claimClient.ID));
         }
     }

@@ -24,6 +24,9 @@ namespace EEDD.Windows
             InitializeComponent();
 
             UpdateTab();
+
+            Username.Text = Settings.Default.Username;
+            Password.Password = Settings.Default.Password;
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -90,6 +93,8 @@ namespace EEDD.Windows
                 {
                     RouteSelect.ItemsSource = routes.Routes;
                     RouteSelect.Items.Refresh();
+
+                    RouteSelect.SelectedItem = routes.Routes.FirstOrDefault(x => x.ID == Settings.Default.Route);
                 });
 
                 e.Handled = true;
@@ -169,7 +174,9 @@ namespace EEDD.Windows
                 return false;
             }
 
-            if (string.IsNullOrEmpty(Username.Text))
+            string username = Username.Text.Trim();
+
+            if (string.IsNullOrEmpty(username))
             {
                 MessageBoxInvoke("Zadejte uživatelské jméno.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
@@ -179,7 +186,7 @@ namespace EEDD.Windows
             {
                 RouteID = route.ID,
                 DeviceID = App.DeviceId,
-                Username = Username.Text,
+                Username = username,
                 Password = Password.Password
             };
 
@@ -202,6 +209,11 @@ namespace EEDD.Windows
                 fail();
                 return false;
             }
+
+            Settings.Default.Route = route.ID;
+            Settings.Default.Username = username;
+            Settings.Default.Password = Password.Password;
+            Settings.Default.Save();
 
             return App.Client.SendMessage(new DataRequestMessage(DataType.Route));
         }
@@ -243,6 +255,8 @@ namespace EEDD.Windows
                         fail();
                         break;
                 }
+
+                return false;
             }
 
             if (response.Status != ResponseStatus.Accepted)
