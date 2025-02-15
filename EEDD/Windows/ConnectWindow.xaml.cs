@@ -4,10 +4,7 @@ using Common.Messages.Data;
 using Common.Messages.Login;
 using Common.TCP;
 using EEDD.Endpoint;
-using System;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 

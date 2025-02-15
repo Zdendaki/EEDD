@@ -1,7 +1,6 @@
 ﻿using Common.Data;
 using EEDD.Controls;
 using EEDD.Windows;
-using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;

@@ -1,5 +1,4 @@
 ﻿using Common.Data;
-using System;
 
 namespace EEDD.Controls
 {
