@@ -12,7 +12,7 @@
         /// <summary>
         /// Předvídaný odjezd ve stanici
         /// </summary>
-        AnnouncedDepartureStation,
+        PODJ,
         /// <summary>
         /// Pro rušící posun a volnost a postavení vlakové cesty
         /// </summary>
@@ -32,11 +32,7 @@
         /// <summary>
         /// Pro vlak postaveno a volno
         /// </summary>
-        RouteForTrainSetAndFree,
-        /// <summary>
-        /// Pro předvídaný odjezd na trati
-        /// </summary>
-        AnnouncedDepartureRoute
+        RouteForTrainSetAndFree
     }
 
     /// <summary>

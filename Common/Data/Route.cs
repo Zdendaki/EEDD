@@ -12,16 +12,19 @@ namespace Common.Data
         [Key(1)]
         public required string Name { get; init; }
 
-        [Key(2)]
-        public string Password { get; init; }
+        [IgnoreMember]
+        public string PasswordEDD { get; init; }
 
-        [Key(3)]
+        [IgnoreMember]
+        public string PasswordEVAL { get; init; }
+
+        [Key(2)]
         public List<Station> Stations { get; init; }
 
-        [Key(4)]
+        [Key(3)]
         public List<StationConnection> StationConnections { get; init; }
 
-        [Key(5)]
+        [Key(4)]
         public List<Client> Clients { get; init; }
 
         [IgnoreMember]

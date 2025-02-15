@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Route ID="55323D63-A6CA-4049-A86A-01D55B42CD5B" Name="Trať 323" Password="323">
+<Route ID="55323D63-A6CA-4049-A86A-01D55B42CD5B" Name="Trať 323" PasswordEDD="323" PasswordEVAL="EVAL">
 	<Stations>
 		<Station ID="351627" Name="Valašské Meziříčí" Abbr="VM">
 			<Tracks>

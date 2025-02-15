@@ -18,8 +18,6 @@ namespace Server
             Routes = [];
         }
 
-
-
         #region Loading
         public void LoadData()
         {
@@ -63,7 +61,8 @@ namespace Server
 
             Guid id = root.GetGuidAttribute("ID");
             string name = root.GetStringAttribute("Name");
-            string password = root.GetStringAttribute("Password");
+            string passwordEDD = root.GetStringAttribute("PasswordEDD");
+            string passwordEVAL = root.GetStringAttribute("PasswordEVAL");
             List<Station> stations = [];
             List<StationConnection> connections = [];
             List<Client> clients = [];
@@ -96,7 +95,8 @@ namespace Server
             {
                 ID = id,
                 Name = name,
-                Password = password,
+                PasswordEDD = passwordEDD,
+                PasswordEVAL = passwordEVAL,
                 Stations = stations,
                 StationConnections = connections,
                 Clients = clients,

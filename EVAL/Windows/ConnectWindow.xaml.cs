@@ -3,7 +3,7 @@ using Common.Messages;
 using Common.Messages.Data;
 using Common.Messages.Login;
 using Common.TCP;
-using EEDD.Endpoint;
+using EVAL.Endpoint;
 using System;
 using System.Linq;
 using System.Net;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace EEDD.Windows
+namespace EVAL.Windows
 {
     /// <summary>
     /// Interakční logika pro ConnectWindow.xaml
@@ -47,7 +47,7 @@ namespace EEDD.Windows
 
             Previous.IsEnabled = Tabs.SelectedIndex > 0;
             Next.IsEnabled = Tabs.SelectedIndex < Tabs.Items.Count;
-            Next.Content = Tabs.SelectedIndex < Tabs.Items.Count - 1 ? "Další" : "Dokončit";
+            Next.Content = Tabs.SelectedIndex < Tabs.Items.Count - 1 ? "Další" : "Přihlásit se";
         }
 
         private async void Next_Click(object sender, RoutedEventArgs e)
@@ -80,15 +80,7 @@ namespace EEDD.Windows
 
         private void Client_MessageReceived(MessageReceivedEventArgs e)
         {
-            if (e.Message is RouteDataMessage routeData)
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    StationSelect.ItemsSource = routeData.Route.Clients;
-                    StationSelect.Items.Refresh();
-                });
-            }
-            else if (e.Message is RoutesMessage routes)
+            if (e.Message is RoutesMessage routes)
             {
                 Dispatcher.Invoke(() =>
                 {
@@ -115,9 +107,6 @@ namespace EEDD.Windows
                     break;
                 case 1:
                     output = await ProcessLogin();
-                    break;
-                case 2:
-                    output = await ProcessClaim();
                     break;
                 default:
                     output = false;
@@ -147,7 +136,7 @@ namespace EEDD.Windows
                 return false;
             }
 
-            App.Client = new EddClient(address, port);
+            App.Client = new EvalClient(address, port);
             bool connected = App.Client.ConnectAsync();
             App.Client.MessageReceived += Client_MessageReceived;
 
@@ -219,59 +208,6 @@ namespace EEDD.Windows
             Settings.Default.Save();
 
             return App.Client.SendMessage(new DataRequestMessage(DataType.Route));
-        }
-
-        private async Task<bool> ProcessClaim()
-        {
-            void fail() => MessageBoxInvoke("Výběr stanice se neprovedl.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-
-            if (StationSelect.SelectedItem is not Client station)
-            {
-                MessageBoxInvoke("Vyberte stanici.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-                return false;
-            }
-
-            ClaimClientMessage claim = new()
-            {
-                ClientID = station.ID
-            };
-
-            ResponseMessage? response = await App.Client.SendRequest(claim, TimeSpan.FromSeconds(10));
-
-            if (response is null)
-            {
-                fail();
-                return false;
-            }
-
-            if (response.Status == ResponseStatus.Refused)
-            {
-                switch (response.Message)
-                {
-                    case RefusedMessageHelper.NOTFOUND:
-                        MessageBoxInvoke("Stanice nebyla nalezena.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-                        break;
-                    case RefusedMessageHelper.OCCUPIED:
-                        MessageBoxInvoke("Stanice je již obsazena.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
-                        break;
-                    default:
-                        fail();
-                        break;
-                }
-
-                return false;
-            }
-
-            if (response.Status != ResponseStatus.Accepted)
-            {
-                fail();
-                return false;
-            }
-
-            App.ClientData = station;
-            App.ClientData.User = new(App.DeviceId, Username.Text);
-
-            return App.Client.SendMessage(new DataRequestMessage(DataType.Trains));
         }
 
         private async Task<IPAddress?> ResolveIPAddress(string input)

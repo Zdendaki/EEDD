@@ -18,6 +18,8 @@ if (OperatingSystem.IsWindows())
 builder.Services.AddSingleton<RuntimeData>();
 builder.Services.AddSingleton<EddServer>();
 builder.Services.AddTransient<EddSession>();
+builder.Services.AddSingleton<EvalServer>();
+builder.Services.AddTransient<EvalSession>();
 builder.Services.AddHostedService<Worker>();
 
 IHost host = builder.Build();

@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Hashing;
 
-namespace EEDD
+namespace EVAL
 {
     internal static class DeviceIdHelper
     {

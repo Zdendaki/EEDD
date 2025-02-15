@@ -1,38 +1,27 @@
-﻿using Common;
-using Common.Data;
+﻿using Common.Data;
 using Common.Messages;
 using Common.Messages.Data;
 using Common.Messages.Login;
 using Common.Messages.Train;
-using MessagePack;
-using NetCoreServer;
 
 namespace Server.Endpoints
 {
-    internal class EddSession : TcpSession
+    internal class EddSession : TcpSessionBase
     {
-        private readonly ILogger<EddSession> _logger;
         private readonly RuntimeData _data;
-        private byte _errorCounter = 0;
 
         internal Route? Route { get; private set; }
 
         internal User? User { get; private set; }
 
-        public EddSession(EddServer server, ILogger<EddSession> logger, RuntimeData data) : base(server)
+        public EddSession(EddServer server, ILogger<EddSession> logger, RuntimeData data) : base(server, logger)
         {
-            _logger = logger;
             _data = data;
-        }
-
-        protected override void OnConnected()
-        {
-            _logger.LogInformation($"[{Id}] Connected.");
         }
 
         protected override void OnDisconnected()
         {
-            _logger.LogInformation($"[{Id}] Disconnected.");
+            base.OnDisconnected();
 
             if (Route is not null && User is not null)
             {
@@ -40,7 +29,7 @@ namespace Server.Endpoints
                 {
                     if (client.User == User)
                     {
-                        _logger.LogInformation($"[{Id}] Released user {User.Name} (ID {User.DeviceID:X}) from client {client.ID}: {client.Name}.");
+                        Logger.LogInformation($"[{Id}] Released user {User.Name} (ID {User.DeviceID:X}) from client {client.ID}: {client.Name}.");
                         client.User = null;
                         break;
                     }
@@ -48,44 +37,8 @@ namespace Server.Endpoints
             }
         }
 
-        public bool SendMessage(Message message)
+        protected override void Receive(Message message)
         {
-            try
-            {
-                byte[] buffer = MessagePackSerializer.Serialize(message, MessagePackHelper.LZ4);
-                return SendAsync(buffer);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"[{Id}] Failed to send message.");
-                return false;
-            }
-        }
-
-        protected override void OnReceived(byte[] buffer, long offset, long size)
-        {
-            _logger.LogDebug($"[{Id}] Received {size} bytes of data.");
-            ReceiveBuffer(buffer.AsMemory((int)offset, (int)size));
-        }
-
-        private void ReceiveBuffer(ReadOnlyMemory<byte> buffer)
-        {
-            Message message;
-
-            try
-            {
-                message = MessagePackSerializer.Deserialize<Message>(buffer, MessagePackHelper.LZ4);
-            }
-            catch
-            {
-                _errorCounter++;
-
-                if (_errorCounter > 100)
-                    Disconnect();
-
-                return;
-            }
-
             switch (message)
             {
                 case ResponseMessage:
@@ -130,9 +83,9 @@ namespace Server.Endpoints
 
         private void Login(LoginMessage login)
         {
-            if (_data.Routes.FirstOrDefault(x => x.ID == login.RouteID) is not Route route || route.Password != login.Password)
+            if (_data.Routes.FirstOrDefault(x => x.ID == login.RouteID) is not Route route || route.PasswordEDD != login.Password)
             {
-                _logger.LogInformation($"[{Id}] Login unsuccessful.");
+                Logger.LogInformation($"[{Id}] Login unsuccessful.");
                 SendMessage(ResponseMessage.GetBadCredentialsMessage(login.ID));
                 return;
             }
@@ -142,7 +95,7 @@ namespace Server.Endpoints
                 Route = route;
                 User = login.GetUser();
 
-                _logger.LogInformation($"[{Id}] Logged in as user {User.Name} ({User.DeviceID:X}) to route {route.Name}.");
+                Logger.LogInformation($"[{Id}] Logged in as user {User.Name} ({User.DeviceID:X}) to route {route.Name}.");
             }
         }
 
@@ -178,7 +131,7 @@ namespace Server.Endpoints
 
             client.User = User;
 
-            _logger.LogInformation($"[{Id}] Claimed client {client.ID}: {client.Name}.");
+            Logger.LogInformation($"[{Id}] Claimed client {client.ID}: {client.Name}.");
             SendMessage(ResponseMessage.GetAcceptedMessage(claimClient.ID));
         }
     }

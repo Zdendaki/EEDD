@@ -1,28 +1,14 @@
-﻿using NetCoreServer;
-using System.Net;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 
 namespace Server.Endpoints
 {
-    internal class EddServer : TcpServer
+    internal class EddServer : TcpServerBase<EddSession>
     {
         private readonly ILogger<EddServer> _logger;
-        private readonly IServiceProvider _provider;
 
-        public EddServer(IConfiguration config, ILogger<EddServer> logger, IServiceProvider provider) : base(IPAddress.Any, ushort.Parse(config["Port"]!))
+        public EddServer(IConfiguration config, ILogger<EddServer> logger, IServiceProvider provider) : base(provider, ushort.Parse(config["PortEDD"]!))
         {
             _logger = logger;
-            _provider = provider;
-
-            OptionKeepAlive = true;
-            OptionTcpKeepAliveInterval = 2;
-            OptionTcpKeepAliveRetryCount = 5;
-            OptionTcpKeepAliveTime = 60;
-        }
-
-        protected override TcpSession CreateSession()
-        {
-            return ActivatorUtilities.CreateInstance<EddSession>(_provider);
         }
 
         protected override void OnError(SocketError error)
@@ -30,7 +16,7 @@ namespace Server.Endpoints
             _logger.LogError($"EDD Server error: {error}");
         }
 
-        public EddSession? FindSession()
+        public override EddSession? FindSession()
         {
             return null;
         }

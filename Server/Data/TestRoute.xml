@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Route ID="" Name="" Password="">
+<Route ID="" Name="" PasswordEDD="" PasswordEVAL="">
 	<Stations>
 		<Station ID="" Name="" Abbr="">
 			<Tracks>
