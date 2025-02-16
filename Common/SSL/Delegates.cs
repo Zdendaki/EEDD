@@ -1,4 +1,4 @@
-﻿namespace Common.TCP
+﻿namespace Common.SSL
 {
     public delegate void MessageReceivedEventHandler(MessageReceivedEventArgs e);
 

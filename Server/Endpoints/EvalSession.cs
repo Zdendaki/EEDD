@@ -2,7 +2,7 @@
 
 namespace Server.Endpoints
 {
-    internal class EvalSession : TcpSessionBase
+    internal class EvalSession : SslSessionBase
     {
         private readonly RuntimeData _data;
 

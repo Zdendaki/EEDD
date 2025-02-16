@@ -2,11 +2,11 @@
 
 namespace Server.Endpoints
 {
-    internal class EddServer : TcpServerBase<EddSession>
+    internal class EddServer : SslServerBase<EddSession>
     {
         private readonly ILogger<EddServer> _logger;
 
-        public EddServer(IConfiguration config, ILogger<EddServer> logger, IServiceProvider provider) : base(provider, ushort.Parse(config["PortEDD"]!))
+        public EddServer(IConfiguration config, ILogger<EddServer> logger, IServiceProvider provider) : base(provider, config, ushort.Parse(config["PortEDD"]!))
         {
             _logger = logger;
         }

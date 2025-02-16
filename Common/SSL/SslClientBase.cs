@@ -1,12 +1,19 @@
 ﻿using Common.Messages;
 using MessagePack;
 using NetCoreServer;
+using System.Diagnostics;
 using System.Net;
+using System.Net.Security;
+using System.Reflection;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 
-namespace Common.TCP
+namespace Common.SSL
 {
-    public abstract class TcpClientBase : TcpClient, ITcpClient
+    public abstract class SslClientBase : SslClient, ISslClient
     {
+        protected static readonly byte[] PUBLIC_KEY = GetPublicKey();
+
         private bool _stop = false;
         private int _errorCounter = 0;
 
@@ -15,12 +22,36 @@ namespace Common.TCP
 
         protected event MessageReceivedEventHandler? MessageReceivedInternal;
 
-        protected TcpClientBase(IPAddress address, int port) : base(address, port)
+        protected SslClientBase(IPAddress address, int port) : base(new(SslProtocols.Tls12), address, port)
         {
             OptionKeepAlive = true;
             OptionTcpKeepAliveInterval = 2;
             OptionTcpKeepAliveRetryCount = 5;
             OptionTcpKeepAliveTime = 60;
+
+            Context.CertificateValidationCallback += ValidateCertificate;
+        }
+
+        private bool ValidateCertificate(object sender, X509Certificate? certificate, X509Chain? chain, SslPolicyErrors sslPolicyErrors)
+        {
+            if (certificate is null)
+                return false;
+
+            byte[] publicKey = certificate.GetPublicKey();
+
+            return publicKey.SequenceEqual(PUBLIC_KEY);
+        }
+
+        private static byte[] GetPublicKey()
+        {
+            using Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Common.EDD.der")!;
+            byte[] cert = new byte[stream.Length];
+
+            for (int i = 0; i < stream.Length; i++)
+                cert[i] = (byte)stream.ReadByte();
+
+            using X509Certificate2 verify = X509CertificateLoader.LoadCertificate(cert);
+            return verify.GetPublicKey();
         }
 
         protected override void OnConnected()
@@ -42,9 +73,11 @@ namespace Common.TCP
         public void DisconnectAndStop()
         {
             _stop = true;
-            DisconnectAsync();
-            while (IsConnected)
-                Thread.Yield();
+            if (DisconnectAsync())
+            {
+                while (IsConnected)
+                    Thread.Yield();
+            }
         }
 
         public virtual bool SendMessage(Message message)

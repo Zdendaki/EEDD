@@ -2,9 +2,11 @@
 using Common.Messages;
 using Common.Messages.Data;
 using Common.Messages.Login;
-using Common.TCP;
+using Common.Messages.Response;
+using Common.SSL;
 using EEDD.Endpoint;
 using System.Net;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -17,12 +19,16 @@ namespace EEDD.Windows
     {
         volatile bool _selectingTab = false;
 
+        private User? _user;
+
         public ConnectWindow()
         {
             InitializeComponent();
 
             UpdateTab();
 
+            ServerAddress.Text = Settings.Default.Server;
+            ServerPort.Text = Settings.Default.Port.ToString();
             Username.Text = Settings.Default.Username;
             Password.Password = Settings.Default.Password;
         }
@@ -130,6 +136,7 @@ namespace EEDD.Windows
             if (App.Client?.IsConnected == true)
                 App.Client.DisconnectAndStop();
 
+            string addressString = ServerAddress.Text.Trim();
             IPAddress? address = await ResolveIPAddress(ServerAddress.Text);
 
             if (address is null)
@@ -160,6 +167,10 @@ namespace EEDD.Windows
                 MessageBoxInvoke("Nepodařilo se připojit k serveru.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+
+            Settings.Default.Server = addressString;
+            Settings.Default.Port = port;
+            Settings.Default.Save();
 
             return App.Client.SendMessage(new DataRequestMessage(DataType.RoutesList));
         }
@@ -204,7 +215,7 @@ namespace EEDD.Windows
                 return false;
             }
 
-            if (response.Status != ResponseStatus.Accepted)
+            if (response.Status != ResponseStatus.Accepted || response is not LoginResponseMessage lrm)
             {
                 fail();
                 return false;
@@ -214,6 +225,9 @@ namespace EEDD.Windows
             Settings.Default.Username = username;
             Settings.Default.Password = Password.Password;
             Settings.Default.Save();
+
+            App.Secret = lrm.Secret;
+            _user = lrm.User;
 
             return App.Client.SendMessage(new DataRequestMessage(DataType.Route));
         }
@@ -243,7 +257,13 @@ namespace EEDD.Windows
 
             if (response.Status == ResponseStatus.Refused)
             {
-                switch (response.Message)
+                if (response is not StringResponseMessage stringResponse)
+                {
+                    fail();
+                    return false;
+                }
+
+                switch (stringResponse.Message)
                 {
                     case RefusedMessageHelper.NOTFOUND:
                         MessageBoxInvoke("Stanice nebyla nalezena.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -259,14 +279,14 @@ namespace EEDD.Windows
                 return false;
             }
 
-            if (response.Status != ResponseStatus.Accepted)
+            if (response.Status != ResponseStatus.Accepted || _user is null)
             {
                 fail();
                 return false;
             }
 
             App.ClientData = station;
-            App.ClientData.User = new(App.DeviceId, Username.Text);
+            App.ClientData.User = _user;
 
             return App.Client.SendMessage(new DataRequestMessage(DataType.Trains));
         }
@@ -279,10 +299,14 @@ namespace EEDD.Windows
             {
                 try
                 {
-                    IPAddress[] addresses = await Dns.GetHostAddressesAsync(input);
-
-                    if (addresses.Length > 0)
-                        address = addresses[0];
+                    foreach (IPAddress ip in await Dns.GetHostAddressesAsync(input))
+                    {
+                        if (ip.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            address = ip;
+                            break;
+                        }
+                    }
                 }
                 catch { }
             }

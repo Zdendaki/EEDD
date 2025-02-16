@@ -1,4 +1,5 @@
-﻿using EVAL.Endpoint;
+﻿using Common.Data;
+using EVAL.Endpoint;
 using System.Windows;
 
 namespace EVAL
@@ -11,6 +12,8 @@ namespace EVAL
         internal static readonly uint DeviceId = DeviceIdHelper.GetDeviceId();
 
         internal static EvalClient Client { get; set; } = null!;
+
+        internal static User User { get; set; } = null!;
     }
 
 }

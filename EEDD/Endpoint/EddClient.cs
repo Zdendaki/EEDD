@@ -1,13 +1,13 @@
 ﻿using Common.Messages;
 using Common.Messages.Data;
-using Common.TCP;
+using Common.SSL;
 using System.Net;
 using SocketError = System.Net.Sockets.SocketError;
 using Timer = System.Timers.Timer;
 
 namespace EEDD.Endpoint
 {
-    internal class EddClient : TcpClientBase
+    internal class EddClient : SslClientBase
     {
         readonly object _sentMessagesLock = new();
         readonly List<MessageCache> _sentMessages = [];

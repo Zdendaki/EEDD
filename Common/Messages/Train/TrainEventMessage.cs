@@ -3,6 +3,7 @@ using MessagePack;
 
 namespace Common.Messages.Train
 {
+    // Union 6
     [MessagePackObject]
     public class TrainEventMessage : Message
     {

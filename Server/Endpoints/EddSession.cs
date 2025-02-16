@@ -2,17 +2,20 @@
 using Common.Messages;
 using Common.Messages.Data;
 using Common.Messages.Login;
+using Common.Messages.Response;
 using Common.Messages.Train;
 
 namespace Server.Endpoints
 {
-    internal class EddSession : TcpSessionBase
+    internal class EddSession : SslSessionBase
     {
         private readonly RuntimeData _data;
 
         internal Route? Route { get; private set; }
 
         internal User? User { get; private set; }
+
+        internal Guid? Secret { get; private set; }
 
         public EddSession(EddServer server, ILogger<EddSession> logger, RuntimeData data) : base(server, logger)
         {
@@ -90,10 +93,15 @@ namespace Server.Endpoints
                 return;
             }
 
-            if (SendMessage(ResponseMessage.GetAcceptedMessage(login.ID)))
+            User user = login.GetUser();
+            Guid secret = Guid.NewGuid();
+            LoginResponseMessage response = new(login.ID, user, secret);
+
+            if (SendMessage(response))
             {
                 Route = route;
-                User = login.GetUser();
+                User = user;
+                Secret = secret;
 
                 Logger.LogInformation($"[{Id}] Logged in as user {User.Name} ({User.DeviceID:X}) to route {route.Name}.");
             }
@@ -119,13 +127,13 @@ namespace Server.Endpoints
 
             if (Route.Clients.FirstOrDefault(x => x.ID == claimClient.ClientID) is not Client client)
             {
-                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, RefusedMessageHelper.NOTFOUND));
+                SendMessage(StringResponseMessage.GetRefusedMessage(claimClient.ID, RefusedMessageHelper.NOTFOUND));
                 return;
             }
 
-            if (client.User is not null)
+            if (client.User is not null && client.User.ID != User.ID)
             {
-                SendMessage(ResponseMessage.GetRefusedMessage(claimClient.ID, RefusedMessageHelper.OCCUPIED));
+                SendMessage(StringResponseMessage.GetRefusedMessage(claimClient.ID, RefusedMessageHelper.OCCUPIED));
                 return;
             }
 

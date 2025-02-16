@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Common.Messages
 {
+    // Union 1
     [MessagePackObject]
     public class DataRequestMessage : Message
     {

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Common.Messages.Login
 {
+    // Union 9
     [MessagePackObject]
     public class ClaimClientMessage : Message
     {

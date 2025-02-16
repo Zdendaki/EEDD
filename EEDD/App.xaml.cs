@@ -30,6 +30,8 @@ namespace EEDD
 
         internal static Client ClientData { get; set; } = null!;
 
+        internal static Guid Secret { get; set; } = Guid.Empty;
+
         internal static Route Route { get; set; } = null!;
 
         protected override void OnStartup(StartupEventArgs e)
