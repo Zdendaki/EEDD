@@ -8,7 +8,7 @@ namespace Common.Data
     public class Train
     {
         [Key(0)]
-        public required uint ID { get; init; }
+        public required Guid ID { get; init; }
 
         [Key(1)]
         public required int Number { get; init; }

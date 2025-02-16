@@ -5,8 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EVAL"
         mc:Ignorable="d"
-        Title="EVAL" Height="450" Width="800">
+        Title="EVAL" Height="450" Width="1000">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <Menu>
+            <MenuItem Header="Vlak">
+                <MenuItem Header="Zavést nový..." />
+                <Separator />
+                <MenuItem Header="Upravit..." />
+                <MenuItem Header="Odřeknout" IsEnabled="False" />
+            </MenuItem>
+        </Menu>
+
+        <DataGrid x:Name="TrainsGrid" Grid.Row="1" EnableColumnVirtualization="True" EnableRowVirtualization="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" SelectionUnit="FullRow" RowDetailsVisibilityMode="Collapsed" RowHeaderWidth="30">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Číslo vlaku" Binding="{Binding Number}" Width="80" />
+                <DataGridTextColumn Header="Výchozí stanice" Binding="{Binding FirstStop}" Width="180" />
+                <DataGridTextColumn Header="Cílová stanice" Binding="{Binding LastStop}" Width="180" />
+                <DataGridTextColumn Header="Aktuální poloha" Binding="{x:Null}" Width="150" />
+                <DataGridTextColumn Header="Čas" Binding="{x:Null}" Width="80" />
+                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="200" />
+            </DataGrid.Columns>
+
+            <DataGrid.RowHeaderTemplate>
+                <DataTemplate>
+                    <Expander Expanded="Expander_Changed" Collapsed="Expander_Changed" />
+                </DataTemplate>
+            </DataGrid.RowHeaderTemplate>
+
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <DataGrid EnableColumnVirtualization="True" EnableRowVirtualization="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" SelectionUnit="FullRow" RowDetailsVisibilityMode="Collapsed">
+                        <DataGrid.Columns>
+                            
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
+            
+        </DataGrid>
     </Grid>
 </Window>

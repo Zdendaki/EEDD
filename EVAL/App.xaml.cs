@@ -13,6 +13,8 @@ namespace EVAL
 
         internal static EvalClient Client { get; set; } = null!;
 
+        internal static Route Route { get; set; } = null!;
+
         internal static User User { get; set; } = null!;
     }
 

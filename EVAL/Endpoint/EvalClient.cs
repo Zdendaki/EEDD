@@ -1,4 +1,5 @@
 ﻿using Common.Messages;
+using Common.Messages.Data;
 using Common.SSL;
 using System.Net;
 
@@ -12,7 +13,10 @@ namespace EVAL.Endpoint
 
         protected override void Receive(Message message)
         {
-
+            if (message is RouteDataMessage route)
+            {
+                App.Route = route.Route;
+            }
         }
     }
 }
