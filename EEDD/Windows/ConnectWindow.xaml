@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EEDD.Windows"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="Připojení k serveru" Height="300" Width="400" ResizeMode="NoResize">
+        Title="EDD | Připojení k serveru" Height="300" Width="400" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -13,13 +13,18 @@
         </Grid.RowDefinitions>
 
         <TabControl x:Name="Tabs" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged" Margin="0,5">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Width" Value="125" />
+                </Style>
+            </TabControl.Resources>
             <TabItem Header="Server" IsSelected="True">
                 <StackPanel Margin="5">
                     <Label Content="Adresa serveru:" />
-                    <TextBox x:Name="ServerAddress" Text="127.0.0.1" MaxLength="128" />
+                    <TextBox x:Name="ServerAddress" MaxLength="128" />
 
                     <Label Content="Port serveru:" />
-                    <TextBox x:Name="ServerPort" Text="1024" MaxLength="5" />
+                    <TextBox x:Name="ServerPort" MaxLength="5" />
                 </StackPanel>
             </TabItem>
             <TabItem Header="Výběr tratě">

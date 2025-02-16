@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Common.Messages
 {
+    // Union 0
     [MessagePackObject]
     public class ResponseMessage : Message
     {
@@ -12,17 +13,13 @@ namespace Common.Messages
         [Key(2)]
         public required ResponseStatus Status { get; init; }
 
-        [Key(3)]
-        public string? Message { get; init; }
-
         public ResponseMessage() { }
 
         [SetsRequiredMembers]
-        public ResponseMessage(Guid requestID, ResponseStatus status, string? message = null)
+        protected ResponseMessage(Guid requestID, ResponseStatus status)
         {
             RequestID = requestID;
             Status = status;
-            Message = message;
         }
 
         public static ResponseMessage GetAcceptedMessage(Guid requestID)
@@ -40,9 +37,9 @@ namespace Common.Messages
             return new(requestID, ResponseStatus.BadCredentials);
         }
 
-        public static ResponseMessage GetRefusedMessage(Guid requestID, string? message = null)
+        public static ResponseMessage GetRefusedMessage(Guid requestID)
         {
-            return new(requestID, ResponseStatus.Refused, message);
+            return new(requestID, ResponseStatus.Refused);
         }
     }
 

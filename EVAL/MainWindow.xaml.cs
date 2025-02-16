@@ -10,6 +10,8 @@ namespace EVAL
         public MainWindow()
         {
             InitializeComponent();
+
+            Title = $"EVAL [přihlášený uživatel {App.User.Name}]";
         }
     }
 }

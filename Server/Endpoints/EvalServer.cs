@@ -2,11 +2,11 @@
 
 namespace Server.Endpoints
 {
-    internal class EvalServer : TcpServerBase<EvalSession>
+    internal class EvalServer : SslServerBase<EvalSession>
     {
         private readonly ILogger<EvalServer> _logger;
 
-        public EvalServer(IConfiguration config, ILogger<EvalServer> logger, IServiceProvider provider) : base(provider, ushort.Parse(config["PortEVAL"]!))
+        public EvalServer(IConfiguration config, ILogger<EvalServer> logger, IServiceProvider provider) : base(provider, config, ushort.Parse(config["PortEVAL"]!))
         {
             _logger = logger;
         }

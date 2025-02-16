@@ -2,7 +2,7 @@
 using Common.Messages;
 using Common.Messages.Data;
 using Common.Messages.Login;
-using Common.TCP;
+using Common.SSL;
 using EVAL.Endpoint;
 using System.Net;
 using System.Windows;
@@ -23,6 +23,8 @@ namespace EVAL.Windows
 
             UpdateTab();
 
+            ServerAddress.Text = Settings.Default.Server;
+            ServerPort.Text = Settings.Default.Port.ToString();
             Username.Text = Settings.Default.Username;
             Password.Password = Settings.Default.Password;
         }
@@ -119,7 +121,8 @@ namespace EVAL.Windows
             if (App.Client?.IsConnected == true)
                 App.Client.DisconnectAndStop();
 
-            IPAddress? address = await ResolveIPAddress(ServerAddress.Text);
+            string addressString = ServerAddress.Text.Trim();
+            IPAddress? address = await ResolveIPAddress(addressString);
 
             if (address is null)
             {
@@ -149,6 +152,10 @@ namespace EVAL.Windows
                 MessageBoxInvoke("Nepodařilo se připojit k serveru.", "Chyba", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
+
+            Settings.Default.Server = addressString;
+            Settings.Default.Port = port;
+            Settings.Default.Save();
 
             return App.Client.SendMessage(new DataRequestMessage(DataType.RoutesList));
         }
@@ -203,6 +210,8 @@ namespace EVAL.Windows
             Settings.Default.Username = username;
             Settings.Default.Password = Password.Password;
             Settings.Default.Save();
+
+            App.User = new(App.DeviceId, Username.Text);
 
             return App.Client.SendMessage(new DataRequestMessage(DataType.Route));
         }

@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using Common.Messages.Response;
+using MessagePack;
 
 namespace Common.Messages
 {
@@ -14,6 +15,8 @@ namespace Common.Messages
     [Union(8, typeof(Train.PodjResponse))]
     [Union(9, typeof(Login.ClaimClientMessage))]
     [Union(10, typeof(Login.ReconnectMessage))]
+    [Union(11, typeof(StringResponseMessage))]
+    [Union(12, typeof(Login.LoginResponseMessage))]
     public abstract class Message
     {
         [Key(0)]

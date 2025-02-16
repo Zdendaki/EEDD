@@ -5,13 +5,13 @@ using NetCoreServer;
 
 namespace Server.Endpoints
 {
-    internal abstract class TcpSessionBase : TcpSession
+    internal abstract class SslSessionBase : SslSession
     {
         protected readonly ILogger Logger;
 
         private int _errorCounter = 0;
 
-        protected TcpSessionBase(TcpServer server, ILogger logger) : base(server)
+        protected SslSessionBase(SslServer server, ILogger logger) : base(server)
         {
             Logger = logger;
         }
@@ -19,6 +19,11 @@ namespace Server.Endpoints
         protected override void OnConnected()
         {
             Logger.LogInformation($"[{Id}] Connected.");
+        }
+
+        protected override void OnHandshaked()
+        {
+            Logger.LogInformation($"[{Id}] Handshaked.");
         }
 
         protected override void OnDisconnected()

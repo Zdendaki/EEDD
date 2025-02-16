@@ -1,6 +1,6 @@
 ﻿using Common.Messages;
 
-namespace Common.TCP
+namespace Common.SSL
 {
     public class MessageReceivedEventArgs : EventArgs
     {

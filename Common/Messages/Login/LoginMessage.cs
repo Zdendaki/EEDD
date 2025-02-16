@@ -3,6 +3,7 @@ using MessagePack;
 
 namespace Common.Messages.Login
 {
+    // Union 2
     [MessagePackObject]
     public class LoginMessage : Message
     {
@@ -17,6 +18,16 @@ namespace Common.Messages.Login
 
         [Key(4)]
         public required string Password { get; init; }
+
+        public User GetUser(Guid id)
+        {
+            return new()
+            {
+                ID = id,
+                DeviceID = DeviceID,
+                Name = Username
+            };
+        }
 
         public User GetUser()
         {

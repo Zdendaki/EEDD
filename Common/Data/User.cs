@@ -6,7 +6,7 @@ namespace Common.Data
     public class User
     {
         [Key(0)]
-        public Guid ID { get; init; }
+        public virtual Guid ID { get; set; }
 
         [Key(1)]
         public uint DeviceID { get; init; }

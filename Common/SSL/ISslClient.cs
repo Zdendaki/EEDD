@@ -1,8 +1,8 @@
 ﻿using Common.Messages;
 
-namespace Common.TCP
+namespace Common.SSL
 {
-    public interface ITcpClient
+    public interface ISslClient
     {
         void DisconnectAndStop();
 
