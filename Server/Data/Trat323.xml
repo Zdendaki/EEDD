@@ -164,7 +164,7 @@
 				<Signaller ID="24" Name="dH" Type="3" Comment="Hostašovice" />
 			</Signallers>
 		</Client>
-		<Client ID="1" Name="Dopravní deník Frenštát pod Radhoštěm">
+		<Client ID="3" Name="Dopravní deník Frenštát pod Radhoštěm">
 			<Stations>
 				<Station ID="1" StationID="333344" Color="Gray" />
 			</Stations>
@@ -176,7 +176,7 @@
 				<Signaller ID="35" Name="dV" Type="3" Comment="Veřovice" />
 			</Signallers>
 		</Client>
-		<Client ID="3" Name="Dopravní deník Frýdlant nad Ostravicí">
+		<Client ID="4" Name="Dopravní deník Frýdlant nad Ostravicí">
 			<Stations>
 				<Station ID="1" StationID="349845" Color="Gray" />
 				<Station ID="2" StationID="339341" Color="Green" />
@@ -189,7 +189,7 @@
 				<Signaller ID="44" Name="DO" Type="3" Comment="" />
 			</Signallers>
 		</Client>
-		<Client ID="3" Name="Dopravní deník Baška">
+		<Client ID="5" Name="Dopravní deník Baška">
 			<Stations>
 				<Station ID="1" StationID="330241" Color="Gray" />
 				<Station ID="2" StationID="333948" Color="Green" />

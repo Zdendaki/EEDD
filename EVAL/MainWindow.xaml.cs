@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace EVAL
 {
@@ -11,7 +13,21 @@ namespace EVAL
         {
             InitializeComponent();
 
-            Title = $"EVAL [přihlášený uživatel {App.User.Name}]";
+            Title = $"EVAL [přihlášený uživatel {App.User?.Name}]";
+
+
+        }
+
+        private void Expander_Changed(object sender, RoutedEventArgs e)
+        {
+            for (Visual? vis = sender as Visual; vis is not null; vis = VisualTreeHelper.GetParent(vis) as Visual)
+            {
+                if (vis is DataGridRow row)
+                {
+                    row.DetailsVisibility = row.DetailsVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                    break;
+                }
+            }
         }
     }
 }

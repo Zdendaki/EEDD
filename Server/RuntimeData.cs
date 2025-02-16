@@ -246,7 +246,7 @@ namespace Server
 
         private Train LoadTrain(XmlNode node)
         {
-            uint id = node.GetUInt32Attribute("ID");
+            Guid id = node.GetGuidAttribute("ID");
             int number = node.GetInt32Attribute("Number");
             DateTime date = node.GetDateTimeAttribute("Date").Date;
             List<TrainStop> stops = [];

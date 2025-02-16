@@ -5,6 +5,7 @@ using Common.Messages.Login;
 using Common.SSL;
 using EVAL.Endpoint;
 using System.Net;
+using System.Net.Sockets;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -224,10 +225,14 @@ namespace EVAL.Windows
             {
                 try
                 {
-                    IPAddress[] addresses = await Dns.GetHostAddressesAsync(input);
-
-                    if (addresses.Length > 0)
-                        address = addresses[0];
+                    foreach (IPAddress ip in await Dns.GetHostAddressesAsync(input))
+                    {
+                        if (ip.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            address = ip;
+                            break;
+                        }
+                    }
                 }
                 catch { }
             }
