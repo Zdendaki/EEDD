@@ -10,7 +10,7 @@ namespace Server
         private readonly EvalServer _evalServer;
         private readonly RuntimeData _data;
 
-        public Worker(ILogger<Worker> log, IConfiguration config, EddServer eddServer, EvalServer evalServer, RuntimeData data) : base("EDD Server", log, TimeSpan.FromSeconds(10))
+        public Worker(ILogger<Worker> log, IConfiguration config, EddServer eddServer, EvalServer evalServer, RuntimeData data) : base("EDD/EVAL Server", log, TimeSpan.FromSeconds(10))
         {
             _logger = log;
             _config = config;
