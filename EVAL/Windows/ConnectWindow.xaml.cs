@@ -62,8 +62,8 @@ namespace EVAL.Windows
                     Tabs.SelectedIndex++;
                 else
                 {
-                    MainWindow mw = new();
-                    mw.Show();
+                    LoadingWindow lw = new();
+                    lw.Show();
                     Close();
                 }
             });
@@ -214,7 +214,8 @@ namespace EVAL.Windows
 
             App.User = new(App.DeviceId, Username.Text);
 
-            return App.Client.SendMessage(new DataRequestMessage(DataType.Route));
+
+            return true;
         }
 
         private async Task<IPAddress?> ResolveIPAddress(string input)

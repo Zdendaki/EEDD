@@ -3,40 +3,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:local="clr-namespace:EVAL.Windows"
-        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="EVAL | Připojení k serveru" Height="300" Width="400" ResizeMode="NoResize">
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" ui:WindowHelper.UseModernWindowStyle="True"
+        Title="EVAL | Připojení k serveru" Height="350" Width="420" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TabControl x:Name="Tabs" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged" Margin="0,5">
+        <TabControl x:Name="Tabs" Grid.Row="0" SelectionChanged="TabControl_SelectionChanged" Margin="0,5" Padding="5">
             <TabItem Header="Server" IsSelected="True" Width="190">
-                <StackPanel Margin="5">
-                    <Label Content="Adresa serveru:" />
-                    <TextBox x:Name="ServerAddress" MaxLength="128" />
-
-                    <Label Content="Port serveru:" />
-                    <TextBox x:Name="ServerPort" MaxLength="5" />
-                </StackPanel>
+                <ui:SimpleStackPanel Margin="5" Spacing="10">
+                    <TextBox x:Name="ServerAddress" ui:ControlHelper.Header="Adresa serveru:" MaxLength="128" />
+                    <TextBox x:Name="ServerPort" ui:ControlHelper.Header="Port serveru:" MaxLength="5" />
+                </ui:SimpleStackPanel>
             </TabItem>
             <TabItem Header="Výběr tratě" Width="190">
-                <StackPanel Margin="5">
-                    <Label Content="Vybrat trať:" />
-                    <ComboBox x:Name="RouteSelect" />
-                    <Label Content="Jméno uživatele (neslouží k ověření):" Margin="0,10,0,0" />
-                    <TextBox x:Name="Username" MaxLength="64" />
-                    <Label Content="Heslo tratě:" Margin="0,10,0,0" />
-                    <PasswordBox x:Name="Password" MaxLength="64" />
-                </StackPanel>
+                <ui:SimpleStackPanel Margin="5" Spacing="10">
+                    <ComboBox x:Name="RouteSelect" ui:ControlHelper.Header="Vybrat trať:" HorizontalAlignment="Stretch" />
+                    <TextBox x:Name="Username" ui:ControlHelper.Header="Jméno uživatele (neslouží k ověření):" MaxLength="64" />
+                    <PasswordBox x:Name="Password" ui:ControlHelper.Header="Heslo tratě:" MaxLength="64" />
+                </ui:SimpleStackPanel>
             </TabItem>
         </TabControl>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="0,-5,0,0">
-            <Button x:Name="Previous" Content="Předchozí" Width="80" Margin="5,10" Height="24" IsEnabled="False" Click="Previous_Click" />
-            <Button x:Name="Next" Content="Další" Width="80" Margin="5,10" Height="24" Click="Next_Click" IsDefault="True" />
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right" Margin="10,5">
+            <Button x:Name="Previous" Content="Předchozí" Width="100" Margin="5,10" IsEnabled="False" Click="Previous_Click" />
+            <Button x:Name="Next" Content="Další" Margin="5,10" Click="Next_Click" IsDefault="True" Width="100" />
         </StackPanel>
     </Grid>
 </Window>

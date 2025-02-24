@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:local="clr-namespace:EVAL"
-        mc:Ignorable="d"
+        mc:Ignorable="d" ui:WindowHelper.UseModernWindowStyle="True"
         Title="EVAL" Height="450" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
@@ -23,12 +24,12 @@
 
         <DataGrid x:Name="TrainsGrid" Grid.Row="1" EnableColumnVirtualization="True" EnableRowVirtualization="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" SelectionUnit="FullRow" RowDetailsVisibilityMode="Collapsed" RowHeaderWidth="30">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Číslo vlaku" Binding="{Binding Number}" Width="80" />
-                <DataGridTextColumn Header="Výchozí stanice" Binding="{Binding FirstStop}" Width="180" />
-                <DataGridTextColumn Header="Cílová stanice" Binding="{Binding LastStop}" Width="180" />
+                <DataGridTextColumn Header="Číslo vlaku" Binding="{Binding Number, Mode=OneWay}" Width="80" />
+                <DataGridTextColumn Header="Výchozí stanice" Binding="{Binding FirstStop, Mode=OneWay}" Width="180" />
+                <DataGridTextColumn Header="Cílová stanice" Binding="{Binding LastStop, Mode=OneWay}" Width="180" />
                 <DataGridTextColumn Header="Aktuální poloha" Binding="{x:Null}" Width="150" />
                 <DataGridTextColumn Header="Čas" Binding="{x:Null}" Width="80" />
-                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="200" />
+                <DataGridTextColumn Header="ID" Binding="{Binding ID, Mode=OneWay}" Width="200" />
             </DataGrid.Columns>
 
             <DataGrid.RowHeaderTemplate>
