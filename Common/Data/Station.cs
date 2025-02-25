@@ -16,6 +16,11 @@ namespace Common.Data
 
         [Key(3)]
         public List<Track> Tracks { get; init; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     [MessagePackObject]
@@ -29,5 +34,13 @@ namespace Common.Data
 
         [Key(2)]
         public bool Platform { get; init; }
+
+        public override string ToString()
+        {
+            if (Platform)
+                return $"{Name}   +";
+
+            return Name;
+        }
     }
 }

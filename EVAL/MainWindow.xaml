@@ -6,48 +6,87 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:local="clr-namespace:EVAL"
         mc:Ignorable="d" ui:WindowHelper.UseModernWindowStyle="True"
-        Title="EVAL" Height="450" Width="1000">
+        Title="EVAL" Height="700" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Menu>
+        <!--<Menu>
             <MenuItem Header="Vlak">
                 <MenuItem Header="Zavést nový..." />
                 <Separator />
                 <MenuItem Header="Upravit..." />
                 <MenuItem Header="Odřeknout" IsEnabled="False" />
             </MenuItem>
-        </Menu>
+        </Menu>-->
 
-        <DataGrid x:Name="TrainsGrid" Grid.Row="1" EnableColumnVirtualization="True" EnableRowVirtualization="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" SelectionUnit="FullRow" RowDetailsVisibilityMode="Collapsed" RowHeaderWidth="30">
+
+        <ui:CommandBar>
+            <ui:CommandBar.PrimaryCommands>
+                <ui:AppBarButton Icon="Refresh" Label="Synchronizovat data" />
+                <ui:AppBarSeparator />
+                <ui:AppBarButton Icon="Add" Label="Zavést vlak" Click="NewTrain_Click" />
+                <ui:AppBarButton Icon="Edit" Label="Upravit vlak" IsEnabled="False" />
+                <ui:AppBarButton Icon="Clear" Label="Odřeknout vlak" IsEnabled="False" />
+                <ui:AppBarSeparator />
+                <ui:AppBarButton Icon="PostUpdate" Label="ROZBOR" IsEnabled="False" />
+                <ui:AppBarButton Icon="Phone" Label="PŘIPRAVENOST" IsEnabled="False" />
+            </ui:CommandBar.PrimaryCommands>
+            <ui:CommandBar.SecondaryCommands>
+                <ui:AppBarButton Icon="Setting" Label="Nastavení" />
+            </ui:CommandBar.SecondaryCommands>
+        </ui:CommandBar>
+
+        <DataGrid x:Name="TrainsGrid" Grid.Row="1" EnableColumnVirtualization="True" EnableRowVirtualization="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" SelectionUnit="FullRow" RowDetailsVisibilityMode="VisibleWhenSelected" RowHeaderWidth="30">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Číslo vlaku" Binding="{Binding Number, Mode=OneWay}" Width="80" />
                 <DataGridTextColumn Header="Výchozí stanice" Binding="{Binding FirstStop, Mode=OneWay}" Width="180" />
                 <DataGridTextColumn Header="Cílová stanice" Binding="{Binding LastStop, Mode=OneWay}" Width="180" />
-                <DataGridTextColumn Header="Aktuální poloha" Binding="{x:Null}" Width="150" />
+                <DataGridTextColumn Header="Aktuální poloha" Binding="{x:Null}" Width="180" />
                 <DataGridTextColumn Header="Čas" Binding="{x:Null}" Width="80" />
-                <DataGridTextColumn Header="ID" Binding="{Binding ID, Mode=OneWay}" Width="200" />
+                <DataGridTextColumn Header="ID" Binding="{Binding ID, Mode=OneWay}" Width="300" />
             </DataGrid.Columns>
 
-            <DataGrid.RowHeaderTemplate>
+            <!--<DataGrid.RowHeaderTemplate>
                 <DataTemplate>
                     <Expander Expanded="Expander_Changed" Collapsed="Expander_Changed" />
                 </DataTemplate>
-            </DataGrid.RowHeaderTemplate>
+            </DataGrid.RowHeaderTemplate>-->
+
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                </Style>
+            </DataGrid.CellStyle>
 
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <DataGrid EnableColumnVirtualization="True" EnableRowVirtualization="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" SelectionUnit="FullRow" RowDetailsVisibilityMode="Collapsed">
+                    <DataGrid ItemsSource="{Binding Stops, Mode=OneWay}" CanUserSortColumns="False" EnableColumnVirtualization="True" EnableRowVirtualization="True" AutoGenerateColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" SelectionUnit="FullRow" RowDetailsVisibilityMode="Collapsed">
                         <DataGrid.Columns>
-                            
+                            <DataGridTextColumn Header="ID" Binding="{Binding ID, Mode=OneWay}" Width="80" />
+                            <DataGridTextColumn Header="Kategorie" Binding="{Binding Type, Mode=OneWay}" Width="80" />
+                            <DataGridTextColumn Header="Stanice" Binding="{Binding Name, Mode=OneWay}" Width="180" />
+                            <DataGridTextColumn Header="TK" Binding="{Binding RouteArrival, Mode=OneWay}" Width="60" />
+                            <DataGridTextColumn Header="Příjezd" Binding="{Binding Arrival, Mode=OneWay}" Width="80" />
+                            <DataGridTextColumn Header="kol." Binding="{Binding TrackArrival, Mode=OneWay}" Width="60" />
+                            <DataGridTextColumn Header="kol." Binding="{Binding TrackDeparture, Mode=OneWay}" Width="60" />
+                            <DataGridTextColumn Header="Odjezd" Binding="{Binding Departure, Mode=OneWay}" Width="80" />
+                            <DataGridTextColumn Header="TK" Binding="{Binding RouteDeparture, Mode=OneWay}" Width="60" />
+                            <DataGridTextColumn Header="Úkony" Binding="{Binding Actions, Mode=OneWay}" Width="60" />
                         </DataGrid.Columns>
+
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                            </Style>
+                        </DataGrid.CellStyle>
                     </DataGrid>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
-            
         </DataGrid>
     </Grid>
 </Window>

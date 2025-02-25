@@ -1,0 +1,62 @@
+﻿<ui:ContentDialog x:Class="EVAL.Dialogs.AddStationDialog"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+                  xmlns:ui="http://schemas.modernwpf.com/2019"
+                  xmlns:c="clr-namespace:Common.Controls;assembly=Common.Controls"
+                  xmlns:dat="clr-namespace:EVAL.Data"
+                  xmlns:local="clr-namespace:EVAL.Dialogs"
+                  mc:Ignorable="d" Title="Přidat stanici "
+                  PrimaryButtonText="Přidat" CloseButtonText="Zrušit" DefaultButton="Primary" PrimaryButtonClick="ContentDialog_PrimaryButtonClick">
+    
+    <Grid Width="450">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ComboBox x:Name="category" ui:ControlHelper.Header="Kategorie:" HorizontalAlignment="Stretch" Margin="5" />
+        <Label Content="Příjezd:" Style="{StaticResource PO}" Grid.Row="1" HorizontalAlignment="Center" Margin="0" />
+        <ComboBox x:Name="arrTrack" ui:ControlHelper.Header="Staniční kolej:" HorizontalAlignment="Stretch" Margin="5" Grid.Row="2" />
+        <c:MaskedTextBox x:Name="arrival" ui:ControlHelper.Header="Příjezd:   (hh:mm:ss)" HorizontalAlignment="Stretch" Margin="5" Mask="00:00:00" MaskChar="_" Grid.Row="3" />
+
+        <ui:NumberBox x:Name="number" ui:ControlHelper.Header="Číslo vlaku:" Margin="5" Grid.Column="1" />
+        <Label Content="Odjezd:" Grid.Column="1" Grid.Row="1" Style="{StaticResource PO}" HorizontalAlignment="Center" Margin="0" />
+        <ComboBox x:Name="depTrack" ui:ControlHelper.Header="Staniční kolej:" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="2" />
+        <c:MaskedTextBox x:Name="departure" ui:ControlHelper.Header="Odjezd:   (hh:mm:ss)" HorizontalAlignment="Stretch" Margin="5" Grid.Column="1" Grid.Row="3" Mask="00:00:00" MaskChar="_" />
+
+        <TextBlock Grid.Row="4" Text="Úkony ve stanici:" Margin="5,5,0,0" FontSize="14" />
+        <ListBox x:Name="actions" Grid.Row="5" Grid.ColumnSpan="2" SelectionMode="Single" Margin="5" Height="180">
+            <ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Style.Resources>
+                        <!-- SelectedItem with focus -->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                        <!-- SelectedItem without focus -->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                        <!-- SelectedItem text foreground -->
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                    </Style.Resources>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                </Style>
+            </ListBox.Resources>
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <VirtualizingStackPanel>
+                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                    </VirtualizingStackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</ui:ContentDialog>

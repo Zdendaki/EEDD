@@ -1,4 +1,5 @@
 ﻿using Common.Data;
+using Common.Data.Helper;
 
 namespace Common
 {
@@ -21,6 +22,11 @@ namespace Common
                 TrainType.Sluz => "Služ",
                 _ => type.ToString()
             };
+        }
+
+        public static List<TrainTypeItem> GetCategoryItems()
+        {
+            return Enum.GetValues<TrainType>().Select(x => new TrainTypeItem(x)).ToList();
         }
     }
 }

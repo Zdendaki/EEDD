@@ -112,10 +112,6 @@
         /// </summary>
         PMD,
         /// <summary>
-        /// Náhradní doprava
-        /// </summary>
-        ND,
-        /// <summary>
         /// Přestavná jízda
         /// </summary>
         PJ

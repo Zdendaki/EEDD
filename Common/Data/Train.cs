@@ -11,13 +11,13 @@ namespace Common.Data
         public required Guid ID { get; init; }
 
         [Key(1)]
-        public required int Number { get; init; }
+        public string Number { get; set; }
 
         [Key(2)]
-        public DateTime Date { get; init; }
+        public DateTime Date { get; set; }
 
         [Key(3)]
-        public List<TrainStop> Stops { get; init; }
+        public List<TrainStop> Stops { get; init; } = [];
 
         [Key(4)]
         public List<TrainEvent> Events { get; init; } = [];
@@ -27,6 +27,11 @@ namespace Common.Data
 
         [Key(6)]
         public List<TrainReady> Readys { get; init; } = [];
+
+        public static Train CreateNew()
+        {
+            return new Train() { ID = Guid.NewGuid() };
+        }
     }
 
     [MessagePackObject]
@@ -36,10 +41,10 @@ namespace Common.Data
         public required uint ID { get; init; }
 
         [Key(1)]
-        public required TrainType TypeArrival { get; init; }
+        public required TrainType Type { get; init; }
 
         [Key(2)]
-        public required TrainType TypeDeparture { get; init; }
+        public required int Number { get; init; }
 
         [Key(3)]
         public DateTime? Arrival { get; init; }
@@ -66,7 +71,7 @@ namespace Common.Data
         public required bool EndBetweenStations { get; init; }
 
         [Key(11)]
-        public List<string> Actions { get; init; }
+        public List<string> Actions { get; init; } = [];
     }
 
     [MessagePackObject]
