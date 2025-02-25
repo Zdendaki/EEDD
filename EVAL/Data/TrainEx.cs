@@ -9,7 +9,7 @@ namespace EVAL.Data
 
         public Guid ID => Template.ID;
 
-        public int Number => Template.Number;
+        public string Number => Template.Number;
 
         public string FirstStop => Stops.First().Name;
 

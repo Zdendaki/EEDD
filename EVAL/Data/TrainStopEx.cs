@@ -14,7 +14,7 @@ namespace EVAL.Data
 
         public string Name { get; }
 
-        public string Type => TrainHelper.GetCategory(Template.TypeDeparture);
+        public string Type => TrainHelper.GetCategory(Template.Type);
 
         public string Arrival => Template.Arrival?.ToString(FORMAT) ?? string.Empty;
 
@@ -28,7 +28,7 @@ namespace EVAL.Data
 
         public string RouteDeparture => Template.RouteTrackDeparture ?? string.Empty;
 
-        public int Actions => Template.Actions.Count;
+        public int Actions => Template.Actions?.Count ?? 0;
 
         [SetsRequiredMembers]
         public TrainStopEx(TrainStop stop)

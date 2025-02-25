@@ -247,7 +247,7 @@ namespace Server
         private Train LoadTrain(XmlNode node)
         {
             Guid id = node.GetGuidAttribute("ID");
-            int number = node.GetInt32Attribute("Number");
+            string number = node.GetStringAttribute("Number");
             DateTime date = node.GetDateTimeAttribute("Date").Date;
             List<TrainStop> stops = [];
 
@@ -272,8 +272,8 @@ namespace Server
         private TrainStop LoadTrainStop(XmlNode stop)
         {
             uint id = stop.GetUInt32Attribute("ID");
-            TrainType typeArrival = (TrainType)stop.GetByteAttribute("TypeArrival");
-            TrainType typeDeparture = (TrainType)stop.GetByteAttribute("TypeDeparture");
+            TrainType type = (TrainType)stop.GetByteAttribute("Type");
+            int number = stop.GetInt32Attribute("Number");
             DateTime? arrival = stop.GetDateTimeAttributeN("Arrival");
             DateTime? departure = stop.GetDateTimeAttributeN("Departure");
             string? trackArrival = stop.GetStringAttribute("TrackArrival");
@@ -293,8 +293,8 @@ namespace Server
             return new()
             {
                 ID = id,
-                TypeArrival = typeArrival,
-                TypeDeparture = typeDeparture,
+                Type = type,
+                Number = number,
                 Arrival = arrival,
                 Departure = departure,
                 TrackArrival = trackArrival,

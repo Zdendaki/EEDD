@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 // Generated with Gemini 2.0 Pro Experimental
 
-namespace EEDD.Controls
+namespace Common.Controls
 {
     public class MaskedTextBox : TextBox
     {
@@ -18,18 +18,13 @@ namespace EEDD.Controls
         }
 
         public static readonly DependencyProperty MaskCharProperty =
-            DependencyProperty.Register("MaskChar", typeof(char), typeof(MaskedTextBox), new PropertyMetadata('*'));
+            DependencyProperty.Register("MaskChar", typeof(char), typeof(MaskedTextBox), new PropertyMetadata(' '));
 
         public char MaskChar
         {
             get { return (char)GetValue(MaskCharProperty); }
             set { SetValue(MaskCharProperty, value); }
         }
-
-
-        private string _previousText = string.Empty;
-        private int _previousSelectionStart;
-
 
         public MaskedTextBox()
         {
@@ -81,8 +76,6 @@ namespace EEDD.Controls
             // Left/Right/Home/End
             else if (e.Key == Key.Left || e.Key == Key.Right || e.Key == Key.Home || e.Key == Key.End)
             {
-                // Allow navigation, but save selection state for later correction.
-                _previousSelectionStart = SelectionStart; //Needed for left arrow.
                 return; // Don't handle the key, let the TextBox handle the movement
             }
             else
@@ -250,7 +243,6 @@ namespace EEDD.Controls
                 {
                     HandleDeletion(nextPos, 1);
                 }
-
             }
         }
 
@@ -277,8 +269,6 @@ namespace EEDD.Controls
             {
                 return; // No mask to apply.
             }
-
-            _previousText = Text; // Store before potentially changing it
 
             char[] maskedText = new char[Mask.Length];
             int textIndex = 0;

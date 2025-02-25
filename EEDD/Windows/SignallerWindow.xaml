@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:c="clr-namespace:EEDD.Controls"
+        xmlns:c="clr-namespace:Common.Controls;assembly=Common.Controls"
         xmlns:local="clr-namespace:EEDD.Windows"
         mc:Ignorable="d" ShowInTaskbar="False"
         Width="300" ResizeMode="NoResize" SizeToContent="Height">
