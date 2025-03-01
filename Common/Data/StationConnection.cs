@@ -32,5 +32,10 @@ namespace Common.Data
 
         [Key(2)]
         public required ConnectionFlags Flags { get; init; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
