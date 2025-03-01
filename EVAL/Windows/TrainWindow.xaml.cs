@@ -4,6 +4,7 @@ using Common.Data.Helper;
 using Common.Data.Static;
 using EVAL.Data;
 using EVAL.Dialogs;
+using EVAL.ViewModels;
 using System.Windows;
 
 namespace EVAL.Windows
@@ -15,12 +16,10 @@ namespace EVAL.Windows
     {
         public List<TrainTypeItem> Categories => TrainHelper.GetCategoryItems();
 
-        public Train Train { get; init; }
+        public TrainVM Train { get; } = new();
 
         public TrainWindow(Train? train)
         {
-            Train = train ?? Train.CreateNew();
-
             InitializeComponent();
 
             category.ItemsSource = TrainHelper.GetCategoryItems();
