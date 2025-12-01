@@ -1,0 +1,1 @@
+# Zjednodušený elektronický dopravní deník
