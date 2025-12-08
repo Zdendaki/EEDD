@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="EEDD.Controls.EDDTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:EEDD.Controls"
+             xmlns:l="clr-namespace:EEDD"
+             mc:Ignorable="d"
+             x:Name="EddTextBox" Background="Transparent"
+             FontFamily="CustomSantSerif" Height="21" d:DesignWidth="36" Margin="-0.5">
+    <UserControl.Resources>
+    </UserControl.Resources>
+    <Grid>
+        <TextBox x:Name="textBox" Background="White" BorderBrush="Black" Foreground="{Binding Foreground, Mode=OneWay, ElementName=EddTextBox}" Text="{Binding Text, Mode=OneWay, ElementName=EddTextBox}" BorderThickness="1.1" MaxLength="{Binding MaxLength, Mode=OneWay, ElementName=EddTextBox}" TextAlignment="{Binding TextAlignment, Mode=OneWay, ElementName=EddTextBox}" FontSize="12" Padding="0,1.5" VerticalContentAlignment="Bottom" IsReadOnlyCaretVisible="False" />
+        <Border x:Name="border" BorderBrush="Black" BorderThickness="1.1" IsHitTestVisible="False" Visibility="Hidden" />
+
+        <Border x:Name="innerBorder" BorderBrush="{Binding InnerBorder, Mode=OneWay, ElementName=EddTextBox}" BorderThickness="1" IsHitTestVisible="False" Margin="1">
+            <Border x:Name="innerBorder2" BorderBrush="{Binding InnerBorder2, Mode=OneWay, ElementName=EddTextBox}" BorderThickness="1" IsHitTestVisible="False" />
+        </Border>
+
+        <Rectangle x:Name="focusBorder" Visibility="Collapsed" Stroke="Black" StrokeThickness="1" StrokeDashArray="3 3" Margin="2" IsHitTestVisible="False" />
+        <Canvas x:Name="acceptRectangle" Visibility="Visible" HorizontalAlignment="Right" Width="1.5" Background="{Binding Acception, Mode=OneWay, ElementName=EddTextBox}" Margin="3" IsHitTestVisible="False" />
+        <Polygon x:Name="requestArrow" Points="0,0 4,0, 4,4" Visibility="Visible" Fill="{Binding Request, Mode=OneWay, ElementName=EddTextBox}" HorizontalAlignment="Right" Margin="3" IsHitTestVisible="False" />
+    </Grid>
+</UserControl>

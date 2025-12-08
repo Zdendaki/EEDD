@@ -1,0 +1,51 @@
+﻿<c:Row x:Class="EEDD.Controls.RowComment"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:EEDD.Controls"
+             xmlns:l="clr-namespace:EEDD"
+             mc:Ignorable="d">
+    <Border BorderBrush="Black" BorderThickness="0.5" d:Background="{x:Static l:EDDBrushes.BackgroundGray1}">
+        <Grid HorizontalAlignment="Left">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="172" />
+                <ColumnDefinition Width="262" />
+                <ColumnDefinition Width="15" x:Name="Signaller1" />
+                <ColumnDefinition Width="15" x:Name="Signaller2" />
+                <ColumnDefinition Width="0" x:Name="Signaller3" />
+                <ColumnDefinition Width="0" x:Name="Signaller4" />
+                <ColumnDefinition Width="0" x:Name="Signaller5" />
+                <ColumnDefinition Width="0" x:Name="Signaller6" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <c:EDDTextBox Text="" x:Name="letter" Grid.Row="0" Grid.Column="0" EditMode="Locked" />
+            <c:EDDTextBox Text="" x:Name="header" Grid.Row="0" Grid.Column="1" MaxLength="50" EditMode="Locked" />
+            <c:EDDTextBox Text="" x:Name="comment" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="7" EditMode="Locked" />
+
+            <c:EDDTextBox Text="" x:Name="note" Grid.Row="0" Grid.Column="9" MaxLength="1" EditMode="CanModify" TextAlignment="Center" Background="White" />
+            <c:EDDTextBox Text="" x:Name="approval" Grid.Row="0" Grid.Column="10" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="exceptions" Grid.Row="0" Grid.Column="11" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="contact" Grid.Row="0" Grid.Column="12" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="edit" Grid.Row="0" Grid.Column="13" MaxLength="1" EditMode="CanModify" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="cancel" Grid.Row="0" Grid.Column="14" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="operations" Grid.Row="0" Grid.Column="15" MaxLength="1" EditMode="Locked" TextAlignment="Center" />
+            <c:EDDTextBox Text="" x:Name="sent" Grid.Row="0" Grid.Column="16" MaxLength="2" EditMode="Locked" TextAlignment="Right" />
+            <c:EDDTextBox Text="" x:Name="path" Grid.Row="0" Grid.Column="17" Type="String" MaxLength="30" EditMode="Locked" />
+        </Grid>
+    </Border>
+</c:Row>

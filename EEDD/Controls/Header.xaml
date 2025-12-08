@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="EEDD.Controls.Header"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EEDD"
+             mc:Ignorable="d">
+    <Grid>
+        <StackPanel Background="LightGray" Orientation="Horizontal" HorizontalAlignment="Left">
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Label}">
+                    <Setter Property="Padding" Value="0,5" />
+                    <Setter Property="BorderBrush" Value="White" />
+                    <Setter Property="BorderThickness" Value="0.5" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="FontSize" Value="10" />
+                    <Setter Property="FontFamily" Value="CustomSansSerif" />
+                    <Setter Property="FontWeight" Value="Regular" />
+                </Style>
+                <Style TargetType="{x:Type TextBlock}">
+                    <Setter Property="TextAlignment" Value="Center" />
+                </Style>
+            </StackPanel.Resources>
+            
+            <Label Width="15" />
+            <Label Width="45">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="číslo" /><LineBreak />
+                        <Run Text="vlaku" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="30" Content="druh" />
+            <Label Width="25" Content="směr" />
+            <Label Width="35">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="trať." /><LineBreak />
+                        <Run Text="kol." />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="37">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="předv" /><LineBreak />
+                        <Run Text="odjezd" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="37">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="přijetí" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="15" Content="ch" />
+            <Label Width="35">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="pro" /><LineBreak />
+                        <Run Text="PMD" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="35">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="skut." /><LineBreak />
+                        <Run Text="odjezd" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="35">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="st" /><LineBreak />
+                        <Run Text="kol." />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig1L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig1" />
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig2L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig2" />
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig3L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig3" />
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig4L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig4" />
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig5L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig5" />
+                </Label.Content>
+            </Label>
+            <Label x:Name="Sig6L" Width="15">
+                <Label.Content>
+                    <TextBlock LineHeight="14" x:Name="Sig6" />
+                </Label.Content>
+            </Label>
+            <Label Width="35">
+                <Label.Content>
+                    <TextBlock LineHeight="14">
+                        <Run Text="příjezd" /><LineBreak />
+                        <Run Text="odjezd" />
+                    </TextBlock>
+                </Label.Content>
+            </Label>
+            <Label Width="35" Content="zpož." />
+            <Label Width="35" Content="odhl." />
+            <Label Width="15" Content="P" ToolTip="Poznámka" />
+            <Label Width="15" Content="J" ToolTip="Souhlas s jízdou" />
+            <Label Width="15" Content="!" ToolTip="Mimořádnosti" />
+            <Label Width="15" Content="K" ToolTip="Komunikace" />
+            <Label Width="15" Content="O" ToolTip="Opravy řádku" />
+            <Label Width="15" Content="Z" ToolTip="Zrušení řádku" />
+            <Label Width="15" Content="U" ToolTip="Plánované úkony" />
+            <Label Width="20" Content="V" ToolTip="Odeslání informace 080" />
+            <Label Width="80" Content="cesta" />
+        </StackPanel>
+    </Grid>
+</UserControl>

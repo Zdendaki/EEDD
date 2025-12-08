@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Route ID="" Name="" PasswordEDD="" PasswordEVAL="">
+	<Stations>
+		<Station ID="" Name="" Abbr="">
+			<Tracks>
+				<Track ID="" Name="" Platform="" />
+			</Tracks>
+		</Station>
+	</Stations>
+	<StationConnections>
+		<StationConnection ID="" Station1="" Station2="" TravelTime="">
+			<Tracks>
+				<Track ID="" Name="" Flags="" />
+			</Tracks>
+		</StationConnection>
+	</StationConnections>
+	<Clients>
+		<Client ID="" Name="">
+			<Stations>
+				<Station ID="" StationID="" Color="" />
+			</Stations>
+			<Signallers>
+				<Signaller ID="" Name="" Type="" Comment="" />
+			</Signallers>
+		</Client>
+	</Clients>
+	<Trains>
+		<Train ID="" Number="" Date="">
+			<Stops>
+				<TrainStop ID="" TypeArrival="" TypeDeparture="" Arrival="" Departure="" TrackArrival="" TrackDeparture="" RouteTrackArrival="" RouteTrackDeparture="" StartBetweenStations="" EndBetweenStations="">
+					<Action></Action>
+				</TrainStop>
+			</Stops>
+		</Train>
+	</Trains>
+</Route>

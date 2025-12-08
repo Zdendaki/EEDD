@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Route ID="55323D63-A6CA-4049-A86A-01D55B42CD5B" Name="Trať 323" PasswordEDD="323" PasswordEVAL="EVAL">
+	<Stations>
+		<Station ID="351627" Name="Valašské Meziříčí" Abbr="VM">
+			<Tracks>
+				<Track ID="101" Name="1" Platform="true" />
+				<Track ID="102" Name="2" Platform="true" />
+				<Track ID="103" Name="3" Platform="false" />
+				<Track ID="104" Name="4" Platform="true" />
+				<Track ID="105" Name="5" Platform="true" />
+				<Track ID="106" Name="6" Platform="true" />
+				<Track ID="107" Name="7" Platform="false" />
+				<Track ID="108" Name="8" Platform="true" />
+				<Track ID="109" Name="9" Platform="false" />
+			</Tracks>
+		</Station>
+		<Station ID="336222" Name="Hostašovice" Abbr="Ho">
+			<Tracks>
+				<Track ID="25" Name="1" Platform="true" />
+				<Track ID="26" Name="2" Platform="true" />
+				<Track ID="27" Name="3" Platform="false" />
+				<Track ID="28" Name="4" Platform="true" />
+			</Tracks>
+		</Station>
+		<Station ID="349845" Name="Veřovice" Abbr="Ve">
+			<Tracks>
+				<Track ID="11" Name="1" Platform="true" />
+				<Track ID="12" Name="2" Platform="true" />
+				<Track ID="13" Name="3" Platform="true" />
+				<Track ID="14" Name="4" Platform="false" />
+				<Track ID="15" Name="101" Platform="true" />
+				<Track ID="16" Name="103" Platform="false" />
+			</Tracks>
+		</Station>
+		<Station ID="333344" Name="Frenštát pod Radhoštěm" Abbr="Fr">
+			<Tracks>
+				<Track ID="1" Name="1" Platform="true" />
+				<Track ID="2" Name="2" Platform="true" />
+				<Track ID="3" Name="3" Platform="true" />
+				<Track ID="4" Name="4" Platform="false" />
+				<Track ID="5" Name="5" Platform="true" />
+				<Track ID="6" Name="7" Platform="true" />
+			</Tracks>
+		</Station>
+		
+		<Station ID="339341" Name="Kunčice pod Ondřejníkem" Abbr="Ku">
+			<Tracks>
+				<Track ID="21" Name="1" Platform="true" />
+				<Track ID="22" Name="2" Platform="false" />
+				<Track ID="23" Name="3" Platform="true" />
+			</Tracks>
+		</Station>
+		<Station ID="333542" Name="Frýdlant nad Ostravicí" Abbr="FO">
+			<Tracks>
+				<Track ID="31" Name="1" Platform="true" />
+				<Track ID="32" Name="2" Platform="true" />
+				<Track ID="33" Name="3a" Platform="true" />
+				<Track ID="34" Name="3" Platform="true" />
+				<Track ID="35" Name="4" Platform="true" />
+				<Track ID="36" Name="6" Platform="false" />
+				<Track ID="37" Name="8" Platform="false" />
+				<Track ID="38" Name="2a" Platform="false" />
+				<Track ID="39" Name="4a" Platform="false" />
+				<Track ID="30" Name="91" Platform="false" />
+			</Tracks>
+		</Station>
+		<Station ID="344648" Name="Ostravice" Abbr="Oc">
+			<Tracks>
+				<Track ID="41" Name="1" Platform="true" />
+				<Track ID="42" Name="3" Platform="true" />
+			</Tracks>
+		</Station>
+		<Station ID="333948" Name="Pržno" Abbr="Po">
+			<Tracks>
+				<Track ID="45" Name="1" Platform="true" />
+				<Track ID="46" Name="3" Platform="true" />
+			</Tracks>
+		</Station>
+		<Station ID="330241" Name="Baška" Abbr="Ba">
+			<Tracks>
+				<Track ID="51" Name="1" Platform="true" />
+				<Track ID="52" Name="3" Platform="true" />
+				<Track ID="53" Name="5" Platform="false" />
+			</Tracks>
+		</Station>
+		<Station ID="333443" Name="Frýdek-Místek" Abbr="FM">
+			<Tracks>
+				<Track ID="61" Name="1" Platform="false" />
+				<Track ID="62" Name="2" Platform="true" />
+				<Track ID="63" Name="3" Platform="true" />
+				<Track ID="64" Name="4" Platform="false" />
+				<Track ID="65" Name="5" Platform="true" />
+				<Track ID="66" Name="6" Platform="false" />
+				<Track ID="67" Name="8" Platform="false" />
+				<Track ID="68" Name="10" Platform="false" />
+				<Track ID="69" Name="12" Platform="false" />
+			</Tracks>
+		</Station>
+	</Stations>
+	<StationConnections>
+		<StationConnection ID="1" Station1="351627" Station2="336222" TravelTime="8">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="2" Station1="336222" Station2="349845" TravelTime="11">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="3" Station1="349845" Station2="333344" TravelTime="10">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="4" Station1="333344" Station2="339341" TravelTime="7">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="5" Station1="339341" Station2="333542" TravelTime="9">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="6" Station1="333542" Station2="344648" TravelTime="10">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="7" Station1="333542" Station2="333948" TravelTime="4">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="8" Station1="333948" Station2="330241" TravelTime="4">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+		<StationConnection ID="9" Station1="330241" Station2="333443" TravelTime="4">
+			<Tracks>
+				<Track ID="1" Name="1" Flags="0" />
+			</Tracks>
+		</StationConnection>
+	</StationConnections>
+	<Clients>
+		<Client ID="1" Name="Dopravní deník Hostašovice">
+			<Stations>
+				<Station ID="1" StationID="336222" Color="Gray" />
+			</Stations>
+			<Signallers>
+				<Signaller ID="11" Name="VV" Type="3" Comment="" />
+			</Signallers>
+		</Client>
+		<Client ID="2" Name="Dopravní deník Veřovice">
+			<Stations>
+				<Station ID="1" StationID="349845" Color="Gray" />
+			</Stations>
+			<Signallers>
+				<Signaller ID="21" Name="dF" Type="3" Comment="Frenštát pod Radhoštěm" />
+				<Signaller ID="22" Name="DF" Type="2" Comment="Dozorce výhybek" />
+				<Signaller ID="23" Name="dS" Type="3" Comment="Štramberk" />
+				<Signaller ID="24" Name="dH" Type="3" Comment="Hostašovice" />
+			</Signallers>
+		</Client>
+		<Client ID="1" Name="Dopravní deník Frenštát pod Radhoštěm">
+			<Stations>
+				<Station ID="1" StationID="333344" Color="Gray" />
+			</Stations>
+			<Signallers>
+				<Signaller ID="31" Name="PO" Type="1" Comment="" />
+				<Signaller ID="32" Name="S1" Type="2" Comment="Stavědlo 1" />
+				<Signaller ID="33" Name="dK" Type="3" Comment="Kunčice pod Ondřejníkem" />
+				<Signaller ID="34" Name="S2" Type="2" Comment="Stavědlo 2" />
+				<Signaller ID="35" Name="dV" Type="3" Comment="Veřovice" />
+			</Signallers>
+		</Client>
+		<Client ID="3" Name="Dopravní deník Frýdlant nad Ostravicí">
+			<Stations>
+				<Station ID="1" StationID="349845" Color="Gray" />
+				<Station ID="2" StationID="339341" Color="Green" />
+				<Station ID="3" StationID="344648" Color="Yellow" />
+			</Stations>
+			<Signallers>
+				<Signaller ID="41" Name="O2" Type="2" Comment="" />
+				<Signaller ID="42" Name="O3" Type="2" Comment="" />
+				<Signaller ID="43" Name="O4" Type="2" Comment="" />
+				<Signaller ID="44" Name="DO" Type="3" Comment="" />
+			</Signallers>
+		</Client>
+		<Client ID="3" Name="Dopravní deník Baška">
+			<Stations>
+				<Station ID="1" StationID="330241" Color="Gray" />
+				<Station ID="2" StationID="333948" Color="Green" />
+			</Stations>
+			<Signallers>
+				<Signaller ID="11" Name="DP" Type="2" Comment="" />
+				<Signaller ID="14" Name="DO" Type="3" Comment="" />
+			</Signallers>
+		</Client>
+	</Clients>
+	<Trains>
+	</Trains>
+</Route>
